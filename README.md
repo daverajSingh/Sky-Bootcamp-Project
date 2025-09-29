@@ -5,7 +5,7 @@ Sky Graduate Bootcamp Project - Team (Name TBD)
 
 ### Frontend
 
-1. Firstly, ```cd project-x``` to be within the react project directory.
+1. Firstly, ```cd frontend``` to be within the react project directory.
 2. Then type ```npm install``` in your terminal. This will install any libraries and plugins required to run the react project.
 3. Finally, type ```npm run dev``` to run the project. In the terminal, you will receive a url that will show the local running instance of the project.
 
