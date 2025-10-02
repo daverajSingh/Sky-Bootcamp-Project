@@ -1,15 +1,18 @@
 import { Link } from 'react-router-dom';
 
 import Header from '../components/header.jsx';
+import Card from '../components/card.jsx';
 
 const Home = () => {
   return (
     <div>
-      {/* <h1>Home</h1>
-      <Link to="/quiz">Go to Quiz</Link>
-      <Link to="/simulator">Go to Simulator</Link>
-      <Link to="/admin">Go to Admin</Link> */}
-      <Header />
+      <div>
+        <Header />
+      </div>
+      <div className="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <Card title="Explore the Sky" />
+        <Card title="Are you Sky ready?" />
+      </div>
     </div>
   );
 }
