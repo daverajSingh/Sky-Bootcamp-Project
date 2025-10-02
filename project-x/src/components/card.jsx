@@ -1,8 +1,11 @@
-import { FiLink, FiPlus} from 'react-icons/fi';
+import { useState } from 'react';
+import { FiLink, FiPlus, FiX } from 'react-icons/fi';
 
 /* Landing Page Card Component*/
 
-const Card = ({ title, link }) => {
+const Card = ({ title, link, description }) => {
+    const [showDescription, setShowDescription] = useState(false);
+
     return (
         <>
             <div className="relative w-full sm:w-72 h-56 sm:h-48 rounded-xl overflow-hidden shadow-lg group">
@@ -12,21 +15,30 @@ const Card = ({ title, link }) => {
                     <h3 className="text-lg sm:text-base font-semibold">{title}</h3>
                 </div>
 
-                <div className="absolute top-2 right-2 flex gap-2">
-                    {/* Description button */}
-                    {link && (
-                        <a href={link} className="hover:bg-indigo-500 text-black p-3 sm:p-2 rounded-full">
-                            <FiPlus size={18} />
-                        </a>
-                    )}
+                {!showDescription && (<div className="absolute top-2 right-2 flex gap-2">
+                    {/* Show Description button */}
+                    <button onClick={() => setShowDescription(true)} className="hover:bg-indigo-500 text-black p-3 sm:p-2 rounded-full">
+                        <FiPlus size={18} />
+                    </button>
 
-                    {/* Link button */}
+                    {/* Link to the page */}
                     {link && (
                         <a href={link} className="hover:bg-indigo-500 text-black p-3 sm:p-2 rounded-full">
                             <FiLink size={18} />
                         </a>
                     )}
                 </div>
+                )}
+
+                {/* Reveal/Overlay the Description on click */}
+                {showDescription && (
+                    <div className="absolute inset-0 bg-black/90 text-white flex flex-col justify-center items-center p-6 text-center text-sm sm:text-xs">
+                        <button onClick={() => setShowDescription(false)} className="absolute top-2 right-2 hover:bg-indigo-500 text-white p-3 sm:p-2 rounded-full">
+                            <FiX size={18} />
+                        </button>
+                        <p>{description}</p>
+                    </div>
+                )}
             </div>
         </>
     );
