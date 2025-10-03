@@ -48,10 +48,10 @@ class DataAccess:
         except pymysql.MySQLError as e:
             raise RuntimeError(f'Database query error: {e}')
 
-    def execute(self, query):
+    def execute(self, query, params=None):
         try:
             self._connect()
-            self.__cursor.execute(query)
+            self.__cursor.execute(query, params)
             self.__connection.commit()
         except pymysql.MySQLError as e:
             self.__connection.rollback()
