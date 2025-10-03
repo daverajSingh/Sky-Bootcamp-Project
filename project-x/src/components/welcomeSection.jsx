@@ -1,3 +1,4 @@
+import React from "react";
 /* Landing Page Card Component*/
 
 const WelcomeSection = () => {

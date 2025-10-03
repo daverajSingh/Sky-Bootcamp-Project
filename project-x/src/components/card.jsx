@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FiLink, FiPlus, FiX } from 'react-icons/fi';
-
+import React from "react";
 /* Landing Page Card Component*/
 
 const Card = ({ title, link, description }) => {
