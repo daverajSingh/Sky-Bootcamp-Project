@@ -14,7 +14,7 @@ describe('Header', () => {
         expect(screen.getByRole('link', { name: 'Sky Immersion' })).toHaveAttribute('href', '/')
     });
 
-    it('Check if the icon is present on the button', () => {
+    it('Check if the login button is visible', () => {
         render(<Header />);
 
         expect(screen.getByRole("button")).toBeInTheDocument()

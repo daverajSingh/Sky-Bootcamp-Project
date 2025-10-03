@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { FiLink, FiPlus, FiX } from 'react-icons/fi';
+import React from "react";
 
 /* Landing Page Card Component*/
 
@@ -17,13 +18,13 @@ const Card = ({ title, link, description }) => {
 
                 {!showDescription && (<div className="absolute top-2 right-2 flex gap-2">
                     {/* Show Description button */}
-                    <button onClick={() => setShowDescription(true)} className="hover:bg-indigo-500 text-black p-3 sm:p-2 rounded-full">
+                    <button data-testid="descriptionButton" onClick={() => setShowDescription(true)} className="hover:bg-indigo-500 text-black p-3 sm:p-2 rounded-full">
                         <FiPlus size={18} />
                     </button>
 
                     {/* Link to the page */}
                     {link && (
-                        <a href={link} className="hover:bg-indigo-500 text-black p-3 sm:p-2 rounded-full">
+                        <a data-testid="linkButton" href={link} className="hover:bg-indigo-500 text-black p-3 sm:p-2 rounded-full">
                             <FiLink size={18} />
                         </a>
                     )}
