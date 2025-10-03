@@ -1,5 +1,4 @@
-import React from 'react';
-import {FiUser} from 'react-icons/fi';
+import { FiUser } from 'react-icons/fi';
 /* Landing Page Header Component*/
 
 const Header = () => {
@@ -10,7 +9,7 @@ const Header = () => {
     <header className="flex items-center justify-between p-4 bg-white shadow-md h-20">
       <div className="flex items-center h-full">
 
-        
+
         {/* Sky */}
         <div className="px-4 flex items-center h-full">
           <h1 className={GRADIENT_CLASS}>
@@ -24,14 +23,14 @@ const Header = () => {
         {/* Sky Immersion */}
         <div className="px-4 flex items-center h-full">
           <p className={GRADIENT_CLASS}>
-            Sky Immersion
+            <a href="/">Sky Immersion</a>
           </p>
         </div>
       </div>
 
       {/* Admin Button */}
       <button className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition duration-300">
-        <FiUser size={20}/>
+        <FiUser size={20} />
       </button>
     </header>
   );
