@@ -8,7 +8,7 @@ const Card = ({ title, link, description }) => {
 
     return (
         <>
-            <div className="relative w-full sm:w-72 h-56 sm:h-48 rounded-xl overflow-hidden shadow-lg group bg-radial-[at_50%_75%] from-sky-200 via-blue-400 to-indigo-900 to-90%">
+            <div className="relative w-full h-56 rounded-xl overflow-hidden shadow-lg group bg-radial-[at_50%_75%] from-sky-200 via-blue-400 to-indigo-900 to-90%">
 
                 {/* Title Section */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 text-black">
