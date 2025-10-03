@@ -12,8 +12,10 @@ def test_login_post():
 
 def test_incorrect_login():
     with app.test_client() as client:
-        response = client.get("/api/login", json={"email": "james", "password": "james"})
+        response = client.post("/api/login", json={"email": "james", "password": "james"})
+        assert response.status_code == 401
 
 def test_correct_login():
     with app.test_client() as client:
-        response = client.get("/api/login", json={"email": "test", "password": "test"})
+        response = client.post("/api/login", json={"email": "test", "password": "test"})
+        assert response.status_code == 200

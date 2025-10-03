@@ -39,7 +39,6 @@ class DataAccess:
             except pymysql.MySQLError:
                 pass
 
-
     def query(self, query, params=None):
         try:
             self._connect()

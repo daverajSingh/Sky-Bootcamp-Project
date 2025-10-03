@@ -1,10 +1,9 @@
 import datetime
 import os
-import bcrypt
 import jwt
 from dotenv import load_dotenv
 from flask import request, jsonify
-from bcrypt import checkpw
+from bcrypt import checkpw, hashpw, gensalt
 from backend import app, DataAccess
 
 load_dotenv()
@@ -35,8 +34,8 @@ def login():
             token = jwt.encode(
                 {
                     'admin_email': user['admin_email'],
-                    'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30),
-                    'iat': datetime.datetime.utcnow(),
+                    'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=30),
+                    'iat': datetime.datetime.now(datetime.UTC),
                 },
                 os.getenv('SECRET_KEY'),
                 algorithm='HS256',
@@ -64,9 +63,10 @@ def register():
             existing = db.query("SELECT admin_id FROM admin WHERE admin_email=%s", (email,))
             if existing:
                 return jsonify({"error": "Email already in use"}), 409
-            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+            hashed_password = hashpw(password.encode('utf-8'), gensalt()).decode('utf-8')
             db.execute("INSERT into admin (admin_email, admin_password, admin_name) VALUES (%s, %s, %s) ", (email, hashed_password, name),)
-
             return jsonify({"message": "Successful Register"}), 200
         finally:
             db.close()
+    else:
+        return jsonify({"error": "Invalid Method"}), 405

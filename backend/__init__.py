@@ -1,5 +1,5 @@
 from flask import Flask
-from backend.data_access import DataAccess
+from backend.application.data_access import DataAccess
 
 app = Flask(__name__)
 
@@ -18,4 +18,5 @@ def create_table():
     except Exception as e:
         print(e)
 
-from backend import routes
+
+from backend.application import routes
