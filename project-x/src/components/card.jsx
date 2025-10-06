@@ -17,14 +17,15 @@ const Card = ({ title, link, description }) => {
 
             {!showDescription && (<div className="absolute top-2 right-2 flex gap-2">
                 {/* Show Description button */}
-                <button data-testid="descriptionButton" onClick={() => setShowDescription(true)} className="hover:bg-indigo-500 text-black p-3 sm:p-2 rounded-full">
-                    <FiPlus size={18} />
+                {description && (<button data-testid="showDescription" onClick={() => setShowDescription(true)} className="hover:bg-indigo-500 text-black p-3 sm:p-2 rounded-full">
+                    <FiPlus data-testid="revealDescriptionIcon" size={18} />
                 </button>
+                )}
 
                 {/* Link to the page */}
                 {link && (
                     <a data-testid="linkButton" href={link} className="hover:bg-indigo-500 text-black p-3 sm:p-2 rounded-full">
-                        <FiLink size={18} />
+                        <FiLink data-testid="navigateToPageButton" size={18} />
                     </a>
                 )}
             </div>
@@ -32,9 +33,9 @@ const Card = ({ title, link, description }) => {
 
             {/* Reveal/Overlay the Description on click */}
             {showDescription && (
-                <div className="absolute inset-0 bg-black/90 text-white flex flex-col justify-center items-center p-6 text-center text-sm sm:text-xs">
+                <div className="absolute inset-0 bg-black/90 text-white flex flex-col justify-center items-center p-6 text-center text-sm sm:text-xs" data-testid="hideDescription">
                     <button onClick={() => setShowDescription(false)} className="absolute top-2 right-2 hover:bg-indigo-500 text-white p-3 sm:p-2 rounded-full">
-                        <FiX size={18} />
+                        <FiX data-testid="hideDescriptionIcon" size={18} />
                     </button>
                     <p>{description}</p>
                 </div>
