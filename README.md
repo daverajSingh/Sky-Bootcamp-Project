@@ -39,3 +39,7 @@ NB: Don't use the ```TYPE``` in the description, for example ```CREATE: created 
 
 - Makes reviewing pull requests easier, as we will be able to see what has changed in each commit and in the final pull request
 - Ensures that commit messages are uniform and makes it easy to figure out what has changed between commits.
+
+# Branches
+
+use the following convention to ensure consistency: '''NAME-work-being-done'''
