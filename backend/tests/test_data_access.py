@@ -10,7 +10,6 @@ def mock_db(mocker):
     mocker.patch("backend.application.data_access.pymysql.connect", return_value=mock_conn)
     return mock_conn, mock_cursor
 
-
 def test_query(mock_db):
     _, mock_cursor = mock_db
     mock_cursor.fetchall.return_value = [{"admin_id": 1, "name": "test"}]

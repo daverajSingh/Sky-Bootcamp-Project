@@ -1,4 +1,6 @@
 flask
+pytest
+pytest-mock
 python-dotenv
 pymysql
 bcrypt
