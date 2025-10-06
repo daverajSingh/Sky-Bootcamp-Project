@@ -11,7 +11,7 @@ load_dotenv()
 @app.route('/api/login', methods=['POST'])
 def login():
     if request.method == 'POST':
-        data=request.json
+        data = request.json
         email = data['email']
         password = data['password']
 
@@ -49,7 +49,7 @@ def login():
 @app.route('/api/register', methods=['POST'])
 def register():
     if request.method == 'POST':
-        data=request.json
+        data = request.json
         email = data['email']
         password = data['password']
         name = data['name']
