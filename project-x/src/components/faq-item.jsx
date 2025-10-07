@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {FiPlus, FiMinus} from 'react-icons/fi';
 
 const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -6,15 +7,15 @@ const FAQItem = ({ question, answer }) => {
   const safeAnswer = answer ? answer : 'Answer not available';
 
   return (
-    <div className="faq-item" style={{ borderBottom: '1px solid #ccc', padding: '1em 0' }}>
+    <div className="border-b border-gray-200 py-4" data-testid="faqItem">
       <div
         onClick={() => setIsOpen(!isOpen)}
-        style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between' }}
+        className="flex justify-between items-center cursor-pointer"
       >
-        <h3 style={{ margin: 0 }}>{safeQuestion}</h3>
-        <span>{isOpen ? '-' : '+'}</span>
+        <h3>{safeQuestion}</h3>
+        <span>{isOpen ? <FiMinus data-testid="faqCollapse" size={18}/>: <FiPlus data-testid="faqExpand" size={18}/>}</span>
       </div>
-      {isOpen && <p style={{ marginTop: '0.5em' }}>{safeAnswer}</p>}
+      {isOpen && <p className="mt-2">{safeAnswer}</p>}
     </div>
   );
 };

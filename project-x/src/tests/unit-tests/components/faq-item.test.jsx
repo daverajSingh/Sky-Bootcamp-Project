@@ -10,13 +10,13 @@ describe('FAQItem', () => {
         render(<FAQItem question="Mock question" answer="Mock answer" />);
         expect(screen.getByText('Mock question')).toBeInTheDocument();
         expect(screen.queryByText('Mock answer')).not.toBeInTheDocument();
-        expect(screen.getByText('+')).toBeInTheDocument();
+        expect(screen.getByTestId('faqExpand')).toBeInTheDocument();
     });
 
     it('shows answer when clicked', () => {
         render(<FAQItem question="Mock question" answer="Mock answer" />);
         fireEvent.click(screen.getByText('Mock question'));
         expect(screen.getByText('Mock answer')).toBeInTheDocument();
-        expect(screen.getByText('-')).toBeInTheDocument();
+        expect(screen.getByTestId('faqCollapse')).toBeInTheDocument();
     });
 });
