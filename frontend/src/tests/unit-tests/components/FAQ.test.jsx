@@ -21,7 +21,7 @@ describe('FAQ', () => {
   it('shows error message if faqData is not an array', () => {
     jest.resetModules();
     jest.doMock('../../../data/faq.json', () => ({}));
-    const FAQError = require('../../../components/faq').default;
+    const FAQError = require('../../../components/FAQ').default;
     render(<FAQError />);
     expect(screen.getByText(/Sorry, FAQ data could not be loaded/i)).toBeInTheDocument();
     jest.dontMock('../../../data/faq.json');
@@ -30,7 +30,7 @@ describe('FAQ', () => {
   it('renders nothing but heading if faqData is empty array', () => {
     jest.resetModules();
     jest.doMock('../../../data/faq.json', () => ([]));
-    const FAQEmpty = require('../../../components/faq').default;
+    const FAQEmpty = require('../../../components/FAQ').default;
     render(<FAQEmpty />);
     expect(screen.getByText('Frequently Asked Questions')).toBeInTheDocument();
     jest.dontMock('../../../data/faq.json');
