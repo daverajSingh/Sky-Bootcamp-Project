@@ -5,13 +5,16 @@ Sky Graduate Bootcamp Project - Team (Name TBD)
 
 ### Frontend
 
-1. Firstly, ```cd project-x``` to be within the react project directory.
+1. Firstly, ```cd frontend``` to be within the react project directory.
 2. Then type ```npm install``` in your terminal. This will install any libraries and plugins required to run the react project.
 3. Finally, type ```npm run dev``` to run the project. In the terminal, you will receive a url that will show the local running instance of the project.
 
 ### Backend
 
-TBC
+1. Firstly, ```cd backend``` to be within the react project directory.
+2. Then type ```pip3 install -r requirements.txt``` in your terminal. This will install any libraries and plugins required to run the react project.
+3. Finally, type ```python3 app.py``` to run the project. In the terminal, you will receive a url that will show the local running instance of the project.
+4. NB - Make sure to have the .env file in backend directory to ensure correct login details for the mysql database - WILL NOT WORK OTHERWISE
 
 # Git Conventions
 
