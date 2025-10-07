@@ -1,5 +1,5 @@
 import faqData from '../data/faq.json';
-import FAQItem from './faq-item';
+import FAQItem from './FAQItem';
 import React from 'react';
 
 const FAQ = () => {

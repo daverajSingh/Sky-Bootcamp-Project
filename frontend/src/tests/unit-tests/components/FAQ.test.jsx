@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, cleanup } from '@testing-library/react';
-import FAQ from '../../../components/faq';
+import FAQ from '../../../components/FAQ';
 
 // Mock the faqData import
 jest.mock('../../../data/faq.json', () => ([

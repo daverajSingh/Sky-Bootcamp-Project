@@ -1,7 +1,7 @@
-import Header from '../components/header.jsx';
-import WelcomeSection from '../components/welcomeSection.jsx';
-import Card from '../components/card.jsx';
-import FAQPage from '../components/faq.jsx';
+import Header from '../components/Header.jsx';
+import WelcomeSection from '../components/WelcomeSection.jsx';
+import Card from '../components/Card.jsx';
+import FAQPage from '../components/FAQ.jsx';
 
 const Home = () => {
   return (
