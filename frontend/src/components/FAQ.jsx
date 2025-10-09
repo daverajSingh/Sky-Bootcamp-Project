@@ -1,12 +1,30 @@
 import faqData from '../data/faq.json';
 import FAQItem from './FAQItem';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
+
 
 const FAQ = () => {
+  const [faqs, setFaqs] = useState([]);
+
+  useEffect(() => {
+    // Use json server to fetch all data from the faq.json file
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/faqs');
+        const data = await response.json();
+        // console.log(data);
+        setFaqs(data);
+      } catch (error) {
+        console.error('Error fetching FAQ data:', error);
+      }
+    }
+    fetchData();
+  }, []);
+
   let content;
   try {
-    if (!Array.isArray(faqData)) throw new Error('FAQ data is not an array');
-    content = faqData.map((item, idx) => (
+    if (!Array.isArray(faqs)) throw new Error('FAQ data is not an array');
+    content = faqs.map((item, idx) => (
       <FAQItem key={idx} question={item.question} answer={item.answer} />
     ));
   } catch (e) {
