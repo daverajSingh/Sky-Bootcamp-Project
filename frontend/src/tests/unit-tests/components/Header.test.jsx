@@ -1,4 +1,4 @@
-import Header from "../../../components/header.jsx"
+import Header from "../../../components/Header.jsx"
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import React from "react";
 
@@ -20,6 +20,15 @@ describe('Header', () => {
         expect(screen.getByRole("button")).toBeInTheDocument()
         expect(screen.getByRole("button")).toBeVisible()
     });
+
+    it('Check if the Sky text is visible', () => {
+        render(<Header />);
+
+        expect(screen.getByText("Sky")).toBeInTheDocument()
+        expect(screen.getByText("Sky")).toBeVisible()
+    });
+
+    
 });
 
 
