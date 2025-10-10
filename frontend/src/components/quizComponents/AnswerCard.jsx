@@ -12,7 +12,18 @@ const AnswerCard = ({ text, onSelect, index, isSelected }) => {
       tabIndex={0}
       onKeyPress={(e) => (e.key === 'Enter' ? handleClick() : null)}
       onClick={handleClick}
-      style={{ border: isSelected ? '2px solid #333' : '1px solid #ccc', padding: 12, width: 200, cursor: 'pointer', background: isSelected ? '#fafafa' : 'white' }}
+      style={{
+        border: isSelected ? '2px solid #333' : '1px solid #ccc',
+        padding: 14,
+  minWidth: 120,
+  maxWidth: 420,
+        boxSizing: 'border-box',
+        cursor: 'pointer',
+        background: isSelected ? '#fafafa' : 'white',
+        whiteSpace: 'normal',
+        wordBreak: 'break-word',
+        flex: '1 1 0%'
+      }}
     >
       {text}
     </div>

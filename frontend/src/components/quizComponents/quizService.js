@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+// Use Vite environment variables exposed to the client. Vite exposes vars prefixed with VITE_.
 const API_BASE = 'http://localhost:3000';
 
 export async function fetchQuiz() {

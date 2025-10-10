@@ -46,23 +46,17 @@ const QuizTopicSelector = () => {
   }
 
   // Called when a question in the selected topic is answered/unanswered
-  function handleTopicAnswer(topicID, questionID, selectedIndex) {
+  function handleTopicAnswer(topicID, questionID, selectedIndicesArray) {
     setTopicAnswers((prev) => {
       const topicMap = { ...(prev[topicID] || {}) };
-      // toggle: if same index clicked again, deselect (set to null)
-      const prevSelected = topicMap[questionID];
-      if (prevSelected === selectedIndex) {
-        topicMap[questionID] = null;
-      } else {
-        topicMap[questionID] = selectedIndex;
-      }
+      topicMap[questionID] = Array.isArray(selectedIndicesArray) ? selectedIndicesArray : (selectedIndicesArray ? [selectedIndicesArray] : []);
 
       const next = { ...prev, [topicID]: topicMap };
 
-      // compute status
+      // compute status: count a question as answered if its array has length > 0
       const topic = topics.find((t) => t.topicID === topicID);
       const total = topic?.questions?.length || 0;
-      const answered = Object.values(topicMap).filter((v) => v !== null && v !== undefined).length;
+      const answered = Object.values(topicMap).filter((v) => Array.isArray(v) ? v.length > 0 : v !== null && v !== undefined).length;
       const newStatus = answered === 0 ? 'todo' : answered === total ? 'answered' : 'partially';
       handleTopicChange(topicID, newStatus, topic?.person || null);
 
@@ -75,26 +69,32 @@ const QuizTopicSelector = () => {
 
   return (
     <div>
-      <h2>Quiz topics</h2>
-      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-        {topics.slice(0, 5).map((topic) => (
-          <QuizTopicCard
-            key={topic.topicID}
-            topic={topic}
-            status={completedMap[topic.topicID]}
-            onSelect={handleSelect}
-            selected={selectedTopicID === topic.topicID}
-          />
-        ))}
+      <h2 style={{ textAlign: 'left' }}>Quiz topics</h2>
 
-        <QuizChatBox
-          topics={topics.slice(0, 5)}
-          completedMap={completedMap}
-          // consider allCompleted true only when all visible topics are fully answered
-          allCompleted={
-            topics.length > 0 && topics.slice(0, 5).every((t) => completedMap[t.topicID] === 'answered')
-          }
-        />
+      {/* Row containing topic cards and chatbox/transcript */}
+      <div style={{ display: 'flex', gap: 12, alignItems: 'stretch' }}>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'stretch', flex: '1 1 0%' }}>
+          {topics.slice(0, 5).map((topic) => (
+            <QuizTopicCard
+              key={topic.topicID}
+              topic={topic}
+              status={completedMap[topic.topicID]}
+              onSelect={handleSelect}
+              selected={selectedTopicID === topic.topicID}
+            />
+          ))}
+        </div>
+
+        <div style={{ flex: '0 0 360px' }}>
+          <QuizChatBox
+            topics={topics.slice(0, 5)}
+            completedMap={completedMap}
+            // consider allCompleted true only when all visible topics are fully answered
+            allCompleted={
+              topics.length > 0 && topics.slice(0, 5).every((t) => completedMap[t.topicID] === 'answered')
+            }
+          />
+        </div>
       </div>
 
       {/* Questions panel: shows the questions for the single selected topic */}

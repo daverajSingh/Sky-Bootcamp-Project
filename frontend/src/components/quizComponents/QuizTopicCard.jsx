@@ -7,15 +7,29 @@ const QuizTopicCard = ({ topic, status = 'todo', onSelect, selected }) => {
       onClick={() => onSelect && onSelect(topic.topicID)}
       style={{
         border: selected ? '2px solid #2563eb' : '1px solid #ddd',
-        padding: 8,
-        width: 200,
+  padding: 12,
+  // allow topic cards to stretch/shrink like answer cards
+  flex: '1 1 0%',
+  minWidth: 140,
+  minHeight: 240,
+        boxSizing: 'border-box',
         cursor: 'pointer',
         background: selected ? '#f0f8ff' : 'white',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
       }}
     >
       <div>
-        <strong>{topic.topicID.replace(/_/g, ' ').toUpperCase()}</strong>
-        <div>{status || 'todo'}</div>
+        <strong style={{ display: 'block', marginBottom: 8 }}>{topic.topicID.replace(/_/g, ' ').toUpperCase()}</strong>
+      </div>
+
+      <div style={{ fontSize: 12, color: '#999', marginTop: 12 }}>
+        {topic.description || ''}
+      </div>
+
+      <div style={{ textAlign: 'center', marginTop: 8, color: '#666' }}>
+        {status === 'partially' ? 'partially completed' : (status || 'todo')}
       </div>
     </div>
   );

@@ -2,25 +2,26 @@ import React, { useEffect } from 'react';
 import QuizQuestion from './QuizQuestion';
 
 const QuizQuestionsPanel = ({ topic, onStatusChange, savedAnswers = {}, onAnswer }) => {
-  // savedAnswers is an object mapping questionID -> selectedIndex|null
+  // savedAnswers is an object mapping questionID -> arrayOfSelectedIndices (for multi-select)
 
   useEffect(() => {
     // inform parent about status for newly selected topic if needed
     if (topic && onStatusChange) {
       const total = topic.questions.length;
-      const answered = Object.values(savedAnswers).filter((v) => v !== null && v !== undefined).length;
+      const answered = Object.values(savedAnswers).filter((v) => Array.isArray(v) ? v.length > 0 : v !== null && v !== undefined).length;
       const newStatus = answered === 0 ? 'todo' : answered === total ? 'answered' : 'partially';
       onStatusChange(topic.topicID, newStatus, topic.person || null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topic?.topicID]);
 
-  function handleAnswer(questionID, selectedIndex) {
-    if (onAnswer) onAnswer(questionID, selectedIndex);
+  function handleAnswer(questionID, selectedIndicesArray) {
+    // selectedIndicesArray is an array of selected option indices for the given question
+    if (onAnswer) onAnswer(questionID, selectedIndicesArray);
     if (onStatusChange && topic) {
-      const merged = { ...savedAnswers, [questionID]: savedAnswers[questionID] === selectedIndex ? null : selectedIndex };
+      const merged = { ...savedAnswers, [questionID]: Array.isArray(selectedIndicesArray) ? selectedIndicesArray : (selectedIndicesArray ? [selectedIndicesArray] : []) };
       const total = topic.questions.length;
-      const answered = Object.values(merged).filter((v) => v !== null && v !== undefined).length;
+      const answered = Object.values(merged).filter((v) => Array.isArray(v) ? v.length > 0 : v !== null && v !== undefined).length;
       const newStatus = answered === 0 ? 'todo' : answered === total ? 'answered' : 'partially';
       onStatusChange(topic.topicID, newStatus, topic.person || null);
     }
@@ -42,8 +43,8 @@ const QuizQuestionsPanel = ({ topic, onStatusChange, savedAnswers = {}, onAnswer
           <QuizQuestion
             key={q.questionID}
             question={q}
-            onAnswer={(questionID, selectedIndex) => handleAnswer(questionID, selectedIndex)}
-            selectedIndex={savedAnswers[q.questionID]}
+            onAnswer={(questionID, selectedIndices) => handleAnswer(questionID, selectedIndices)}
+            selectedIndex={savedAnswers[q.questionID] || []}
           />
         ))}
       </div>

@@ -7,7 +7,7 @@ Sky Graduate Bootcamp Project - Team (Name TBD)
 
 1. Firstly, ```cd frontend``` to be within the react project directory.
 2. Then type ```npm install``` in your terminal. This will install any libraries and plugins required to run the react project.
-3. Give yourself admin, and then run  ```json-server --watch src/data/quiz.json --port 3000```
+3. Give yourself admin, and then run  ```json-server --watch src/data/quiz.json --port 4000```
 4. Finally, type ```npm run dev``` to run the project. In the terminal, you will receive a url that will show the local running instance of the project.
 
 ### Backend
