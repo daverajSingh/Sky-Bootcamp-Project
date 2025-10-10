@@ -2,13 +2,15 @@ import datetime
 import os
 import jwt
 from dotenv import load_dotenv
-from flask import request, jsonify
+from flask import request, jsonify, Blueprint
 from bcrypt import checkpw, hashpw, gensalt
-from backend import app, DataAccess
+from application.data_access import DataAccess
 
 load_dotenv()
 
-@app.route('/api/login', methods=['POST'])
+routes = Blueprint('routes',__name__)
+
+@routes.route('/api/login', methods=['POST'])
 def login():
     if request.method == 'POST':
         data = request.json
@@ -46,7 +48,7 @@ def login():
     else:
         return jsonify({"error": "Invalid Method"}), 405
 
-@app.route('/api/register', methods=['POST'])
+@routes.route('/api/register', methods=['POST'])
 def register():
     if request.method == 'POST':
         data = request.json
