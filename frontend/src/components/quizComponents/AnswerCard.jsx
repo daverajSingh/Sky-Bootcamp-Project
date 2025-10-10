@@ -1,10 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const AnswerCard = ({ text, onSelect, index }) => {
-  const [selected, setSelected] = useState(false);
-
+// Controlled answer card: selection is driven by parent via `isSelected`.
+const AnswerCard = ({ text, onSelect, index, isSelected }) => {
   function handleClick() {
-    setSelected(true);
     if (onSelect) onSelect(index);
   }
 
@@ -14,7 +12,7 @@ const AnswerCard = ({ text, onSelect, index }) => {
       tabIndex={0}
       onKeyPress={(e) => (e.key === 'Enter' ? handleClick() : null)}
       onClick={handleClick}
-      style={{ border: selected ? '2px solid #333' : '1px solid #ccc', padding: 12, width: 200, cursor: 'pointer' }}
+      style={{ border: isSelected ? '2px solid #333' : '1px solid #ccc', padding: 12, width: 200, cursor: 'pointer', background: isSelected ? '#fafafa' : 'white' }}
     >
       {text}
     </div>
