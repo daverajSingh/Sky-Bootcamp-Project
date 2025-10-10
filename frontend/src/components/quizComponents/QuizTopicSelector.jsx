@@ -93,6 +93,7 @@ const QuizTopicSelector = () => {
             allCompleted={
               topics.length > 0 && topics.slice(0, 5).every((t) => completedMap[t.topicID] === 'answered')
             }
+            topicAnswers={topicAnswers}
           />
         </div>
       </div>
