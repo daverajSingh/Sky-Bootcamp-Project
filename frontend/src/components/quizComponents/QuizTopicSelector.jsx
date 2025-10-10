@@ -6,16 +6,26 @@ import quizService from './quizService';
 const QuizTopicSelector = () => {
   const [topics, setTopics] = useState([]);
   const [completedMap, setCompletedMap] = useState({});
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     let mounted = true;
-    quizService.fetchQuiz().then((data) => {
-      if (!mounted) return;
-      setTopics(data);
-      const map = {};
-      data.forEach((t) => (map[t.topicID] = 'todo'));
-      setCompletedMap(map);
-    });
+    const loadQuizData = async () => {
+      try {
+        const data = await quizService.fetchQuiz();
+        if (!mounted) return;
+        setTopics(data);
+        const map = {};
+        data.forEach((t) => (map[t.topicID] = 'todo'));
+        setCompletedMap(map);
+        setError(null);
+      } catch (err) {
+        if (mounted) {
+          setError('Failed to load quiz data. Please try again later.');
+        }
+      }
+    };
+    loadQuizData();
     return () => (mounted = false);
   }, []);
 
