@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiUser } from 'react-icons/fi';
+import DropDownLogin from './DropDownLogin';
 /* Landing Page Header Component*/
 
 const Header = () => {
@@ -29,10 +29,7 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Admin Button */}
-      <button className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition duration-300">
-        <FiUser size={20} />
-      </button>
+      <DropDownLogin/>
     </header>
   );
 };
