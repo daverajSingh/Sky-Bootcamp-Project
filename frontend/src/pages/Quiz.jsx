@@ -12,7 +12,7 @@ const Quiz = () => {
             </div>
                 {/* simple header */}
                 <header style={{ width: '100%', maxWidth: 1300, padding: '12px 0', marginBottom: 8, borderBottom: '1px solid #eee' }}>
-                    <h1 style={{ textAlign: 'center', margin: 0 }}>Quiz Page</h1>
+                    <h1 style={{ textAlign: 'center', margin: 0 }}>Are you Sky ready</h1>
                 </header>
 
                 <div style={{ width: '100%', maxWidth: 1300, marginTop: 12 }}>

@@ -14,7 +14,7 @@ const QuizQuestion = ({ question, onAnswer, selectedIndex = [] }) => {
 
   return (
     <div style={{ marginBottom: 12 }}>
-      <QuestionTitle human={question.human || 'Agile human'} questionText={question.question} />
+      <QuestionTitle human={question.human} questionText={question.question} />
       <div style={{ display: 'flex', gap: 12, marginTop: 8, flexWrap: 'nowrap' }}>
         {question.options.map((opt, idx) => (
           <AnswerCard

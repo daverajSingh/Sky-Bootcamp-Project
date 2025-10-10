@@ -37,7 +37,7 @@ const QuizQuestionsPanel = ({ topic, onStatusChange, savedAnswers = {}, onAnswer
 
   return (
     <div style={{ marginTop: 20, borderTop: '1px solid #eee', paddingTop: 12 }}>
-      <h3>{topic.topicID.replace(/_/g, ' ').toUpperCase()}</h3>
+      <h3 style={{ fontWeight: 700 }}>{topic.topicID.replace(/_/g, ' ').toUpperCase()}</h3>
       <div>
         {topic.questions.map((q) => (
           <QuizQuestion
