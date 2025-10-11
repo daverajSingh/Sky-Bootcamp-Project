@@ -23,7 +23,7 @@ def login():
         db = DataAccess()
 
         try:
-            user = db.query("Select admin_email, admin_password FROM admin WHERE admin_email=%s",(email,),)
+            user = db.query("Select admin_email, admin_password, admin_name FROM admin WHERE admin_email=%s",(email,),)
             if not user:
                 return jsonify({"error": "Invalid Username or Password"}), 401
 
@@ -36,6 +36,7 @@ def login():
             token = jwt.encode(
                 {
                     'admin_email': user['admin_email'],
+                    'admin_name': user['admin_name'],
                     'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=30),
                     'iat': datetime.datetime.now(datetime.UTC),
                 },

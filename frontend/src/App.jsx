@@ -4,8 +4,10 @@ import Quiz from './pages/Quiz';
 import Simulator from './pages/Simulator';
 import Admin from './pages/Admin';
 import Layout from './components/Layout';
+import { AuthProvider } from './components/AuthContext';
 function App() {
   return (
+    <AuthProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
@@ -16,6 +18,7 @@ function App() {
         </Route>
         </Routes>
       </BrowserRouter>
+    </AuthProvider>
   );
 }
 

@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { FiLogIn } from "react-icons/fi";
+import { useNavigate } from "react-router";
+import { useAuth } from './AuthContext';
 
 function DropDownLogin() {
+  const { login } = useAuth();
   const [dropDownStyle, setDropDownStyle] = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -11,6 +15,7 @@ function DropDownLogin() {
 
   const buttonRef = useRef(null);
   const dropdownRef = useRef(null);
+  let navigate = useNavigate();
 
   useEffect(() => {
     if (isOpen && buttonRef.current) {
@@ -82,9 +87,10 @@ function DropDownLogin() {
       const data = await response.json();
 
       if (response.ok) {
-        // Successful login        
+        login(data.token);
         setIsOpen(false);
-        onLoginSuccess(data.token);
+        navigate('/admin');
+        console.log("Login successful");
       } else {
         setError(data.error || "Login failed. Please try again.");
       }
@@ -102,10 +108,6 @@ function DropDownLogin() {
     }
   };
 
-  const onLoginSuccess = (token) => {
-    sessionStorage.setItem('authToken', token);
-  }
-
   return (
     <>
       <button
@@ -113,19 +115,7 @@ function DropDownLogin() {
         className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition duration-300 flex items-center gap-2"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <svg
-          className="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-          />
-        </svg>
+        <FiLogIn size={20} />
         Login
       </button>
       {isOpen &&
