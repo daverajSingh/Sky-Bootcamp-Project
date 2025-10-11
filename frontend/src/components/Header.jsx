@@ -7,9 +7,8 @@ const Header = () => {
   // Give a gradient effect to text
   const GRADIENT_CLASS = "text-2xl font-bold bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 inline-block text-transparent bg-clip-text";
   return (
-    <header className="flex items-center justify-between p-4 bg-white shadow-md h-20">
+    <header className="flex items-center justify-between p-4 bg-white shadow-md h-20 border-b border-gray-300">
       <div className="flex items-center h-full">
-
 
         {/* Sky */}
         <div className="px-4 flex items-center h-full">
