@@ -7,9 +7,7 @@ const Layout = () => {
     <div className="flex flex-col w-full min-h-screen">
       <Header />
       <main
-        className="pt-30 w-full h-full flex-grow bg-white overflow-scroll md:px-10 lg:px-20"
-        role="main div"
-      >
+        className="w-full h-full flex-grow bg-white overflow-scroll md:px-10 lg:px-20">
         <Outlet />
       </main>
       <Footer />
