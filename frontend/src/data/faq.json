@@ -40,5 +40,16 @@
       "question": "Is the app accessible?",
       "answer": "Accessibility is a priority and we try to follow common accessibility guidelines (keyboard navigation, semantic HTML). If you find accessibility issues, please report them so we can improve the experience."
     }
-  ]
+  ],
+  "ai": [
+    {
+      "id": 1,
+      "message": "Are you ready to discuss about Agile ?"
+    },
+    {
+      "id": 2,
+      "message": "Second message"
+    }
+  ],
+  "user": []
 }
