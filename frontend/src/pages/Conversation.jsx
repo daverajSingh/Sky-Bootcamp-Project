@@ -6,6 +6,12 @@ const Conversation = () => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const today = new Date();
 
+    let messageList = [{ 'agent': 'AI', 'message': 'Are you ready to discuss about Agile', 'direction': 'incoming' },
+    { 'agent': 'user', 'message': 'Yes, but I am new to Agile, what is Agile?', 'direction': 'outgoing' },
+    { 'agent': 'AI', 'message': 'Second message', 'direction': 'incoming' },
+    { 'agent': 'user', 'message': 'Second message from user john', 'direction': 'outgoing' }
+    ]
+
     return (
         <>
             <Header />
@@ -13,34 +19,18 @@ const Conversation = () => {
                 <ChatContainer>
                     <MessageList>
                         <MessageSeparator content={today.toLocaleString("en-UK", options)} />
-                        <Message
-                            model={{
-                                direction: 'incoming',
-                                message: 'Are you ready to discuss about Agile',
-                                sender: 'AI',
-                            }}
-                        />
-                        <Message
-                            model={{
-                                direction: 'outgoing',
-                                message: 'Yes, but I am new to Agile, what is Agile?',
-                                sender: 'John',
-                            }}
-                        />
-                        <Message
-                            model={{
-                                direction: 'incoming',
-                                message: 'Second message',
-                                sender: 'AI',
-                            }}
-                        />
-                        <Message
-                            model={{
-                                direction: 'outgoing',
-                                message: 'Second message from user',
-                                sender: 'John',
-                            }}
-                        />
+                        {
+                            messageList.map((message, index) => (
+                                <Message
+                                    key={index}
+                                    model={{
+                                        direction: message.agent === 'AI' ? 'incoming' : 'outgoing',
+                                        message: message.message,
+                                        sender: message.agent === 'AI' ? 'AI' : 'John',
+                                    }}
+                                />
+                            ))
+                        }
                     </MessageList>
                     <MessageInput placeholder="Type message here" attachButton="false" />
                 </ChatContainer>
