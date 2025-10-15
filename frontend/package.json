@@ -11,6 +11,8 @@
     "test:unit": "vite-jest --no-cache"
   },
   "dependencies": {
+    "@chatscope/chat-ui-kit-react": "^2.1.1",
+    "@chatscope/chat-ui-kit-styles": "^1.4.0",
     "@tailwindcss/vite": "^4.1.13",
     "json-server": "^1.0.0-beta.3",
     "react": "^19.1.1",
