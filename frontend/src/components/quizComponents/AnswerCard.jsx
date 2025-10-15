@@ -10,7 +10,10 @@ const AnswerCard = ({ text, onSelect, index, isSelected }) => {
     <div
       role="button"
       tabIndex={0}
-      onKeyPress={(e) => (e.key === 'Enter' ? handleClick() : null)}
+      data-testid={`answer-card-${index}`}
+      aria-label={`Answer option: ${text}`}
+      aria-pressed={isSelected}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ' ? handleClick() : null)}
       onClick={handleClick}
       style={{
         border: isSelected ? '2px solid #333' : '1px solid #ccc',

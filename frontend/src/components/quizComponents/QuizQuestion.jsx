@@ -13,7 +13,7 @@ const QuizQuestion = ({ question, onAnswer, selectedIndex = [] }) => {
   }
 
   return (
-    <div style={{ marginBottom: 12 }}>
+    <div style={{ marginBottom: 12 }} data-testid={`question-${question.questionID}`}>
       <QuestionTitle human={question.human} questionText={question.question} />
       <div style={{ display: 'flex', gap: 12, marginTop: 8, flexWrap: 'nowrap' }}>
         {question.options.map((opt, idx) => (

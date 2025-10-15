@@ -4,7 +4,13 @@ import React from 'react';
 const QuizTopicCard = ({ topic, status = 'todo', onSelect, selected }) => {
   return (
     <div
+      role="button"
+      tabIndex={0}
+      data-testid={`topic-card-${topic.topicID}`}
+      aria-label={`Quiz topic: ${topic.topicID.replace(/_/g, ' ')}`}
+      aria-pressed={selected}
       onClick={() => onSelect && onSelect(topic.topicID)}
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onSelect && onSelect(topic.topicID)}
       style={{
         border: selected ? '2px solid #2563eb' : '1px solid #ddd',
   padding: 12,
