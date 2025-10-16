@@ -8,13 +8,13 @@ const AdminDashboard = () => {
   const [selectedTopic, setSelectedTopic] = useState("Agile");
   const [allQuestions, setAllQuestions] = useState([...questionsData]);
   const [selectedQuestions, setSelectedQuestions] = useState({});
-  const [warning, setWarning] = useState("");
   const [newQuestion, setNewQuestion] = useState("");
 
   useEffect(() => {
     setTimeout(() => setData(adminData), 300);
   }, []);
 
+  // ✅ Removed question limit (now allows any number)
   const handleSelect = (id) => {
     const topic = allQuestions.find((q) => q.id === id).category;
     const topicSelected = selectedQuestions[topic] || [];
@@ -23,11 +23,6 @@ const AdminDashboard = () => {
       const updated = topicSelected.filter((q) => q !== id);
       setSelectedQuestions({ ...selectedQuestions, [topic]: updated });
     } else {
-      if (topicSelected.length >= 4) {
-        setWarning(`You can only select 4 questions for ${topic}.`);
-        setTimeout(() => setWarning(""), 2000);
-        return;
-      }
       const updated = [...topicSelected, id];
       setSelectedQuestions({ ...selectedQuestions, [topic]: updated });
     }
@@ -125,12 +120,10 @@ const AdminDashboard = () => {
             ))}
           </div>
 
+          {/* ✅ Updated text */}
           <h4 className="text-lg font-semibold text-gray-800 text-center mb-2">
-            Select up to 4 {selectedTopic} questions
+            Select any number of {selectedTopic} questions
           </h4>
-          {warning && (
-            <p className="text-red-500 text-sm text-center mb-3">{warning}</p>
-          )}
 
           {/* Question List */}
           <div className="overflow-y-auto max-h-60 border border-sky-100 rounded-xl p-3 bg-gradient-to-b from-white to-sky-50">
@@ -177,15 +170,9 @@ const AdminDashboard = () => {
           {/* Summary */}
           <div className="mt-4 text-sm text-gray-700 text-center">
             Total selected:{" "}
-            <strong>{selectedQuestions[selectedTopic]?.length || 0}</strong>/4
-            for {selectedTopic},{" "}
-            <strong>
-              {Object.values(selectedQuestions).reduce(
-                (acc, arr) => acc + arr.length,
-                0
-              )}
-            </strong>{" "}
-            overall.
+            <strong>{selectedQuestions[selectedTopic]?.length || 0}</strong> for{" "}
+            {selectedTopic},{" "}
+            <strong>{totalSelected}</strong> overall.
           </div>
         </div>
 
@@ -213,7 +200,6 @@ const AdminDashboard = () => {
   );
 };
 
-// Card for statistics
 const StatCard = ({ title, value }) => (
   <div className="bg-white/80 backdrop-blur-md rounded-2xl border border-sky-100 shadow-md hover:shadow-lg transition p-6 text-center">
     <h3 className="text-gray-500 text-sm">{title}</h3>
