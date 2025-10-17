@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import QuizChatBox from '../../../../components/quizComponents/QuizChatBox';
+import QuizChatBox from '../../../components/quizComponents/QuizChatBox';
 
 describe('QuizChatBox', () => {
   afterEach(cleanup);

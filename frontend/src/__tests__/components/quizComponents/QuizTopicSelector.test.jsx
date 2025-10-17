@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import QuizTopicSelector from '../../../../components/quizComponents/QuizTopicSelector';
-import quizService from '../../../../components/quizComponents/quizService';
+import QuizTopicSelector from '../../../components/quizComponents/QuizTopicSelector';
+import quizService from '../../../components/quizComponents/quizService';
 
-jest.mock('../../../../components/quizComponents/quizService');
+jest.mock('../../../components/quizComponents/quizService');
 
 describe('QuizTopicSelector', () => {
   afterEach(() => {
