@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, fireEvent, screen, cleanup } from '@testing-library/react';
-import FAQ from '../../../components/FAQ';
+import FAQ from '../../components/FAQ';
 
 // Mock the faqData import
-jest.mock('../../../data/faq.json', () => ([
+jest.mock('../../data/faq.json', () => ([
   { question: 'What is X?', answer: 'X is ...' },
   { question: 'How does Y work?', answer: 'Y works by ...' }
 ]));
@@ -20,19 +20,19 @@ describe('FAQ', () => {
 
   it('shows error message if faqData is not an array', () => {
     jest.resetModules();
-    jest.doMock('../../../data/faq.json', () => ({}));
-    const FAQError = require('../../../components/FAQ').default;
+    jest.doMock('../../data/faq.json', () => ({}));
+    const FAQError = require('../../components/FAQ').default;
     render(<FAQError />);
     expect(screen.getByText(/Sorry, FAQ data could not be loaded/i)).toBeInTheDocument();
-    jest.dontMock('../../../data/faq.json');
+    jest.dontMock('../../data/faq.json');
   });
 
   it('renders nothing but heading if faqData is empty array', () => {
     jest.resetModules();
-    jest.doMock('../../../data/faq.json', () => ([]));
-    const FAQEmpty = require('../../../components/FAQ').default;
+    jest.doMock('../../data/faq.json', () => ([]));
+    const FAQEmpty = require('../../components/FAQ').default;
     render(<FAQEmpty />);
     expect(screen.getByText('Frequently Asked Questions')).toBeInTheDocument();
-    jest.dontMock('../../../data/faq.json');
+    jest.dontMock('../../data/faq.json');
   });
 });
