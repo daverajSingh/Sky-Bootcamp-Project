@@ -1,0 +1,19 @@
+{
+  "dailyUsers": 10,
+  "avgTimePerUse": "45 mins",
+  "avgQuestionsCorrect": "6/10",
+  "quizResults": {
+    "Agile": 80,
+    "Values": 70,
+    "Git": 90,
+    "Ethics": 75,
+    "EQ": 85
+  },
+  "simulationQuestions": {
+    "Agile": 20,
+    "Values": 5,
+    "Git": 50,
+    "Ethics": 10,
+    "EQ": 3
+  }
+}
