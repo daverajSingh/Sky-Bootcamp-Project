@@ -2,9 +2,13 @@ import React from 'react';
 
 const QuizChatBox = ({ topics = [], completedMap = {}, allCompleted, topicAnswers = {} }) => {
   // collect messages from topics that are completed
+  // Only show a topic message when it is fully answered.
   const messages = topics
-    .filter((t) => completedMap[t.topicID] === 'answered' || completedMap[t.topicID] === 'partially')
-    .map((t) => ({ topicID: t.topicID, text: t.personMessage || `${t.topicID} completed` }));
+    .filter((t) => completedMap[t.topicID] === 'answered')
+    .map((t) => ({
+      topicID: t.topicID,
+      text: t.personMessage || `${t.topicID} completed`,
+    }));
 
   // match the visual height of topic cards (cards use minHeight: 200)
   const minBoxHeight = 320;
