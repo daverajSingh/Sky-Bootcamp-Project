@@ -1,14 +1,17 @@
 import { useState } from 'react';
+import { useNavigate, generatePath } from 'react-router-dom';
 import { FiLink, FiPlus, FiX } from 'react-icons/fi';
 import React from "react";
 
 /* Landing Page Card Component*/
 
 const Card = ({ title, link, description }) => {
+
+    const navigate = useNavigate();
     const [showDescription, setShowDescription] = useState(false);
 
     return (
-        <div className="relative w-full h-56 rounded-xl overflow-hidden shadow-lg group bg-radial-[at_50%_75%] from-sky-200 via-blue-400 to-indigo-900 to-90%">
+        <div className="relative w-full h-56 rounded-xl overflow-hidden shadow-lg group bg-radial-[at_50%_75%] from-sky-200 via-blue-400 to-indigo-900 to-90% cursor-pointer" onClick={() => navigate(generatePath(link))}>
 
             {/* Title Section */}
             <div className="absolute bottom-0 left-0 right-0 p-4 text-black">
