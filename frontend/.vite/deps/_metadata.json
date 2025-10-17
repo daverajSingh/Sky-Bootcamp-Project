@@ -1,0 +1,46 @@
+{
+  "hash": "ac9463c8",
+  "configHash": "c51c6686",
+  "lockfileHash": "ceb5623a",
+  "browserHash": "5989c4c3",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "7b31c1ec",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "a85092cc",
+      "needsInterop": false
+    },
+    "react-icons/fi": {
+      "src": "../../node_modules/react-icons/fi/index.mjs",
+      "file": "react-icons_fi.js",
+      "fileHash": "5a966fe9",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "0a59d48b",
+      "needsInterop": true
+    },
+    "@chatscope/chat-ui-kit-react": {
+      "src": "../../node_modules/@chatscope/chat-ui-kit-react/dist/es/index.js",
+      "file": "@chatscope_chat-ui-kit-react.js",
+      "fileHash": "54d78760",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-4J6BLW67": {
+      "file": "chunk-4J6BLW67.js"
+    },
+    "chunk-WYQRYOQT": {
+      "file": "chunk-WYQRYOQT.js"
+    }
+  }
+}
