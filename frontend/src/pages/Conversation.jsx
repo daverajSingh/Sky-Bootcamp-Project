@@ -6,8 +6,9 @@ import { ChatContainer, MainContainer, MessageInput, Message, MessageList, Messa
 const Conversation = () => {
 
     const { topicid } = useParams();
-    // Order of the messages should be maintained in a list
+    // Order of the messages should be maintained in this list as they are added
     const [messageList, setMessageList] = useState([])
+    // IDs to keep track of which message to send next, may not be needed once backend is connected
     const [userMessageId, setUserMessageId] = useState(1)
     const [aiMessageId, setAIMessageId] = useState(0)
 
@@ -29,8 +30,6 @@ const Conversation = () => {
                 fetch(`http://localhost:3000/ai-messages?topicID=${topicid}`)
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
-                        // console.log(messageList);
                         const userResponse = { 'agent': 'user', 'message': message, 'direction': 'outgoing' };
                         const aiResponse = { 'agent': 'AI', 'message': data[aiMessageId]['text'], 'direction': 'incoming' };
                         setMessageList([...messageList, userResponse, aiResponse]);
@@ -41,7 +40,6 @@ const Conversation = () => {
             .catch(error => console.error(error));
 
         setUserMessageId(userMessageId + 1);
-
     }
 
     useEffect(() => {
