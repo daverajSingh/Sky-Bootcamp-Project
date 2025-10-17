@@ -28,6 +28,8 @@ describe('QuizQuestion', () => {
   it('should render all options', () => {
     render(<QuizQuestion question={mockQuestion} onAnswer={mockOnAnswer} selectedIndex={[]} />);
     expect(screen.getByText('Option A')).toBeInTheDocument();
+    expect(screen.getByText('Option B')).toBeInTheDocument();
+    expect(screen.getByText('Option C')).toBeInTheDocument();
     expect(screen.getByText('Option D')).toBeInTheDocument();
   });
 
