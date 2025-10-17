@@ -1,0 +1,17 @@
+[
+  { "id": 1, "category": "EQ", "question": "Which of the following best describes emotional intelligence (EI) in a professional telecom environment?" },
+  { "id": 2, "category": "EQ", "question": "You’re a Sky graduate engineer working in a cross-functional team. During a sprint review, a colleague criticizes your work harshly in front of others. What’s the most emotionally intelligent way to handle it?" },
+
+  { "id": 3, "category": "Agile", "question": "In an Agile development environment at Sky, what is the primary purpose of a daily stand-up?" },
+  { "id": 4, "category": "Agile", "question": "You’re part of a scrum team developing a new customer self-service feature. Mid-sprint, marketing requests a new functionality that could improve engagement. What’s the best Agile response?" },
+
+  { "id": 5, "category": "Ethics", "question": "Which of the following best aligns with GDPR compliance within a telecom company?" },
+  { "id": 6, "category": "Ethics", "question": "You’re building an internal analytics dashboard using customer viewing data. A teammate suggests including names and email addresses to make debugging easier. What’s the most compliant approach?" },
+
+  { "id": 7, "category": "Values", "question": "Which of the following is a hallmark of effective communication in a hybrid telecom workplace?" },
+  { "id": 8, "category": "Values", "question": "You’re presenting a technical network solution to a non-technical operations manager. Halfway through, they seem confused. What should you do?" },
+
+  { "id": 9, "category": "Git", "question": "Which of the following is not typically part of a telecom company’s core service offering like Sky’s?" },
+  { "id": 10, "category": "Git", "question": "You’re working on improving customer experience for Sky’s broadband product. Data shows customers frequently experience connection drops during peak hours. What’s the most effective product improvement approach?" }
+]
+
