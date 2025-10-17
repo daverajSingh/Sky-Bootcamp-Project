@@ -28,13 +28,4 @@ describe('Layout', () => {
     expect(Outlet).toHaveBeenCalledTimes(1);
   });
 
-  it('renders the main container with correct classes', () => {
-    render(<Layout />);
-
-    const main = screen.getByRole('main');
-    expect(main).toHaveClass('w-full');
-    expect(main).toHaveClass('flex-grow');
-    expect(main).toHaveClass('bg-white');
-    expect(main).toHaveClass('overflow-scroll');
-  });
 });

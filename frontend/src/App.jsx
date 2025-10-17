@@ -6,6 +6,7 @@ import Admin from './pages/AdminDashboard';
 import Layout from './components/Layout';
 import { AuthProvider } from './components/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import Conversation from './pages/Conversation';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
             <Route path="/simulator" element={<Simulator />} />
+            <Route path="/simulator/:topicid" element={<Conversation />} />
             <Route path="/quiz" element={<Quiz />} />
         </Route>
         </Routes>
