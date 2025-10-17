@@ -15,6 +15,8 @@ const Conversation = () => {
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     const today = new Date();
 
+    const wrapUpMessage = "Explore another topic in the simulator to learn more about corporate life or return to the main simulator page.";
+
     function sendUserResponse(message) {
         // Need to send this to the backend and get a response from the AI
         fetch('http://localhost:3000/user-messages', {
@@ -31,7 +33,13 @@ const Conversation = () => {
                     .then(response => response.json())
                     .then(data => {
                         const userResponse = { 'agent': 'user', 'message': message, 'direction': 'outgoing' };
-                        const aiResponse = { 'agent': 'AI', 'message': data[aiMessageId]['text'], 'direction': 'incoming' };
+                        let aiResponse = {};
+                        if (aiMessageId > data.length-1) {
+                            // No more AI messages left for this topic
+                            aiResponse = { 'agent': 'AI', 'message': wrapUpMessage, 'direction': 'incoming' };
+                        } else {
+                            aiResponse = { 'agent': 'AI', 'message': data[aiMessageId]['text'], 'direction': 'incoming' };
+                        }
                         setMessageList([...messageList, userResponse, aiResponse]);
                         setAIMessageId(aiMessageId + 1);
                     })
