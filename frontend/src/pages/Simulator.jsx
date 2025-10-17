@@ -1,12 +1,18 @@
-import {Link} from 'react-router-dom';
-
+import Header from "../components/Header"
+import Card from "../components/Card"
 
 const Simulator = () => {
     return (
-        <div>
-            <h1>Simulator Page</h1>
-            <Link to="/">Go to Home</Link>
-        </div>
+        <>
+            <Header />
+            <div class="grid grid-flow-col grid-rows-1 gap-4 p-6">
+                <Card title="Agile" link="/simulator/1" />
+                <Card title="Compilance" link="/simulator/2" />
+                <Card title="Emotional Intelligence" link="/simulator/3" />
+                <Card title="Communication" link="/simulator/4" />
+                <Card title="Sky Products & Services" link="/simulator/5" />
+            </div>
+        </>
     );
 }
 export default Simulator;
