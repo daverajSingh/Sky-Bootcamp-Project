@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, cleanup, waitFor } from '@testing-library/react';
-import FAQ from '../../../components/FAQ';
+import FAQ from '../../components/FAQ';
 
 describe('FAQ', () => {
 

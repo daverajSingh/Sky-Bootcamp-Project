@@ -1,0 +1,14 @@
+import React from "react";
+
+const Footer = () => {
+  return (
+    <div
+      data-testid="footer"
+      className="flex justify-center items-center w-full h-20 bg-white border-1 mt-auto border-gray-300"
+    >
+      <p className="text-[#808080]">© Sky Immersion</p>
+    </div>
+  );
+};
+
+export default Footer;

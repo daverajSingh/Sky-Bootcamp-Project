@@ -1,19 +1,15 @@
-import { TextEncoder, TextDecoder } from 'util';
-
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
-import Card from "../../../components/Card.jsx"
+import Card from "../../components/Card.jsx"
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 
 import React from "react";
-import { MemoryRouter, useNavigate } from 'react-router-dom';
+import { MemoryRouter, useNavigate } from 'react-router';
 
 
 // Mock useNavigate hook
 const mockedNavigate = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-    ...jest.requireActual('react-router-dom'), // keep other exports intact
+jest.mock('react-router', () => ({
+    ...jest.requireActual('react-router'), // keep other exports intact
     useNavigate: () => mockedNavigate,
 }));
 

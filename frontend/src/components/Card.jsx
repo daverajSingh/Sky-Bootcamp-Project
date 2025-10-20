@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, generatePath } from 'react-router-dom';
+import { useNavigate, generatePath } from 'react-router';
 import { FiLink, FiPlus, FiX } from 'react-icons/fi';
 import React from "react";
 

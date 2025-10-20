@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, screen, cleanup } from '@testing-library/react';
-import FAQItem from '../../../components/FAQItem.jsx';
+import FAQItem from '../../components/FAQItem.jsx';
 
 
 describe('FAQItem', () => {

@@ -1,4 +1,4 @@
-import WelcomeSection from "../../../components/WelcomeSection.jsx"
+import WelcomeSection from "../../components/WelcomeSection.jsx"
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import React from "react";
 

@@ -1,11 +1,13 @@
-import { TextEncoder, TextDecoder } from 'util';
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
-
 import React from 'react';
-import Conversation from '../../../pages/Conversation';
+import Conversation from '../../pages/Conversation';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes } from 'react-router';
+
+
+jest.mock('../../components/AuthContext', () => ({
+  useAuth: jest.fn(),
+}));
+
 
 // Mock chat UI components
 jest.mock('@chatscope/chat-ui-kit-react', () => {

@@ -1,10 +1,8 @@
-import Header from "../components/Header"
 import Card from "../components/Card"
 
 const Simulator = () => {
     return (
         <>
-            <Header />
             <div class="grid grid-flow-col grid-rows-1 gap-4 p-6">
                 <Card title="Agile" link="/simulator/1" />
                 <Card title="Compilance" link="/simulator/2" />

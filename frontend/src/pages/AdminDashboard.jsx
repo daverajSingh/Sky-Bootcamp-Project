@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import adminData from "../data/adminData.json";
 import questionsData from "../data/questionsData.json";
-import Header from "../components/Header.jsx";
 import StatsOverview from "../components/admin/StatsOverview.jsx";
 import QuizResultsPanel from "../components/admin/QuizResultsPanel.jsx";
 import QuestionManager from "../components/admin/QuestionManager.jsx";
@@ -64,10 +63,7 @@ const AdminDashboard = () => {
     return <p className="text-center text-gray-600 mt-20">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sky-50 to-indigo-100 font-sans">
-      {/* Header */}
-      <Header />
-
+    <>
       {/* Welcome banner */}
       <section className="mx-auto mt-8 mb-10 w-11/12 bg-gradient-to-r from-sky-600 to-indigo-500 text-white text-center rounded-2xl shadow-lg p-8">
         <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
@@ -102,7 +98,7 @@ const AdminDashboard = () => {
         {/* RIGHT PANEL */}
         <SimulationSummary simulationQuestions={data.simulationQuestions} />
       </section>
-    </div>
+    </>
   );
 };
 

@@ -1,9 +1,18 @@
-import Header from "../../../components/Header.jsx"
+import Header from '../../components/Header.jsx';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import React from "react";
 
+jest.mock('../../components/AuthContext', () => ({
+  useAuth: jest.fn(),
+}));
+
+jest.mock('../../components/AuthButton', () => jest.fn(() => <button>Mocked AuthButton</button>));
 describe('Header', () => {
     afterEach(cleanup);
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
     it('Clicking the SkyImmersion text should load the skyImmersion home page', () => {
         render(<Header />);
 

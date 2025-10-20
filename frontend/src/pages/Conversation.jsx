@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { useParams } from 'react-router-dom';
-import Header from "../components/Header"
+import { useParams } from 'react-router';
 import { ChatContainer, MainContainer, MessageInput, Message, MessageList, MessageSeparator } from "@chatscope/chat-ui-kit-react"
 
 const Conversation = () => {
@@ -63,8 +62,7 @@ const Conversation = () => {
     }, []);
 
     return (
-        <>
-            <Header />
+        
             <MainContainer>
                 <ChatContainer>
                     <MessageList>
@@ -85,8 +83,6 @@ const Conversation = () => {
                     <MessageInput placeholder="Type message here" attachButton="false" onSend={sendUserResponse} />
                 </ChatContainer>
             </MainContainer>
-        </>
-
     );
 }
 export default Conversation;

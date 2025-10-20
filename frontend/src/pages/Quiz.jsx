@@ -1,11 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import Header from '../components/Header.jsx';
 import QuizTopicSelector from '../components/quizComponents/QuizTopicSelector';
 
 const Quiz = () => {
     return (
-        <>
-            <Header />
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 24 }}>
             {/* ensure header takes full width */}
             <div style={{ width: '100%' }}>
@@ -22,7 +20,6 @@ const Quiz = () => {
                     </div>
                 </div>
             </div>
-        </>
     );
 };
 

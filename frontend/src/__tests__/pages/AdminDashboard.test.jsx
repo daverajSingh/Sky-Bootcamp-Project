@@ -7,11 +7,11 @@ import {
   cleanup,
   act,
 } from "@testing-library/react";
-import AdminDashboard from "../../../pages/admin.jsx";
-import adminData from "../../../data/adminData.json";
-import questionsData from "../../../data/questionsData.json";
+import AdminDashboard from "../../pages/AdminDashboard.jsx";
+import adminData from "../../data/adminData.json";
+import questionsData from "../../data/questionsData.json";
 
-jest.mock("../../../data/adminData.json", () => ({
+jest.mock("../../data/adminData.json", () => ({
   dailyUsers: 10,
   avgTimePerUse: "45 mins",
   avgQuestionsCorrect: "6/10",
@@ -19,7 +19,7 @@ jest.mock("../../../data/adminData.json", () => ({
   simulationQuestions: { Agile: 10, Values: 8, Git: 7, Ethics: 5, EQ: 6 },
 }));
 
-jest.mock("../../../data/questionsData.json", () => [
+jest.mock("../../data/questionsData.json", () => [
   { id: 1, category: "Agile", question: "Agile question 1" },
   { id: 2, category: "Agile", question: "Agile question 2" },
   { id: 3, category: "Values", question: "Values question 1" },
@@ -41,15 +41,10 @@ afterEach(() => {
 });
 
 describe("AdminDashboard", () => {
-  it("renders header and stats correctly", async () => {
+  it("renders stats correctly", async () => {
     render(<AdminDashboard />);
     await act(async () => {
       jest.advanceTimersByTime(300);
-    });
-
-    await waitFor(() => {
-      expect(screen.getByText("Sky")).toBeInTheDocument();
-      expect(screen.getByText(/Sky Immersion/i)).toBeVisible();
     });
 
     expect(screen.getByText("Admin Dashboard")).toBeInTheDocument();
