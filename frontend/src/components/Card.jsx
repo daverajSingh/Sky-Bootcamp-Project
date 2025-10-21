@@ -10,8 +10,15 @@ const Card = ({ title, link, description }) => {
     const navigate = useNavigate();
     const [showDescription, setShowDescription] = useState(false);
 
+    function handleCardClick(e) {
+        if (e.target.closest('button') || e.target.closest('a')) {
+            return;
+        }
+        navigate(generatePath(link));
+    }
+    
     return (
-        <div className="relative w-full h-56 rounded-xl overflow-hidden shadow-lg group bg-radial-[at_50%_75%] from-sky-200 via-blue-400 to-indigo-900 to-90% cursor-pointer" onClick={() => navigate(generatePath(link))}>
+        <div className="relative w-full h-56 rounded-xl overflow-hidden shadow-lg group bg-radial-[at_50%_75%] from-sky-200 via-blue-400 to-indigo-900 to-90% cursor-pointer" onClick={handleCardClick}>
 
             {/* Title Section */}
             <div className="absolute bottom-0 left-0 right-0 p-4 text-black">
