@@ -12,7 +12,6 @@ const FAQ = () => {
       try {
         const response = await fetch('http://localhost:3000/faqs');
         const data = await response.json();
-        // console.log(data);
         setFaqs(data);
       } catch (error) {
         console.error('Error fetching FAQ data:', error);
