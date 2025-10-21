@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { useNavigate, generatePath } from 'react-router';
 import { FiLink, FiPlus, FiX } from 'react-icons/fi';
-import React from "react";
+import React, { useState } from "react";
 
 /* Landing Page Card Component*/
 
@@ -10,15 +9,13 @@ const Card = ({ title, link, description }) => {
     const navigate = useNavigate();
     const [showDescription, setShowDescription] = useState(false);
 
-    function handleCardClick(e) {
-        if (e.target.closest('button') || e.target.closest('a')) {
-            return;
-        }
-        navigate(generatePath(link));
+    function handleButtonClick(e, showDetails) {
+        e.stopPropagation();
+        setShowDescription(showDetails);
     }
-    
+
     return (
-        <div className="relative w-full h-56 rounded-xl overflow-hidden shadow-lg group bg-radial-[at_50%_75%] from-sky-200 via-blue-400 to-indigo-900 to-90% cursor-pointer" onClick={handleCardClick}>
+        <div className="relative w-full h-56 rounded-xl overflow-hidden shadow-lg group bg-radial-[at_50%_75%] from-sky-200 via-blue-400 to-indigo-900 to-90% cursor-pointer" onClick={() => navigate(generatePath(link))}>
 
             {/* Title Section */}
             <div className="absolute bottom-0 left-0 right-0 p-4 text-black">
@@ -27,7 +24,7 @@ const Card = ({ title, link, description }) => {
 
             {!showDescription && (<div className="absolute top-2 right-2 flex gap-2">
                 {/* Show Description button */}
-                {description && (<button data-testid="showDescription" onClick={() => setShowDescription(true)} className="hover:bg-indigo-500 cursor-pointer text-black p-3 sm:p-2 rounded-full">
+                {description && (<button data-testid="showDescription" onClick={(e) => handleButtonClick(e,true)} className="hover:bg-indigo-500 cursor-pointer text-black p-3 sm:p-2 rounded-full">
                     <FiPlus data-testid="revealDescriptionIcon" size={18} />
                 </button>
                 )}
@@ -44,7 +41,7 @@ const Card = ({ title, link, description }) => {
             {/* Reveal/Overlay the Description on click */}
             {showDescription && (
                 <div className="absolute inset-0 bg-black/90 text-white flex flex-col justify-center items-center p-6 text-center text-sm sm:text-xs" data-testid="hideDescription">
-                    <button onClick={() => setShowDescription(false)} className="absolute top-2 right-2 hover:bg-indigo-500 cursor-pointer text-white p-3 sm:p-2 rounded-full">
+                    <button onClick={(e) => handleButtonClick(e,false)} className="absolute top-2 right-2 hover:bg-indigo-500 cursor-pointer text-white p-3 sm:p-2 rounded-full">
                         <FiX data-testid="hideDescriptionIcon" size={18} />
                     </button>
                     <p>{description}</p>
