@@ -60,10 +60,10 @@ def create_table():
             FOREIGN KEY (session_id) REFERENCES quiz_session (topic_id) ON DELETE CASCADE
             );"""
         db.execute(query)
+        db.execute(query_create_quiz)
         db.execute(query_create_topic)
         db.execute(query_create_question)
-        db.execute(query_create_options)
-        db.execute(query_create_quiz)
+
     except Exception as e:
         print(e)
 
