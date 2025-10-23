@@ -13,19 +13,20 @@ def get_quiz_session(id):
 
     return quiz_session
 
-def add_quiz_session(start_time, end_time, time_diff):
+def add_quiz_session(start_time, end_time):
     db = DataAccess()
-    db.execute("INSERT INTO quiz_session (start_time, end_time, time_diff) VALUES (DateTime, DateTime, DateTime)", start_time, end_time, time_diff)
+    db.execute("INSERT INTO quiz_session (start_time, end_time)" \
+    " VALUES (TIMESTAMP(%s), TIMESTAMP(%s))", (start_time, end_time))
 
 
-# def delete_topic(id):
-#     db = DataAccess()
-#     db.query("DELETE FROM topic WHERE topic_id = (%s);", id)
+def delete_quiz_sesson(id):
+    db = DataAccess()
+    db.query("DELETE FROM quiz_session WHERE session_id = (%s);", id)
 
 
-# def update_topic(id, topic):
+def update_quiz_session(id, start_time, end_time):
 
-#     db = DataAccess()
-#     topic = db.query("UPDATE topic SET topic_name = (%s) WHERE topic_id = (%s);", topic, id)
+    db = DataAccess()
+    quiz_session = db.query("UPDATE quiz_session SET (start_time = (%s), start_time = (%s)) WHERE session_id = (%s);", (start_time, end_time), id)
 
-#     return topic
+    return quiz_session
