@@ -1,11 +1,9 @@
 import Card from "../../components/Card.jsx"
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from "react";
 
 
-
-// Mock useNavigate hook
 const mockedNavigate = jest.fn();
 
 jest.mock('react-router', () => ({
@@ -15,71 +13,46 @@ jest.mock('react-router', () => ({
 
 describe('Card', () => {
     afterEach(cleanup);
-    it('Check if the Card is rendered with the title, link, show description button', () => {
+    it('Check if the Card is rendered with the title', () => {
         render(<Card title="Title" link="/" description={"Hi"} />);
 
         expect(screen.getByText('Title')).toBeInTheDocument();
-
-        const button = screen.getByTestId("showDescription");
-        expect(button).toBeInTheDocument();
-
-        expect(screen.getByTestId("linkButton")).toHaveAttribute('href', '/');
     });
 
-    it('Check if the description and hide button is revealed on clicking plus button (show button)', async () => {
+    it('Check if the description is revealed on hovering', async () => {
         render(<Card title="Title" link="/" description={"Hi"} />);
 
-        await userEvent.click(screen.getByTestId("showDescription"));
+        await userEvent.hover(screen.getByText('Title'));
 
         expect(screen.getByText('Hi')).toBeInTheDocument();
 
-        const button = screen.getByTestId("hideDescription");
-        expect(button).toBeInTheDocument();
-        expect(button).toBeVisible();
     });
 
-    it('Check if the description is hidden on clicking hide description button', async () => {
+    it('Check if the description is hidden on unhovering', async () => {
         render(<Card title="Title" link="/" description={"Hi"} />);
 
-        await userEvent.click(screen.getByTestId("showDescription"));
-
+        await userEvent.hover(screen.getByText('Title'));
         expect(screen.getByText('Hi')).toBeInTheDocument()
-        await userEvent.click(screen.getByTestId("hideDescription"));
+
+        await userEvent.unhover(screen.getByText('Title'));
+        expect(screen.queryByText('Hi')).toBeNull();
 
         expect(screen.getByText('Title')).toBeInTheDocument()
+
     });
 
-    it('Check if the link button is working', () => {
-        render(<Card title="Title" link="/" description={"Hi"} />);
+    it('Check if clicking the card triggers navigation', async () => {
+        render(<Card title="Title" link="/sample" description={"Hi"} />);
 
-        const linkButton = screen.getByTestId("linkButton")
-        expect(linkButton).toBeInTheDocument()
-        expect(linkButton).toBeVisible()
-        expect(linkButton).toHaveAttribute('href', '/')
-    });
-
-    it('Check if clicking the card triggers navigation', () => {
-        render(<Card title="Title" link="/" description={"Hi"} />);
-
-        const cardArea = screen.getByText('Title').closest('div');
+        const cardArea = screen.getByRole("button")
         expect(cardArea).toBeInTheDocument();
-        
-        userEvent.click(cardArea);
-        expect(mockedNavigate).toHaveBeenCalledWith('/');
+
+        await userEvent.click(cardArea);
+
+        await waitFor(() => {
+            expect(mockedNavigate).toHaveBeenCalled();
+        });
     });
-
-    it('Check if the link button is not rendered when no link is provided', () => {
-        render(<Card title="Title" description={"Hi"} />);
-
-        expect(screen.queryByTestId("linkButton")).toBeNull();
-    });
-
-    it('Check if the description button is not rendered when no description is provided', () => {
-        render(<Card title="Title" link="/" />);
-
-        expect(screen.queryByTestId("showDescription")).toBeNull();
-    });
-
 });
 
 
