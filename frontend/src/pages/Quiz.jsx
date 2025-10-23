@@ -1,5 +1,4 @@
 import { Link } from 'react-router';
-import Header from '../components/Header.jsx';
 import QuizTopicSelector from '../components/quizComponents/QuizTopicSelector';
 
 const Quiz = () => {
