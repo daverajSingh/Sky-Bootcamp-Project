@@ -6,9 +6,9 @@ from flask import request, jsonify, Blueprint
 from bcrypt import checkpw, hashpw, gensalt
 from application.data_access import DataAccess
 from application.services.topic import add_topic, get_topics, delete_topic, update_topic
-from application.services.question import add_question, get_questions, delete_question, update_question,get_questions_by_topic_id
+from application.services.question import add_question, get_questions, delete_question, update_question, get_questions_by_topic_id
 from application.services.quiz import add_quiz_session, get_quiz_sessions
-from application.services.options import add_option, get_options
+from application.services.options import add_option, get_options, update_option, delete_option, get_options_by_question_id
 
 load_dotenv()
 
@@ -86,7 +86,7 @@ def topics():
         data = request.json
         topic = data['name']
         add_topic(topic)
-        return jsonify({"message": "Topic addition was successful"}), 200
+        return jsonify({"message": "Topic added successfully"}), 200
     else :
         all_topics = get_topics()
         return jsonify(all_topics), 200
@@ -98,17 +98,17 @@ def quiz_session():
         start_time = data['start_time']
         end_time = data['end_time']
         add_quiz_session(start_time, end_time)
-        return jsonify({"message": "Quiz session addition was successful"}), 200
+        return jsonify({"message": "Quiz session added successfully"}), 200
     else :
         all_quiz_session = get_quiz_sessions()
         
         return jsonify(all_quiz_session), 200
     
-@routes.route('/topics/<int:id>', methods=['PATCH', 'DELETE'])
+@routes.route('/topic/<int:id>', methods=['PATCH', 'DELETE'])
 def update_topic_by_id(id):
     if request.method == 'DELETE':
         delete_topic(id)
-        return jsonify({"message": "Topic deletion was successful"}), 200
+        return jsonify({"message": "Topic deleted successfully"}), 200
     else:
         data = request.json
         topic_id = id
@@ -124,16 +124,16 @@ def question():
         topic_id = data['topic_id']
         question = data['question_text']
         add_question(topic_id, question)
-        return jsonify({"message": "Question addition was successful"}), 200
+        return jsonify({"message": "Question added successfully"}), 200
     else :
         questions = get_questions()
         return jsonify(questions), 200
 
-@routes.route('/questions/<int:id>', methods=['PATCH', 'DELETE'])
+@routes.route('/question/<int:id>', methods=['PATCH', 'DELETE'])
 def update_question_by_id(id):
     if request.method == 'DELETE':
         delete_question(id)
-        return jsonify({"message": "Question deletion was successful"}), 200
+        return jsonify({"message": "Question deleted successfully"}), 200
     else:
         data = request.json
         question_id = id
@@ -142,7 +142,7 @@ def update_question_by_id(id):
         return jsonify({"message": "Question updated successfully!"}), 200
 
 
-@routes.route('/questions/topics/<int:id>', methods=['GET'])
+@routes.route('/topic/<int:id>/questions', methods=['GET'])
 def questions_by_topic_id(id):
     questions = get_questions_by_topic_id(id)
     return jsonify(questions), 200
@@ -156,7 +156,25 @@ def options():
         option = data['option_text']
         is_correct = data['is_correct']
         add_option(question_id, option, is_correct)
-        return jsonify({"message": "Option addition was successful"}), 200
+        return jsonify({"message": "Option added successfully"}), 200
     else :
         all_options = get_options()
         return jsonify(all_options), 200
+
+@routes.route('/option/<int:id>', methods=['PATCH', 'DELETE'])
+def update_options_by_id(id):
+    if request.method == 'DELETE':
+        delete_option(id)
+        return jsonify({"message": "Option deleted successfully"}), 200
+    else:
+        data = request.json
+        option_id = id
+        option = data['option_text']
+        is_correct = data['is_correct']
+        update_option(option_id, option, is_correct)
+        return jsonify({"message": "Question updated successfully!"}), 200
+
+@routes.route('/question/<int:id>/options', methods=['GET'])
+def options_by_question_id(id):
+    options = get_options_by_question_id(id)
+    return jsonify(options), 200
