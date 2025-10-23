@@ -24,8 +24,25 @@ def create_table():
         `topic_name` varchar(255) NOT NULL
         );
         """
+        query_create_quiz = """
+            CREATE TABLE IF NOT EXISTS quiz_session (
+            `session_id` int PRIMARY KEY NOT NULL auto_increment,
+            `start_time` TIMESTAMP NOT NULL,
+            `end_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            `time_diff` TIMESTAMP AS (end_time - start_time)
+            );"""
+        query_create_score = """
+            CREATE TABLE IF NOT EXISTS score (
+            `score_id` int PRIMARY KEY NOT NULL auto_increment
+            `topic_id` int NOT NULL,
+            `session_id` int NOT NULL,
+            `score_value` int NOT NULL
+            FOREIGN KEY (topic_id) REFERENCES topic (topic_id) ON DELETE CASCADE
+            FOREIGN KEY (session_id) REFERENCES quiz_session (topic_id) ON DELETE CASCADE
+            );"""
         db.execute(query)
         db.execute(query_create_topic)
+        db.execute(query_create_quiz)
     except Exception as e:
         print(e)
 
