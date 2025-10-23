@@ -1,6 +1,6 @@
-backend/application/.env
 .venv
 .idea
 *.pyc
 __pycache__
 frontend/coverage/
+*.env
