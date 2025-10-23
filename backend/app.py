@@ -29,7 +29,7 @@ def create_table():
             `session_id` int PRIMARY KEY NOT NULL auto_increment,
             `start_time` TIMESTAMP NOT NULL,
             `end_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            `time_diff` TIMESTAMP AS (end_time - start_time)
+            `time_diff` int AS (end_time - start_time)
             );"""
         query_create_score = """
             CREATE TABLE IF NOT EXISTS score (

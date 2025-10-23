@@ -6,6 +6,7 @@ from flask import request, jsonify, Blueprint
 from bcrypt import checkpw, hashpw, gensalt
 from application.data_access import DataAccess
 from application.services.topic import add_topic, get_topics
+from application.services.quiz import add_quiz_session, get_quiz_sessions
 
 load_dotenv()
 
@@ -88,6 +89,19 @@ def topic():
         topics = get_topics()
         
         return jsonify(topics), 200
+    
+@routes.route('/quizsession', methods=['GET', 'POST'])
+def quiz_session():
+    if request.method == 'POST':
+        data = request.json
+        start_time = data['start_time']
+        end_time = data['end_time']
+        add_quiz_session(start_time, end_time)
+        return jsonify({"message": "Quiz session addition was successful"}), 200
+    else :
+        quiz_session = get_quiz_sessions()
+        
+        return jsonify(quiz_session), 200
     
 
 
