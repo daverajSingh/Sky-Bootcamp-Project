@@ -20,13 +20,10 @@ def add_topic(topic):
 
 def delete_topic(id):
     db = DataAccess()
-    db.query("DELETE FROM topic WHERE topic_id = (%s);", id)
+    db.execute("DELETE FROM topic WHERE topic_id = (%s);", id)
 
 
 def update_topic(id, topic):
-
     db = DataAccess()
-    topic = db.query("UPDATE topic SET topic_name = (%s) WHERE topic_id = (%s);", topic, id)
-
-    return topic
+    db.execute("UPDATE topic SET topic_name = (%s) WHERE topic_id = (%s);", (topic, id))
     

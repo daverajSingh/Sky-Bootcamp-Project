@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from flask import request, jsonify, Blueprint
 from bcrypt import checkpw, hashpw, gensalt
 from application.data_access import DataAccess
-from application.services.topic import add_topic, get_topics
+from application.services.topic import add_topic, get_topics, delete_topic, update_topic
 
 load_dotenv()
 
@@ -86,8 +86,19 @@ def topic():
         return jsonify({"message": "Topic addition was successful"}), 200
     else :
         topics = get_topics()
-        
         return jsonify(topics), 200
+
+@routes.route('/topics/<int:id>', methods=['PATCH', 'DELETE'])
+def update_topic_by_id(id):
+    if request.method == 'DELETE':
+        delete_topic(id)
+        return jsonify({"message": "Topic deletion was successful"}), 200
+    else:
+        data = request.json
+        topic_id = id
+        topic_name = data['name']
+        updated_topic = update_topic(topic_id, topic_name)
+        return jsonify(updated_topic), 200
     
 
 
