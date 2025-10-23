@@ -81,17 +81,17 @@ def register():
 
 # Postman test routes
 @routes.route('/topics', methods=['GET', 'POST'])
-def topic():
+def topics():
     if request.method == 'POST':
         data = request.json
         topic = data['name']
         add_topic(topic)
         return jsonify({"message": "Topic addition was successful"}), 200
     else :
-        topics = get_topics()
-        return jsonify(topics), 200
+        all_topics = get_topics()
+        return jsonify(all_topics), 200
 
-@routes.route('/quizsession', methods=['GET', 'POST'])
+@routes.route('/quiz-session', methods=['GET', 'POST'])
 def quiz_session():
     if request.method == 'POST':
         data = request.json
@@ -100,9 +100,9 @@ def quiz_session():
         add_quiz_session(start_time, end_time)
         return jsonify({"message": "Quiz session addition was successful"}), 200
     else :
-        quiz_session = get_quiz_sessions()
+        all_quiz_session = get_quiz_sessions()
         
-        return jsonify(quiz_session), 200
+        return jsonify(all_quiz_session), 200
     
 @routes.route('/topics/<int:id>', methods=['PATCH', 'DELETE'])
 def update_topic_by_id(id):
@@ -158,5 +158,5 @@ def options():
         add_option(question_id, option, is_correct)
         return jsonify({"message": "Option addition was successful"}), 200
     else :
-        options = get_options()
-        return jsonify(options), 200
+        all_options = get_options()
+        return jsonify(all_options), 200

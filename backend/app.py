@@ -18,7 +18,8 @@ def create_table():
         `admin_name` varchar(50) NOT NULL
         );
         """
-        query_create_topic ="""        
+
+        query_create_topic = """        
         CREATE TABLE IF NOT EXISTS topic (
         `topic_id` int PRIMARY KEY NOT NULL auto_increment,
         `topic_name` varchar(255) NOT NULL UNIQUE
@@ -43,26 +44,31 @@ def create_table():
         FOREIGN KEY (question_id) REFERENCES question (question_id) ON DELETE CASCADE
         );
         """
-        query_create_quiz = """
+        query_create_quiz_session = """
             CREATE TABLE IF NOT EXISTS quiz_session (
             `session_id` int PRIMARY KEY NOT NULL auto_increment,
             `start_time` TIMESTAMP NOT NULL,
             `end_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            `time_diff` int AS (end_time - start_time)
-            );"""
-        query_create_score = """
-            CREATE TABLE IF NOT EXISTS score (
-            `score_id` int PRIMARY KEY NOT NULL auto_increment
-            `topic_id` int NOT NULL,
-            `session_id` int NOT NULL,
-            `score_value` int NOT NULL
-            FOREIGN KEY (topic_id) REFERENCES topic (topic_id) ON DELETE CASCADE
-            FOREIGN KEY (session_id) REFERENCES quiz_session (topic_id) ON DELETE CASCADE
-            );"""
+            `time_diff` TIME AS (SEC_TO_TIME(end_time - start_time))
+            );
+        """
+
+        # query_create_score = """
+        #     CREATE TABLE IF NOT EXISTS score (
+        #     `score_id` int PRIMARY KEY NOT NULL auto_increment
+        #     `topic_id` int NOT NULL,
+        #     `session_id` int NOT NULL,
+        #     `score_value` int NOT NULL
+        #     FOREIGN KEY (topic_id) REFERENCES topic (topic_id) ON DELETE CASCADE
+        #     FOREIGN KEY (session_id) REFERENCES quiz_session (topic_id) ON DELETE CASCADE
+        #     );
+        # """
+
         db.execute(query)
-        db.execute(query_create_quiz)
+        db.execute(query_create_quiz_session)
         db.execute(query_create_topic)
         db.execute(query_create_question)
+        db.execute(query_create_options)
 
     except Exception as e:
         print(e)
