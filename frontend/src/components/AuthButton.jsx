@@ -1,9 +1,9 @@
-import DropDownLogin from './DropDownLogin';
-import { useAuth } from './AuthContext';
-import LogoutButton from './logoutButton';
+import DropDownLogin from "./DropDownLogin";
+import { useAuth } from "./AuthContext";
+import LogoutButton from "./logoutButton";
 
 function AuthButton() {
-  const {isAuthenticated} = useAuth();
+  const { isAuthenticated } = useAuth();
 
   if (isAuthenticated) {
     return <LogoutButton />;

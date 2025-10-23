@@ -31,7 +31,6 @@ class DataAccess:
             connection = pymysql.connect(
                 host=os.getenv("DB_HOST"),
                 user=os.getenv("DB_USER"),
-                password=os.getenv("DB_PASSWORD"),  # Include password here
                 cursorclass=pymysql.cursors.DictCursor
             )
             with connection.cursor() as cursor:

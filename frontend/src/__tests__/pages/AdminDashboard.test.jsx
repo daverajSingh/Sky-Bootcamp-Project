@@ -7,7 +7,7 @@ import {
   cleanup,
   act,
 } from "@testing-library/react";
-import AdminDashboard from "../../pages/AdminDashboard.jsx";
+import AdminDashboard from "../../pages/AdminDashboard";
 import adminData from "../../data/adminData.json";
 import questionsData from "../../data/questionsData.json";
 
@@ -49,7 +49,9 @@ describe("AdminDashboard", () => {
 
     expect(screen.getByText("Admin Dashboard")).toBeInTheDocument();
     expect(screen.getByText("Daily Users")).toBeInTheDocument();
-    expect(screen.getByText(adminData.dailyUsers.toString())).toBeInTheDocument();
+    expect(
+      screen.getByText(adminData.dailyUsers.toString())
+    ).toBeInTheDocument();
   });
 
   it("displays topic buttons and default Agile questions", async () => {
@@ -123,7 +125,9 @@ describe("AdminDashboard", () => {
 
     await waitFor(() => {
       expect(screen.getByText(/Quiz Results/i)).toBeInTheDocument();
-      expect(screen.getByText(/Simulation Questions Asked/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Simulation Questions Asked/i)
+      ).toBeInTheDocument();
     });
   });
 });
