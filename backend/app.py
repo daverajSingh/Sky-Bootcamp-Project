@@ -18,7 +18,14 @@ def create_table():
         `admin_name` varchar(50) NOT NULL
         );
         """
+        query_create_topic ="""        
+        CREATE TABLE IF NOT EXISTS topic (
+        `topic_id` int PRIMARY KEY NOT NULL auto_increment,
+        `topic_name` varchar(255) NOT NULL
+        );
+        """
         db.execute(query)
+        db.execute(query_create_topic)
     except Exception as e:
         print(e)
 
