@@ -8,6 +8,7 @@ from application.data_access import DataAccess
 from application.services.topic import add_topic, get_topics, delete_topic, update_topic
 from application.services.question import add_question, get_questions, delete_question, update_question,get_questions_by_topic_id
 from application.services.quiz import add_quiz_session, get_quiz_sessions
+from application.services.options import add_option, get_options
 
 load_dotenv()
 
@@ -145,3 +146,17 @@ def update_question_by_id(id):
 def questions_by_topic_id(id):
     questions = get_questions_by_topic_id(id)
     return jsonify(questions), 200
+
+
+@routes.route('/options', methods=['GET', 'POST'])
+def options():
+    if request.method == 'POST':
+        data = request.json
+        question_id = data['question_id']
+        option = data['option_text']
+        is_correct = data['is_correct']
+        add_option(question_id, option, is_correct)
+        return jsonify({"message": "Option addition was successful"}), 200
+    else :
+        options = get_options()
+        return jsonify(options), 200
