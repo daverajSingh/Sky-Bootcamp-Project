@@ -6,7 +6,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve:json": "concurrently \"json-server --watch src/data/quiz.json --port 4000\" \"json-server --watch src/data/faq.json\"",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest --config jest.config.js",
