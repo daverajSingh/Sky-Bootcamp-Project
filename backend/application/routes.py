@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from flask import request, jsonify, Blueprint
 from bcrypt import checkpw, hashpw, gensalt
 from application.data_access import DataAccess
+from application.services.topic import add_topic, get_topics
 
 load_dotenv()
 
@@ -73,3 +74,20 @@ def register():
             db.close()
     else:
         return jsonify({"error": "Invalid Method"}), 405
+
+
+# Postman test routes
+@routes.route('/topics', methods=['GET', 'POST'])
+def topic():
+    if request.method == 'POST':
+        data = request.json
+        topic = data['name']
+        add_topic(topic)
+        return jsonify({"message": "Topic addition was successful"}), 200
+    else :
+        topics = get_topics()
+        
+        return jsonify(topics), 200
+    
+
+
