@@ -21,7 +21,26 @@ def create_table():
         query_create_topic ="""        
         CREATE TABLE IF NOT EXISTS topic (
         `topic_id` int PRIMARY KEY NOT NULL auto_increment,
-        `topic_name` varchar(255) NOT NULL
+        `topic_name` varchar(255) NOT NULL UNIQUE
+        );
+        """
+
+        query_create_question = """
+        CREATE TABLE IF NOT EXISTS question (
+        `question_id` int PRIMARY KEY NOT NULL auto_increment,
+        `topic_id` int NOT NULL,
+        `question_text` varchar(255) NOT NULL,
+        FOREIGN KEY (topic_id) REFERENCES topic (topic_id) ON DELETE CASCADE
+        );
+        """
+
+        query_create_options = """
+        CREATE TABLE IF NOT EXISTS options (
+        `option_id` int PRIMARY KEY NOT NULL auto_increment,
+        `question_id` int NOT NULL,
+        `option_text` varchar(255) NOT NULL,
+        `is_correct` boolean NOT NULL,
+        FOREIGN KEY (question_id) REFERENCES question (question_id) ON DELETE CASCADE
         );
         """
         query_create_quiz = """
@@ -42,6 +61,8 @@ def create_table():
             );"""
         db.execute(query)
         db.execute(query_create_topic)
+        db.execute(query_create_question)
+        db.execute(query_create_options)
         db.execute(query_create_quiz)
     except Exception as e:
         print(e)

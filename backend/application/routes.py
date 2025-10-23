@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 from flask import request, jsonify, Blueprint
 from bcrypt import checkpw, hashpw, gensalt
 from application.data_access import DataAccess
-from application.services.topic import add_topic, get_topics
-from application.services.quiz import add_quiz_session, get_quiz_sessions
+from application.services.topic import add_topic, get_topics, delete_topic, update_topic
+from application.services.question import add_question, get_questions, delete_question, update_question,get_questions_by_topic_idfrom application.services.quiz import add_quiz_session, get_quiz_sessions
 
 load_dotenv()
 
@@ -87,9 +87,8 @@ def topic():
         return jsonify({"message": "Topic addition was successful"}), 200
     else :
         topics = get_topics()
-        
         return jsonify(topics), 200
-    
+
 @routes.route('/quizsession', methods=['GET', 'POST'])
 def quiz_session():
     if request.method == 'POST':
@@ -103,5 +102,45 @@ def quiz_session():
         
         return jsonify(quiz_session), 200
     
+@routes.route('/topics/<int:id>', methods=['PATCH', 'DELETE'])
+def update_topic_by_id(id):
+    if request.method == 'DELETE':
+        delete_topic(id)
+        return jsonify({"message": "Topic deletion was successful"}), 200
+    else:
+        data = request.json
+        topic_id = id
+        topic_name = data['name']
+        updated_topic = update_topic(topic_id, topic_name)
+        return jsonify(updated_topic), 200
+    
+
+@routes.route('/questions', methods=['GET', 'POST'])
+def question():
+    if request.method == 'POST':
+        data = request.json
+        topic_id = data['topic_id']
+        question = data['question_text']
+        add_question(topic_id, question)
+        return jsonify({"message": "Question addition was successful"}), 200
+    else :
+        questions = get_questions()
+        return jsonify(questions), 200
+
+@routes.route('/questions/<int:id>', methods=['PATCH', 'DELETE'])
+def update_question_by_id(id):
+    if request.method == 'DELETE':
+        delete_question(id)
+        return jsonify({"message": "Question deletion was successful"}), 200
+    else:
+        data = request.json
+        question_id = id
+        question_text = data['question_text']
+        update_question(question_id, question_text)
+        return jsonify({"message": "Question updated successfully!"}), 200
 
 
+@routes.route('/questions/topics/<int:id>', methods=['GET'])
+def questions_by_topic_id(id):
+    questions = get_questions_by_topic_id(id)
+    return jsonify(questions), 200
