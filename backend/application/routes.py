@@ -6,7 +6,8 @@ from flask import request, jsonify, Blueprint
 from bcrypt import checkpw, hashpw, gensalt
 from application.data_access import DataAccess
 from application.services.topic import add_topic, get_topics, delete_topic, update_topic
-from application.services.question import add_question, get_questions, delete_question, update_question,get_questions_by_topic_idfrom application.services.quiz import add_quiz_session, get_quiz_sessions
+from application.services.question import add_question, get_questions, delete_question, update_question,get_questions_by_topic_id
+from application.services.quiz import add_quiz_session, get_quiz_sessions
 
 load_dotenv()
 
