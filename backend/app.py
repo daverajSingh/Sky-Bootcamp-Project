@@ -2,15 +2,20 @@ from flask import Flask
 from flask_cors import CORS
 from application.data_access import DataAccess
 from application.routes import routes
+from application.route.quiz import routes as quiz_routes
 
-app = Flask(__name__)
-CORS(app)
-app.register_blueprint(routes)
+
+def create_app():
+    app = Flask(__name__)
+    CORS(app)
+    app.register_blueprint(routes)
+    app.register_blueprint(quiz_routes)
+    return app
 
 def create_table():
     db = DataAccess()
     try:
-        query = """
+        query_create_admin = """
         CREATE TABLE IF NOT EXISTS admin (
         `admin_id` int PRIMARY KEY NOT NULL auto_increment, 
         `admin_email` varchar(255) NOT NULL, 
@@ -44,6 +49,7 @@ def create_table():
         FOREIGN KEY (question_id) REFERENCES question (question_id) ON DELETE CASCADE
         );
         """
+
         query_create_quiz_session = """
             CREATE TABLE IF NOT EXISTS quiz_session (
             `session_id` int PRIMARY KEY NOT NULL auto_increment,
@@ -64,7 +70,7 @@ def create_table():
             );
         """
 
-        db.execute(query)
+        db.execute(query_create_admin)
         db.execute(query_create_quiz_session)
         db.execute(query_create_topic)
         db.execute(query_create_question)
@@ -74,9 +80,7 @@ def create_table():
     except Exception as e:
         print(e)
 
-
-from application import routes
-
 if __name__ == "__main__":
+    app = create_app()
     create_table()
     app.run(debug=True, port=5000)
