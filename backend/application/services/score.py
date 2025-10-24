@@ -13,10 +13,10 @@ def get_score(id):
 
     return score
 
-def add_score(start_time, end_time):
+def add_score(topic_id, session_id, score_value):
     db = DataAccess()
-    db.execute("INSERT INTO score (start_time, end_time)" \
-    " VALUES (TIMESTAMP(%s), TIMESTAMP(%s))", (start_time, end_time))
+    db.execute("INSERT INTO score (topic_id, session_id, score_value)" \
+    " VALUES (int(%s), int(%s), int(%s))", (topic_id, session_id, score_value))
 
 
 def delete_quiz_sesson(id):
@@ -24,9 +24,7 @@ def delete_quiz_sesson(id):
     db.query("DELETE FROM score WHERE session_id = (%s);", id)
 
 
-def update_score(id, start_time, end_time):
+def update_score(id, score_value):
 
     db = DataAccess()
-    score = db.query("UPDATE score SET (start_time = (%s), start_time = (%s)) WHERE session_id = (%s);", (start_time, end_time), id)
-
-    return score
+    db.query("UPDATE score SET (score_value = (%s)); WHERE score_id = (%s)", score_value, id)
