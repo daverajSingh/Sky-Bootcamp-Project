@@ -1,16 +1,15 @@
 import FAQItem from "./FAQItem";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const FAQ = () => {
   const [faqs, setFaqs] = useState([]);
 
   useEffect(() => {
-    // Use json server to fetch all data from the faq.json file
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:3000/faqs");
-        const data = await response.json();
-        setFaqs(data);
+        const response = await axios.get("http://localhost:5000/api/faq");
+        setFaqs(response.data);
       } catch (error) {
         console.error("Error fetching FAQ data:", error);
       }

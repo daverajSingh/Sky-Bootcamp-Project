@@ -76,3 +76,18 @@ class DataAccess:
         except pymysql.MySQLError as e:
             self.__connection.rollback()
             raise RuntimeError(f"Database query execution failed: {e}")
+    
+    def execute_file(self, file_path):
+        """Executes SQL commands from a file."""
+        try:
+            with open(file_path, 'r') as file:
+                sql_commands = file.read()
+            self._connect()
+            for command in sql_commands.split(';'):
+                command = command.strip()
+                if command:
+                    self.__cursor.execute(command)
+            self.__connection.commit()
+        except (pymysql.MySQLError, IOError) as e:
+            self.__connection.rollback()
+            raise RuntimeError(f"Failed to execute SQL file: {e}")

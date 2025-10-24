@@ -53,3 +53,11 @@ def register_post(email, password, name):
         return jsonify({"message": "Successful Register"}), 200
     finally:
         db.close()
+
+def faq_get():
+    db = DataAccess()
+    try:
+        faqs = db.query("SELECT id, question, answer FROM faqs",)
+        return jsonify(faqs), 200
+    finally:
+        db.close()
