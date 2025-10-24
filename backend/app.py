@@ -53,22 +53,23 @@ def create_table():
             );
         """
 
-        # query_create_score = """
-        #     CREATE TABLE IF NOT EXISTS score (
-        #     `score_id` int PRIMARY KEY NOT NULL auto_increment
-        #     `topic_id` int NOT NULL,
-        #     `session_id` int NOT NULL,
-        #     `score_value` int NOT NULL
-        #     FOREIGN KEY (topic_id) REFERENCES topic (topic_id) ON DELETE CASCADE
-        #     FOREIGN KEY (session_id) REFERENCES quiz_session (topic_id) ON DELETE CASCADE
-        #     );
-        # """
+        query_create_score = """
+            CREATE TABLE IF NOT EXISTS score (
+            `score_id` int PRIMARY KEY NOT NULL auto_increment,
+            `topic_id` int NOT NULL,
+            `session_id` int NOT NULL,
+            `score_value` int NOT NULL,
+            FOREIGN KEY (topic_id) REFERENCES topic (topic_id) ON DELETE CASCADE,
+            FOREIGN KEY (session_id) REFERENCES quiz_session (session_id) ON DELETE CASCADE
+            );
+        """
 
         db.execute(query)
         db.execute(query_create_quiz_session)
         db.execute(query_create_topic)
         db.execute(query_create_question)
         db.execute(query_create_options)
+        db.execute(query_create_score)
 
     except Exception as e:
         print(e)
