@@ -7,7 +7,7 @@ from bcrypt import checkpw, hashpw, gensalt
 from application.data_access import DataAccess
 from application.services.topic import add_topic, get_topics, delete_topic, update_topic
 from application.services.question import add_question, get_questions, delete_question, update_question, get_questions_by_topic_id
-from backend.application.services.quiz_session import add_quiz_session, get_quiz_sessions
+from application.services.quiz_session import add_quiz_session, get_quiz_sessions
 from application.services.options import add_option, get_options, update_option, delete_option, get_options_by_question_id
 
 load_dotenv()
