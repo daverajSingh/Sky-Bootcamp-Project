@@ -4,3 +4,5 @@ backend/application/.env
 *.pyc
 __pycache__
 frontend/coverage/
+.env
+.DS_Store
