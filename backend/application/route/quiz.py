@@ -42,12 +42,10 @@ def restructure_data(flat_data):
         topic_name = item["topic_name"]
         add_question_if_new(topics[topic_name]["questions"], item)
     
-    return {
-        "topics": [
+    return  [
             {
                 "topicID": topic,
                 "questions": data["questions"]
             }
             for topic, data in topics.items()
         ]
-    }

@@ -1,6 +1,5 @@
 from application.route.quiz import create_option, add_question_if_new, restructure_data
 from collections import defaultdict
-import application.services.quiz as quiz_service
 import pytest
 from app import create_app
 
@@ -14,46 +13,32 @@ def client(app):
 
 @pytest.fixture
 def mock_services(monkeypatch):
-    mock_structured_data = {
-        "topics": [
-            {
-                "topicID": "Topic 1",
-                "questions": [
-                    {
-                        "options": [
-                            {
-                                "is_correct": False,
-                                "text": "Option 1"
-                            },
-                            {
-                                "is_correct": True,
-                                "text": "Option 2"
-                            }
-                        ],
-                        "question": "Topic 1 - Question 1",
-                        "questionID": 1
-                    }
-                ]
-            }
-        ]
-    }
+    mock_data = sample_input = [
+        {'question_id': 1, 'topic_id': 1, 'option_id': 1,
+         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
+         'option_text': 'Option 1', 'is_correct': 0},
+        {'question_id': 1, 'topic_id': 1, 'option_id': 2,
+         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
+         'option_text': 'Option 2', 'is_correct': 1},
+    ]
 
-    monkeypatch.setattr(quiz_service, "get_quiz_questions", mock_structured_data)
+    def mock_get_quiz_questions():
+        return mock_data
+
+    monkeypatch.setattr("application.route.quiz.get_quiz_questions", mock_get_quiz_questions)
 
 def test_get_all_quiz_questions_route(client, mock_services):
     response = client.get("/api/quiz")
     assert response.status_code == 200
-    assert isinstance(response.json, dict)
-    assert "topics" in response.json
-    assert len(response.json["topics"]) > 0
-    assert "questions" in response.json["topics"][0]
-    assert "topicID" in response.json["topics"][0]
-    assert "questionID" in response.json["topics"][0]["questions"][0]
-    assert "question" in response.json["topics"][0]["questions"][0]
-    assert "options" in response.json["topics"][0]["questions"][0]
-    assert "text" in response.json["topics"][0]["questions"][0]["options"][0]
-    assert "is_correct" in response.json["topics"][0]["questions"][0]["options"][0]
-    
+    assert isinstance(response.json, list)
+    assert "questions" in response.json[0]
+    assert "topicID" in response.json[0]
+    assert "questionID" in response.json[0]["questions"][0]
+    assert "question" in response.json[0]["questions"][0]
+    assert "options" in response.json[0]["questions"][0]
+    assert "text" in response.json[0]["questions"][0]["options"][0]
+    assert "is_correct" in response.json[0]["questions"][0]["options"][0]
+
 
 
 def test_create_options():
@@ -110,29 +95,27 @@ def test_restructure_data():
          'option_text': 'Option 2', 'is_correct': 1},
     ]
 
-    expected_output = {
-        "topics": [
-            {
-                "topicID": "Topic 1",
-                "questions": [
-                        {
-                            "options": [
-                                {
-                                    "is_correct": False,
-                                    "text": "Option 1"
-                                },
-                                {
-                                    "is_correct": True,
-                                    "text": "Option 2"
-                                }
-                            ],
-                            "question": "Topic 1 - Question 1",
-                            "questionID": 1
-                        }
-                ]
-            }
-        ]
-    }
+    expected_output = [
+        {
+            "topicID": "Topic 1",
+            "questions": [
+                    {
+                        "options": [
+                            {
+                                "is_correct": False,
+                                "text": "Option 1"
+                            },
+                            {
+                                "is_correct": True,
+                                "text": "Option 2"
+                            }
+                        ],
+                        "question": "Topic 1 - Question 1",
+                        "questionID": 1
+                    }
+            ]
+        }
+    ]
 
     actual_output = restructure_data(sample_input)
     assert actual_output == expected_output
