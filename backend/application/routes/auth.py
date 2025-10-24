@@ -91,19 +91,6 @@ def topics():
     else :
         all_topics = get_topics()
         return jsonify(all_topics), 200
-
-@routes.route('/quiz-session', methods=['GET', 'POST'])
-def quiz_session():
-    if request.method == 'POST':
-        data = request.json
-        start_time = data['start_time']
-        end_time = data['end_time']
-        add_quiz_session(start_time, end_time)
-        return jsonify({"message": "Quiz session added successfully"}), 200
-    else :
-        all_quiz_session = get_quiz_sessions()
-        
-        return jsonify(all_quiz_session), 200
     
 @routes.route('/topic/<int:id>', methods=['PATCH', 'DELETE'])
 def update_topic_by_id(id):
@@ -179,6 +166,19 @@ def update_options_by_id(id):
 def options_by_question_id(id):
     options = get_options_by_question_id(id)
     return jsonify(options), 200
+
+@routes.route('/quiz-session', methods=['GET', 'POST'])
+def quiz_session():
+    if request.method == 'POST':
+        data = request.json
+        start_time = data['start_time']
+        end_time = data['end_time']
+        add_quiz_session(start_time, end_time)
+        return jsonify({"message": "Quiz session added successfully"}), 200
+    else :
+        all_quiz_session = get_quiz_sessions()
+        
+        return jsonify(all_quiz_session), 200
 
 @routes.route('/score', methods=['GET', 'POST'])
 def scores():

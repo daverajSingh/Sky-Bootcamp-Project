@@ -1,4 +1,4 @@
-from application.route.quiz import create_option, add_question_if_new, restructure_data
+from application.routes.quiz import create_option, add_question_if_new, restructure_data
 from collections import defaultdict
 import pytest
 from app import create_app
@@ -25,7 +25,7 @@ def mock_services(monkeypatch):
     def mock_get_quiz_questions():
         return mock_data
 
-    monkeypatch.setattr("application.route.quiz.get_quiz_questions", mock_get_quiz_questions)
+    monkeypatch.setattr("application.routes.quiz.get_quiz_questions", mock_get_quiz_questions)
 
 def test_get_all_quiz_questions_route(client, mock_services):
     response = client.get("/api/quiz")

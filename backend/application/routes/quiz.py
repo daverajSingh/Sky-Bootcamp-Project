@@ -13,7 +13,7 @@ def quiz_questions ():
         structured_data = restructure_data(all_quiz_data)
         return jsonify(structured_data), 200
     else:
-            return jsonify({"error": "Invalid Method"}), 405
+        return jsonify({"error": "Invalid Method"}), 405
 
 # Helper methods
 def create_option(item):

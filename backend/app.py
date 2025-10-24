@@ -1,14 +1,14 @@
 from flask import Flask
 from flask_cors import CORS
 from application.data_access import DataAccess
-from application.routes import routes
-from application.route.quiz import routes as quiz_routes
+from application.routes.auth import routes as login_routes
+from application.routes.quiz import routes as quiz_routes
 
 
 def create_app():
     app = Flask(__name__)
     CORS(app)
-    app.register_blueprint(routes)
+    app.register_blueprint(login_routes)
     app.register_blueprint(quiz_routes)
     return app
 
