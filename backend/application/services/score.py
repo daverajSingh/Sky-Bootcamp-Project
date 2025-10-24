@@ -1,7 +1,7 @@
 from application.data_access import DataAccess
 
 
-def get_score():
+def get_scores():
     db = DataAccess()
     scores = db.query("SELECT score_id, topic_id, session_id, score_value FROM score;")
 
@@ -16,10 +16,10 @@ def get_score(id):
 def add_score(topic_id, session_id, score_value):
     db = DataAccess()
     db.execute("INSERT INTO score (topic_id, session_id, score_value)" \
-    " VALUES (int(%s), int(%s), int(%s))", (topic_id, session_id, score_value))
+    " VALUES (%s, %s, %s)", (topic_id, session_id, score_value))
 
 
-def delete_quiz_sesson(id):
+def delete_score(id):
     db = DataAccess()
     db.query("DELETE FROM score WHERE session_id = (%s);", id)
 

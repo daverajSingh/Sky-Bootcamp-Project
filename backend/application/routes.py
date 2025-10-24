@@ -9,6 +9,7 @@ from application.services.topic import add_topic, get_topics, delete_topic, upda
 from application.services.question import add_question, get_questions, delete_question, update_question, get_questions_by_topic_id
 from application.services.quiz_session import add_quiz_session, get_quiz_sessions
 from application.services.options import add_option, get_options, update_option, delete_option, get_options_by_question_id
+from application.services.score import add_score, get_score, get_scores, delete_score, update_score
 
 load_dotenv()
 
@@ -178,3 +179,16 @@ def update_options_by_id(id):
 def options_by_question_id(id):
     options = get_options_by_question_id(id)
     return jsonify(options), 200
+
+@routes.route('/score', methods=['GET', 'POST'])
+def scores():
+    if request.method == 'POST':
+        data = request.json
+        topic_id = data['topic_id']
+        session_id = data['session_id']
+        score_value = data['score_value']
+        add_score(topic_id, session_id, score_value)
+        return jsonify({"message": "Score added successfully"}), 200
+    else :
+        scores = get_scores()
+        return jsonify(scores), 200
