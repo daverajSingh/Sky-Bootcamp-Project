@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve:json": "json-server --watch src/data/quiz.json --port 4000",
+    "serve:json": "concurrently \"json-server --watch src/data/quiz.json --port 4000\" \"json-server --watch src/data/faq.json\"",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest --config jest.config.js",
@@ -36,6 +36,7 @@
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.2",
     "babel-jest": "^30.2.0",
+    "concurrently": "^9.2.1",
     "eslint": "^9.35.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",

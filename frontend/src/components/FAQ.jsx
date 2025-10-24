@@ -1,4 +1,3 @@
-import faqData from '../data/faq.json';
 import FAQItem from './FAQItem';
 import React, {useState, useEffect} from 'react';
 
@@ -12,7 +11,6 @@ const FAQ = () => {
       try {
         const response = await fetch('http://localhost:3000/faqs');
         const data = await response.json();
-        // console.log(data);
         setFaqs(data);
       } catch (error) {
         console.error('Error fetching FAQ data:', error);
@@ -21,14 +19,14 @@ const FAQ = () => {
     fetchData();
   }, []);
 
-  let content;
+  let content = <p>Sorry, FAQ data could not be loaded.</p>;
   try {
     if (!Array.isArray(faqs)) throw new Error('FAQ data is not an array');
     content = faqs.map((item, idx) => (
       <FAQItem key={idx} question={item.question} answer={item.answer} />
     ));
   } catch (e) {
-    content = <p>Sorry, FAQ data could not be loaded.</p>;
+    console.error('Error displaying FAQ data:', e);
   }
   return (
     <div className="w-full px-4 py-8 lg:px-16 lg:py-12 lg:max-w-full md:max-w-2xl md:mx-auto">
