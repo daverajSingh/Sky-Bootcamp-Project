@@ -3,13 +3,15 @@ from flask_cors import CORS
 from application.data_access import DataAccess
 from application.routes.auth import routes as login_routes
 from application.routes.quiz import routes as quiz_routes
-
+from application.routes.internal import routes as internal_routes
 
 def create_app():
     app = Flask(__name__)
     CORS(app)
     app.register_blueprint(login_routes)
     app.register_blueprint(quiz_routes)
+    app.register_blueprint(internal_routes)
+    
     return app
 
 def create_table():
@@ -55,7 +57,7 @@ def create_table():
             `session_id` int PRIMARY KEY NOT NULL auto_increment,
             `start_time` TIMESTAMP NOT NULL,
             `end_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            `time_diff` TIME AS (SEC_TO_TIME(end_time - start_time))
+            `time_diff` TIME GENERATED ALWAYS AS (SEC_TO_TIME(TIMESTAMPDIFF(SECOND, start_time, end_time))) STORED
             );
         """
 
