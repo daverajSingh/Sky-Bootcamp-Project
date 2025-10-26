@@ -10,8 +10,7 @@ describe('FAQ', () => {
   });
 
   it('renders FAQ questions and answers from mock data', async () => {
-    // Mock fetch response
-    global.fetch = jest.fn(() =>
+    globalThis.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve([
           { question: 'What is X?', answer: 'X is ...' },
@@ -29,27 +28,36 @@ describe('FAQ', () => {
   });
 
   it('shows error message if faqData is not an array', async () => {
-    global.fetch = jest.fn(() =>
+    globalThis.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve({ question: 'Wrong shape' }), // Not an array
       })
     );
 
-    render(<FAQ />);
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+
+    render(<FAQ />)
 
     await waitFor(() => {
       expect(screen.getByText(/Sorry, FAQ data could not be loaded/i)).toBeInTheDocument();
     });
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Error displaying FAQ data'),
+      expect.any(Error)
+    );
+
+    consoleErrorSpy.mockRestore();
   });
 
   it('renders nothing but heading if faqData is empty array', async () => {
-    global.fetch = jest.fn(() =>
+    globalThis.fetch = jest.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve([]), // Empty array
       })
     );
 
-    render(<FAQ />);
+    render(<FAQ />)
 
     expect(screen.getByText('Frequently Asked Questions')).toBeInTheDocument();
 
