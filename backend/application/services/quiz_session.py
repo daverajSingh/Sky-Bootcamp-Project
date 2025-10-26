@@ -25,7 +25,8 @@ def get_quiz_session(session_id):
 def add_quiz_session(start_time, end_time):
     db = DataAccess()
     try:
-        db.execute("INSERT INTO quiz_session (start_time, end_time) VALUES (TIMESTAMP(%s), TIMESTAMP(%s))", (start_time, end_time))
+        last_row_id = db.execute("INSERT INTO quiz_session (start_time, end_time) VALUES (%s, %s)", (start_time, end_time))
+        return last_row_id
     except pymysql.MySQLError as e:
         raise RuntimeError(f'Database query error: {e}')
 

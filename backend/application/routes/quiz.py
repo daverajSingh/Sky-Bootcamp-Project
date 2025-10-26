@@ -1,7 +1,6 @@
 from flask import Blueprint, request, jsonify
-from collections import defaultdict
-from application.services.quiz import get_quiz_questions
-
+from application.services.quiz import get_quiz_questions, insert_quiz_scores, restructure_data, make_date_time_sql_compatible
+from application.services.quiz_session import add_quiz_session
 
 routes = Blueprint('quiz_routes', __name__, url_prefix='/api')
 
@@ -15,37 +14,21 @@ def quiz_questions ():
     else:
         return jsonify({"error": "Invalid Method"}), 405
 
-# Helper methods
-def create_option(item):
-    return {
-        "text": item["option_text"],
-        "is_correct": bool(item["is_correct"])
-    }
+@routes.route('/quiz', methods=['POST'])
+def add_quiz_details ():
 
-def add_question_if_new(topic_questions, item):
-    question_id = item["question_id"]
-    if not any(q["questionID"] == question_id for q in topic_questions):
-        topic_questions.append({
-            "questionID": question_id,
-            "question": item["question_text"],
-            "options": [create_option(item)]
-        })
+    if request.method == 'POST':
+        data = request.json
+        start_time = data['start_time']
+        end_time = data['end_time']
+        result = data['result']
+
+        [start_time_str, end_time_str] = make_date_time_sql_compatible(start_time, end_time)
+
+        session_id = add_quiz_session(start_time_str, end_time_str)
+
+        insert_quiz_scores(session_id, result)
+
+        return jsonify({"message": "Scores submitted successfully"}), 200
     else:
-        for q in topic_questions:
-            if q["questionID"] == question_id:
-                q["options"].append(create_option(item))
-                break
-
-def restructure_data(flat_data):
-    topics = defaultdict(lambda: {"questions": []})
-    for item in flat_data:
-        topic_name = item["topic_name"]
-        add_question_if_new(topics[topic_name]["questions"], item)
-    
-    return  [
-            {
-                "topicID": topic,
-                "questions": data["questions"]
-            }
-            for topic, data in topics.items()
-        ]
+        return jsonify({"error": "Invalid Method"}), 405

@@ -1,5 +1,3 @@
-from application.routes.quiz import create_option, add_question_if_new, restructure_data
-from collections import defaultdict
 import pytest
 from app import create_app
 
@@ -13,7 +11,7 @@ def client(app):
 
 @pytest.fixture
 def mock_services(monkeypatch):
-    mock_data = sample_input = [
+    mock_quiz_session_data = [
         {'question_id': 1, 'topic_id': 1, 'option_id': 1,
          'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
          'option_text': 'Option 1', 'is_correct': 0},
@@ -23,9 +21,18 @@ def mock_services(monkeypatch):
     ]
 
     def mock_get_quiz_questions():
-        return mock_data
+        return mock_quiz_session_data
+
+    def mock_add_quiz_session(start_time_str, end_time_str):
+        return 1
+
+    def mock_insert_quiz_scores(session_id, result):
+        pass
 
     monkeypatch.setattr("application.routes.quiz.get_quiz_questions", mock_get_quiz_questions)
+    monkeypatch.setattr("application.routes.quiz.add_quiz_session", mock_add_quiz_session)
+    monkeypatch.setattr("application.routes.quiz.insert_quiz_scores", mock_insert_quiz_scores)
+
 
 def test_get_all_quiz_questions_route(client, mock_services):
     response = client.get("/api/quiz")
@@ -40,89 +47,20 @@ def test_get_all_quiz_questions_route(client, mock_services):
     assert "is_correct" in response.json[0]["questions"][0]["options"][0]
 
 
-
-def test_create_options():
-    sample_input = [
-        {"option_text":"Option 1", "is_correct": "0"},
-        {"option_text":"Option 2", "is_correct": "1"}
-    ]
-    expected_output = {
-        "text": "Option 2","is_correct": True
-    }
-
-    actual_output = create_option(sample_input[1])
-
-    assert actual_output == expected_output
-
-def test_add_questions_if_new():
-    sample_input = [
-        {'question_id': 1, 'topic_id': 1, 'option_id': 1,
-         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
-         'option_text': 'Option 1', 'is_correct': 0},
-        {'question_id': 1, 'topic_id': 1, 'option_id': 2,
-         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
-         'option_text': 'Option 2', 'is_correct': 1},
-    ]
-    expected_output = {
-        "Topic 1" : {
-             "questions": [
-                {
-                    "options": [
-                        {
-                            "is_correct": False,
-                            "text": "Option 1"
-                        }
-                    ],
-                    "question": "Topic 1 - Question 1",
-                    "questionID": 1
-                }
-             ]
-        }
-    }
-
-    actual_output = defaultdict(lambda: {"questions": []})
-    add_question_if_new(actual_output[sample_input[0]["topic_name"]]["questions"], sample_input[0])
-
-    assert actual_output == expected_output
-
-def test_restructure_data():
-    sample_input = [
-        {'question_id': 1, 'topic_id': 1, 'option_id': 1,
-         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
-         'option_text': 'Option 1', 'is_correct': 0},
-        {'question_id': 1, 'topic_id': 1, 'option_id': 2,
-         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
-         'option_text': 'Option 2', 'is_correct': 1},
-    ]
-
-    expected_output = [
-        {
-            "topicID": "Topic 1",
-            "questions": [
-                    {
-                        "options": [
-                            {
-                                "is_correct": False,
-                                "text": "Option 1"
-                            },
-                            {
-                                "is_correct": True,
-                                "text": "Option 2"
-                            }
-                        ],
-                        "question": "Topic 1 - Question 1",
-                        "questionID": 1
-                    }
-            ]
-        }
-    ]
-
-    actual_output = restructure_data(sample_input)
-    assert actual_output == expected_output
-
-
-
-
+def test_add_quiz_details(client, mock_services):
+    data = {
+        "start_time": "Sat, 25 Oct 2025 17:00:20 GMT",
+        "end_time": "Sat, 25 Oct 2025 17:10:20 GMT",
+        "result": [
+            {"topicID": "Topic 1", "isCorrect": 1, },
+            {"topicID": "Topic 1", "isCorrect": 0, },
+            {"topicID": "Topic 2", "isCorrect": 1, },
+            {"topicID": "Topic 2", "isCorrect": 1, },
+        ],
+      }
+    response = client.post("/api/quiz", json=data)
+    assert response.status_code == 200
+    assert response.json == {"message": "Scores submitted successfully"}
 
 
 
