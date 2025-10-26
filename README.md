@@ -45,3 +45,18 @@ NB: Don't use the ```TYPE``` in the description, for example ```CREATE: created 
 # Branches
 
 use the following convention to ensure consistency: '''NAME-work-being-done'''
+
+# For coverage report 
+
+## For Backend
+
+From the project root run the below commands, make sure the virtual environment is activated and you have the dependencies installed
+`cd backend`
+`export PYTHONPATH=.`
+`pytest --cov=application`
+
+## For Frontend
+
+From the project root run the below commands, make sure you have all the dependencies installed
+`cd frontend`
+`npm run test:coverage`
