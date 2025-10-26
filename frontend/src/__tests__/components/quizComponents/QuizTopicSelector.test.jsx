@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import QuizTopicSelector from '../../../components/quizComponents/QuizTopicSelector';
-import quizService from '../../../components/quizComponents/quizService';
 
 jest.mock('axios')
 jest.mock('../../../env', () => ({  API_BASE: 'https://mocked-api.com'}))
@@ -40,7 +39,6 @@ describe('QuizTopicSelector', () => {
 
   it('should display correct number of topic cards', async () => {
     axios.get.mockResolvedValue( {data: mockDataTwoTopics });
-    quizService.fetchQuiz();
     render(<QuizTopicSelector />);
     await waitFor(() => {
       expect(screen.getByTestId('topic-card-emotional_intelligence')).toBeInTheDocument();
@@ -50,14 +48,12 @@ describe('QuizTopicSelector', () => {
 
   it('should show completion counter', async () => {
     axios.get.mockResolvedValue({data: mockDataTwoTopics });
-    quizService.fetchQuiz();
     render(<QuizTopicSelector />);
     await waitFor(() => expect(screen.getByText('Completed: 0 / 2')).toBeInTheDocument());
   });
 
   it('should display questions when card clicked', async () => {
     axios.get.mockResolvedValue({data: mockDataTwoTopics });
-    quizService.fetchQuiz();
     render(<QuizTopicSelector />);
     await waitFor(() => expect(screen.getByTestId('topic-card-emotional_intelligence')).toBeInTheDocument());
     fireEvent.click(screen.getByTestId('topic-card-emotional_intelligence'));
@@ -66,7 +62,6 @@ describe('QuizTopicSelector', () => {
 
   it('should persist answers when toggling cards', async () => {
     axios.get.mockResolvedValue({data: mockDataTwoTopics });
-    quizService.fetchQuiz();
     render(<QuizTopicSelector />);
     await waitFor(() => expect(screen.getByTestId('topic-card-emotional_intelligence')).toBeInTheDocument());
     const topicCard = screen.getByTestId('topic-card-emotional_intelligence');
@@ -82,7 +77,6 @@ describe('QuizTopicSelector', () => {
 
   it('should show done button when all completed', async () => {
     axios.get.mockResolvedValue({data: mockDataTwoTopics });
-    quizService.fetchQuiz();
     render(<QuizTopicSelector />);
     await waitFor(() => expect(screen.getByTestId('topic-card-emotional_intelligence')).toBeInTheDocument());
     fireEvent.click(screen.getByTestId('topic-card-emotional_intelligence'));

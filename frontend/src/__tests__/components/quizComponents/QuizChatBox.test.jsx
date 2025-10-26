@@ -1,7 +1,12 @@
 import React from 'react';
-import { render, screen, fireEvent, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import QuizChatBox from '../../../components/quizComponents/QuizChatBox';
+
+jest.mock('axios')
+jest.mock('../../../env', () => ({  API_BASE: 'https://mocked-api.com'}))
+
+import axios from 'axios';
 
 describe('QuizChatBox', () => {
   afterEach(cleanup);
@@ -59,16 +64,31 @@ describe('QuizChatBox', () => {
     expect(screen.getByText("I'm good to go")).toBeInTheDocument();
   });
 
-  it('should show results with score when done button clicked', () => {
+  it('should show results with score when done button clicked', async () => {
     const completedMap = { emotional_intelligence: 'answered' };
     const topicAnswers = { emotional_intelligence: { 1: [0] } };
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => { });
+    axios.post.mockResolvedValueOnce({ status: 200 });
 
     render(
-      <QuizChatBox topics={mockTopics} completedMap={completedMap} allCompleted={true} topicAnswers={topicAnswers} />
+      <QuizChatBox topics={mockTopics} completedMap={completedMap} allCompleted={true} topicAnswers={topicAnswers} startTime="2025-10-25 17:00:00"/>
     );
 
     fireEvent.click(screen.getByText("I'm good to go"));
+
+    await waitFor(() => {
+      expect(axios.post).toHaveBeenCalledTimes(1);
+    });
+
+    const callArgs = axios.post.mock.calls[0]
+    expect(callArgs[0]).toEqual('https://mocked-api.com/api/quiz');
+    expect(callArgs[1]).toEqual(
+      expect.objectContaining({
+        start_time: '2025-10-25 17:00:00',
+        end_time: expect.any(String),
+        result: expect.any(Array),
+      })
+    );
 
     expect(alertMock).toHaveBeenCalled();
     expect(alertMock.mock.calls[0][0]).toContain('You scored 1 / 1');
