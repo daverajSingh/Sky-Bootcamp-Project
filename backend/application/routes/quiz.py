@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from application.services.quiz import get_quiz_questions, insert_quiz_scores, restructure_data, make_date_time_sql_compatible
+from application.services.quiz import get_quiz_questions, insert_quiz_scores, restructure_data, make_date_time_sql_compatible, get_limited_questions
 from application.services.quiz_session import add_quiz_session
 
 routes = Blueprint('quiz_routes', __name__, url_prefix='/api')

@@ -3,7 +3,9 @@ from application.services.quiz import (get_quiz_questions,
                                        add_question_if_new,
                                        restructure_data,
                                        make_date_time_sql_compatible,
-                                       insert_quiz_scores)
+                                       insert_quiz_scores,
+                                       get_limited_questions,
+                                       limit_questions_per_topic)
 from collections import defaultdict
 
 DB_ACCESS = 'application.services.quiz.DataAccess'
@@ -34,6 +36,40 @@ def test_get_quiz_questions(mocker):
     assert all_questions[1]['is_correct'] == 1
     assert all_questions[2]['topic_name'] == 'Topic 2'
     assert all_questions[3]['option_text'] == 'Option 2' == 'Option 2'
+
+def test_get_limited_quiz_questions(mocker):
+
+    mock_data = [
+        {'question_id': 1, 'topic_id': 1, 'option_id': 1,
+         'topic_name': 'Topic 1', 'question_text':'Topic 1 - Question 1',
+         'option_text':'Option 1', 'is_correct': 0},
+        {'question_id': 1,'topic_id': 1, 'option_id': 2,
+         'topic_name': 'Topic 1','question_text':'Topic 1 - Question 1',
+         'option_text':'Option 2', 'is_correct': 1},
+        {'question_id': 2, 'topic_id': 1, 'option_id': 3,
+         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
+         'option_text': 'Option 1', 'is_correct': 0},
+        {'question_id': 2, 'topic_id': 1, 'option_id': 4,
+         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
+         'option_text': 'Option 2', 'is_correct': 1},
+        {'question_id': 3, 'topic_id': 2, 'option_id': 5,
+         'topic_name': 'Topic 2', 'question_text':'Topic 2 Question 1',
+         'option_text':'Option 1', 'is_correct': 1},
+        {'question_id': 3, 'topic_id': 2, 'option_id': 6,
+         'topic_name': 'Topic 2', 'question_text':'Topic 2 Question 1',
+         'option_text':'Option 2', 'is_correct': 0},
+        {'question_id': 4, 'topic_id': 2, 'option_id': 7,
+         'topic_name': 'Topic 2', 'question_text': 'Topic 2 Question 1',
+         'option_text': 'Option 1', 'is_correct': 1},
+        {'question_id': 4, 'topic_id': 2, 'option_id': 8,
+         'topic_name': 'Topic 2', 'question_text': 'Topic 2 Question 1',
+         'option_text': 'Option 2', 'is_correct': 0}
+    ]
+
+    mocker.patch("application.services.quiz.get_quiz_questions", return_value=mock_data)
+
+    all_questions = get_limited_questions(1)
+    assert len(all_questions) == 4
 
 def test_insert_quiz_scores(mocker):
     mock_db = mocker.patch(DB_ACCESS)
@@ -151,3 +187,52 @@ def test_make_date_time_sql_compatible():
 
     assert actual_output[0] == expected_output_1
     assert actual_output[1] == expected_output_2
+
+def test_limit_questions_per_topic(mocker):
+    mocker.patch('random.sample', side_effect=lambda x, n: x[:n])
+
+    sample_input =  [
+        {'question_id': 1, 'topic_id': 1, 'option_id': 1,
+         'topic_name': 'Topic 1', 'question_text':'Topic 1 - Question 1',
+         'option_text':'Option 1', 'is_correct': 0},
+        {'question_id': 1,'topic_id': 1, 'option_id': 2,
+         'topic_name': 'Topic 1','question_text':'Topic 1 - Question 1',
+         'option_text':'Option 2', 'is_correct': 1},
+        {'question_id': 2, 'topic_id': 1, 'option_id': 3,
+         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
+         'option_text': 'Option 1', 'is_correct': 0},
+        {'question_id': 2, 'topic_id': 1, 'option_id': 4,
+         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
+         'option_text': 'Option 2', 'is_correct': 1},
+        {'question_id': 3, 'topic_id': 2, 'option_id': 5,
+         'topic_name': 'Topic 2', 'question_text':'Topic 2 Question 1',
+         'option_text':'Option 1', 'is_correct': 1},
+        {'question_id': 3, 'topic_id': 2, 'option_id': 6,
+         'topic_name': 'Topic 2', 'question_text':'Topic 2 Question 1',
+         'option_text':'Option 2', 'is_correct': 0},
+        {'question_id': 4, 'topic_id': 2, 'option_id': 7,
+         'topic_name': 'Topic 2', 'question_text': 'Topic 2 Question 1',
+         'option_text': 'Option 1', 'is_correct': 1},
+        {'question_id': 4, 'topic_id': 2, 'option_id': 8,
+         'topic_name': 'Topic 2', 'question_text': 'Topic 2 Question 1',
+         'option_text': 'Option 2', 'is_correct': 0}
+    ]
+
+    expected_output = [
+        {'question_id': 1, 'topic_id': 1, 'option_id': 1,
+         'topic_name': 'Topic 1', 'question_text':'Topic 1 - Question 1',
+         'option_text':'Option 1', 'is_correct': 0},
+        {'question_id': 1,'topic_id': 1, 'option_id': 2,
+         'topic_name': 'Topic 1','question_text':'Topic 1 - Question 1',
+         'option_text':'Option 2', 'is_correct': 1},
+        {'question_id': 3, 'topic_id': 2, 'option_id': 5,
+         'topic_name': 'Topic 2', 'question_text':'Topic 2 Question 1',
+         'option_text':'Option 1', 'is_correct': 1},
+        {'question_id': 3, 'topic_id': 2, 'option_id': 6,
+         'topic_name': 'Topic 2', 'question_text':'Topic 2 Question 1',
+         'option_text':'Option 2', 'is_correct': 0},
+    ]
+
+    actual_output = limit_questions_per_topic(sample_input, 1)
+    assert len(actual_output) == 4
+    assert actual_output == expected_output
