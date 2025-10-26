@@ -1,5 +1,6 @@
 from application.services.options import get_options, get_options_by_question_id, add_option, delete_option, update_option
 import pymysql
+import pytest
 
 DB_ACCESS = 'application.services.options.DataAccess'
 
@@ -58,12 +59,28 @@ def test_update_option(mocker):
     update_option(1, "Updated Option", 0)
     mock_instance.execute.assert_called_once_with("UPDATE options SET option_text = (%s), is_correct=(%s) WHERE option_id = (%s)", ("Updated Option", 0, 1))
 
-def test_add_option_db_error(mocker):
+def test_option_db_errors(mocker):
     mock_db = mocker.patch(DB_ACCESS)
     mock_instance = mock_db.return_value
     mock_instance.execute.side_effect = pymysql.MySQLError("DB Error")
+    mock_instance.query.side_effect = pymysql.MySQLError("DB Error")
 
-    try:
+    with pytest.raises(RuntimeError) as exc_add:
         add_option(1, "New Option", 0)
-    except RuntimeError as e:
-        assert str(e) == "Database query error: DB Error"
+    assert str(exc_add.value) == "Database query error: DB Error"
+
+    with pytest.raises(RuntimeError) as exc_delete:
+        delete_option(1)
+    assert str(exc_delete.value) == "Database query error: DB Error"
+
+    with pytest.raises(RuntimeError) as exc_update:
+        update_option(1, "Option 1", False)
+    assert str(exc_update.value) == "Database query error: DB Error"
+
+    with pytest.raises(RuntimeError) as query_get:
+        get_options()
+    assert str(query_get.value) == "Database query error: DB Error"
+
+    with pytest.raises(RuntimeError) as query_get_by_q_id:
+        get_options_by_question_id(1)
+    assert str(query_get_by_q_id.value) == "Database query error: DB Error"

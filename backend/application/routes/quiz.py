@@ -4,21 +4,15 @@ from application.services.quiz_session import add_quiz_session
 
 routes = Blueprint('quiz_routes', __name__, url_prefix='/api')
 
-@routes.route('/quiz', methods=['GET'])
+@routes.route('/quiz', methods=['GET', 'POST'])
 def quiz_questions ():
-
-    if request.method == 'GET':
-        all_quiz_data = get_quiz_questions()
-        structured_data = restructure_data(all_quiz_data)
-        return jsonify(structured_data), 200
-    else:
-        return jsonify({"error": "Invalid Method"}), 405
-
-@routes.route('/quiz', methods=['POST'])
-def add_quiz_details ():
 
     if request.method == 'POST':
         data = request.json
+
+        if 'start_time' not in data or 'end_time' not in data or 'result' not in data:
+            return jsonify({"error": "Invalid Request"}), 400
+
         start_time = data['start_time']
         end_time = data['end_time']
         result = data['result']
@@ -30,5 +24,8 @@ def add_quiz_details ():
         insert_quiz_scores(session_id, result)
 
         return jsonify({"message": "Scores submitted successfully"}), 200
-    else:
-        return jsonify({"error": "Invalid Method"}), 405
+
+    # Get request
+    all_quiz_data = get_quiz_questions()
+    structured_data = restructure_data(all_quiz_data)
+    return jsonify(structured_data), 200

@@ -62,6 +62,11 @@ def test_add_quiz_details(client, mock_services):
     assert response.status_code == 200
     assert response.json == {"message": "Scores submitted successfully"}
 
+def test_invalid_quiz_data(client, mock_services):
 
+    response = client.post("/api/quiz", json={})
+    assert response.status_code == 400
 
-
+def test_invalid_quiz_routes(client, mock_services):
+    response = client.delete("/api/quiz")
+    assert response.status_code == 405

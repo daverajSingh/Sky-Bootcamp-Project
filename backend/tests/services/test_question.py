@@ -1,5 +1,6 @@
 from application.services.question import get_questions, get_questions_by_topic_id, add_question, delete_question, update_question
 import pymysql
+import pytest
 
 DB_ACCESS = 'application.services.question.DataAccess'
 
@@ -61,3 +62,29 @@ def test_update_question_db_error(mocker):
         update_question(1, 'Update Question')
     except RuntimeError as e:
         assert str(e) == "Database query error: DB Error"
+
+def test_question_db_errors(mocker):
+    mock_db = mocker.patch(DB_ACCESS)
+    mock_instance = mock_db.return_value
+    mock_instance.execute.side_effect = pymysql.MySQLError("DB Error")
+    mock_instance.query.side_effect = pymysql.MySQLError("DB Error")
+
+    with pytest.raises(RuntimeError) as exc_add:
+        add_question(1, "New Question")
+    assert str(exc_add.value) == "Database query error: DB Error"
+
+    with pytest.raises(RuntimeError) as exc_delete:
+        delete_question(1)
+    assert str(exc_delete.value) == "Database query error: DB Error"
+
+    with pytest.raises(RuntimeError) as exc_update:
+        update_question(1, "Updated Question")
+    assert str(exc_update.value) == "Database query error: DB Error"
+
+    with pytest.raises(RuntimeError) as query_get:
+        get_questions()
+    assert str(query_get.value) == "Database query error: DB Error"
+
+    with pytest.raises(RuntimeError) as query_get_by_id:
+        get_questions_by_topic_id(1)
+    assert str(query_get_by_id.value) == "Database query error: DB Error"
