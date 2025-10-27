@@ -46,16 +46,16 @@ NB: Don't use the ```TYPE``` in the description, for example ```CREATE: created 
 
 use the following convention to ensure consistency: '''NAME-work-being-done'''
 
-# For coverage report 
+# Code Coverage Report
 
-## For Backend
+## Backend
 
 From the project root run the below commands, make sure the virtual environment is activated and you have the dependencies installed
 `cd backend`
 `export PYTHONPATH=.`
 `pytest --cov=application`
 
-## For Frontend
+## Frontend
 
 From the project root run the below commands, make sure you have all the dependencies installed
 `cd frontend`
