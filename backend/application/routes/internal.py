@@ -75,6 +75,8 @@ def questions_by_topic_id(topic_id):
 def options():
     if request.method == 'POST':
         data = request.json
+        if 'question_id' not in data or 'option_text' not in data or 'is_correct' not in data:
+            return jsonify({"error": "Question ID, option text and is_correct are required"}), 400
         question_id = data['question_id']
         option = data['option_text']
         is_correct = data['is_correct']
@@ -92,6 +94,8 @@ def update_options_by_id(option_id):
         return jsonify({"message": "Option deleted successfully"}), 200
     else:
         data = request.json
+        if 'option_text' not in data or 'is_correct' not in data:
+            return jsonify({"error": "Option text and is_correct are required"}), 400
         option = data['option_text']
         is_correct = data['is_correct']
         update_option(option_id, option, is_correct)
