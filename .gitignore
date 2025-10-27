@@ -6,3 +6,4 @@ frontend/coverage/
 *.env
 .DS_Store
 backend/.coverage
+backend/htmlcov/
