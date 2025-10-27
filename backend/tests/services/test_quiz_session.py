@@ -4,7 +4,6 @@ import pytest
 
 DB_ACCESS = 'application.services.quiz_session.DataAccess'
 
-#create test for get quiz sessions
 def test_get_quiz_sessions(mocker):
     mock_db = mocker.patch(DB_ACCESS)
     mock_instance = mock_db.return_value
