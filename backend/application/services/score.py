@@ -57,10 +57,10 @@ def delete_score(id):
         raise RuntimeError(f'Database query error: {e}')
 
 
-def update_score(score_id, topic_id, session_id, score_value):
+def update_score(score_id, score_value):
 
     db = DataAccess()
     try:
-        db.execute("UPDATE score SET topic_id=(%s), session_id=(%s), score_value = (%s) WHERE score_id = (%s)", (topic_id, session_id, score_value, score_id))
+        db.execute("UPDATE score SET score_value = (%s) WHERE score_id = (%s)", (score_value, score_id))
     except pymysql.MySQLError as e:
         raise RuntimeError(f'Database query error: {e}')

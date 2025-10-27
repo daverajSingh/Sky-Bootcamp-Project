@@ -147,10 +147,8 @@ def score_by_id(id):
     elif request.method == 'PATCH':
         data = request.json
         score_id = id
-        topic_id = data['topic_id']
-        session_id = data['session_id']
         score_value = data['score_value']
-        update_score(score_id, topic_id, session_id, score_value)
+        update_score(score_id, score_value)
         return jsonify({"message": "Quiz-session updated successfully!"}), 200
     else:
         delete_score(id)
