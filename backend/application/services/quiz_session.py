@@ -16,7 +16,7 @@ def get_quiz_session(session_id):
     db = DataAccess()
 
     try:
-        quiz_session = db.query("SELECT session_id, start_time, end_time, TIME_FORMAT(time_diff, '%H:%i:%s') AS time_diff FROM quiz_session; WHERE session_id = (%s)", session_id)
+        quiz_session = db.query("SELECT session_id, start_time, end_time, TIME_FORMAT(time_diff, '%H:%i:%s') AS time_diff FROM quiz_session WHERE session_id = (%s)", session_id)
         return quiz_session
     except pymysql.MySQLError as e:
         raise RuntimeError(f'Database query error: {e}')
@@ -31,11 +31,11 @@ def add_quiz_session(start_time, end_time):
         raise RuntimeError(f'Database query error: {e}')
 
 
-def delete_quiz_session(id):
+def delete_quiz_session(session_id):
     db = DataAccess()
 
     try:
-        db.execute("DELETE FROM quiz_session WHERE session_id = (%s)", id)
+        db.execute("DELETE FROM quiz_session WHERE session_id = (%s)", session_id)
     except pymysql.MySQLError as e:
         raise RuntimeError(f'Database query error: {e}')
 
