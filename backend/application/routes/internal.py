@@ -112,6 +112,8 @@ def options_by_question_id(id):
 def quiz_session():
     if request.method == 'POST':
         data = request.json
+        if 'start_time' not in data or 'end_time' not in data:
+            return jsonify({"error": "Start time and end time are required"}), 400
         start_time = data['start_time']
         end_time = data['end_time']
         add_quiz_session(start_time, end_time)
@@ -125,19 +127,23 @@ def quiz_session():
 def update_quiz_session_by_id(quiz_session_id):
     if request.method == 'DELETE':
         delete_quiz_session(quiz_session_id)
-        return jsonify({"message": "Quiz-session deleted successfully"}), 200
+        return jsonify({"message": "Quiz session deleted successfully"}), 200
     else:
         data = request.json
+        if 'start_time' not in data or 'end_time' not in data:
+            return jsonify({"error": "Start time and end time are required"}), 400
         start_time = data['start_time']
         end_time = data['end_time']
         update_quiz_session(quiz_session_id, start_time, end_time)
-        return jsonify({"message": "Quiz-session updated successfully!"}), 200
+        return jsonify({"message": "Quiz session updated successfully"}), 200
 
 
 @routes.route('/score', methods=['GET', 'POST'])
 def scores():
     if request.method == 'POST':
         data = request.json
+        if 'topic_id' not in data or 'session_id' not in data or 'score_value' not in data:
+            return jsonify({"error": "Topic ID, session ID and score value are required"}), 400
         topic_id = data['topic_id']
         session_id = data['session_id']
         score_value = data['score_value']
@@ -147,18 +153,15 @@ def scores():
         all_scores = get_scores()
         return jsonify(all_scores), 200
 
-@routes.route('/score/<int:score_id>', methods=['GET', 'DELETE', 'PATCH'])
+@routes.route('/score/<int:score_id>', methods=['DELETE', 'PATCH'])
 def score_by_id(score_id):
-    if  request.method == 'GET':
-        score = get_score(score_id)
-        return jsonify(score), 200
-    elif request.method == 'PATCH':
+    if request.method == 'PATCH':
         data = request.json
-        topic_id = data['topic_id']
-        session_id = data['session_id']
+        if 'score_value' not in data:
+            return jsonify({"error": "Score value is required"}), 400
         score_value = data['score_value']
-        update_score(score_id, topic_id, session_id, score_value)
-        return jsonify({"message": "Quiz-session updated successfully!"}), 200
+        update_score(score_id, score_value)
+        return jsonify({"message": "Score updated successfully"}), 200
     else:
         delete_score(score_id)
         return jsonify({"message": "Score deleted successfully"}), 200
