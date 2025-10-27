@@ -60,3 +60,10 @@ From the project root run the below commands, make sure the virtual environment 
 From the project root run the below commands, make sure you have all the dependencies installed
 `cd frontend`
 `npm run test:coverage`
+
+# ENVIRONMENT VARIABLES
+
+There are sample .env files in the frontend and backend folders named `env_sample`
+
+Use the correct values, the .env file in backend will be used for connecting with your SQL database and the .env file in the frontend will be used to provide the backend url to make the requests. 
+
