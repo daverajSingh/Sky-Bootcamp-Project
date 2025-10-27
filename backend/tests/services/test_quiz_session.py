@@ -37,17 +37,7 @@ def test_update_quiz_session(mocker):
     mock_instance = mock_db.return_value
 
     update_quiz_session(1,'2025-10-27 12:00:00','2025-10-27 12:00:01')
-    mock_instance.execute.assert_called_once_with("UPDATE quiz_session SET start_time = (%s), end_time = (%s) WHERE session_id = (%s)", ('2025-10-27 12:00:00','2025-10-27 12:00:01',1))
-
-def test_update_quiz_session_db_error(mocker):
-    mock_db = mocker.patch(DB_ACCESS)
-    mock_instance = mock_db.return_value
-    mock_instance.execute.side_effect = pymysql.MySQLError("DB Error")
-
-    try:
-        update_quiz_session(1,'2025-10-27 12:00:00','2025-10-27 12:00:01')
-    except RuntimeError as e:
-        assert str(e) == "Database query error: DB Error"   
+    mock_instance.execute.assert_called_once_with("UPDATE quiz_session SET start_time = (%s), end_time = (%s) WHERE session_id = (%s)", ('2025-10-27 12:00:00','2025-10-27 12:00:01',1)) 
 
 def test_quiz_session_db_errors(mocker):
     mock_db = mocker.patch(DB_ACCESS)
