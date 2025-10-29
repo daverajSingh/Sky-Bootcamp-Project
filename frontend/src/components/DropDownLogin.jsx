@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { FiLogIn } from "react-icons/fi";
 import { useNavigate } from "react-router";
-import { useAuth } from './AuthContext';
+import { useAuth } from "./AuthContext";
 
 function DropDownLogin() {
   const { login } = useAuth();
@@ -19,39 +19,40 @@ function DropDownLogin() {
 
   useEffect(() => {
     if (isOpen && buttonRef.current) {
-        const rect = buttonRef.current.getBoundingClientRect();
-        const dropdownWidth = 256;
-        let leftPosition = rect.left;
-        if (leftPosition + dropdownWidth > window.innerWidth) {
-            leftPosition = rect.right - dropdownWidth;
-        }
-        if (leftPosition < 0) {
-            leftPosition = 8;
-        }
-        setDropDownStyle({
-            position: "fixed",
-            zIndex: 9999,
-            top: `${rect.bottom + 8}px`,
-            left: `${leftPosition}px`,
-        });
+      const rect = buttonRef.current.getBoundingClientRect();
+      const dropdownWidth = 256;
+      let leftPosition = rect.left;
+      if (leftPosition + dropdownWidth > window.innerWidth) {
+        leftPosition = rect.right - dropdownWidth;
+      }
+      if (leftPosition < 0) {
+        leftPosition = 8;
+      }
+      setDropDownStyle({
+        position: "fixed",
+        zIndex: 9999,
+        top: `${rect.bottom + 8}px`,
+        left: `${leftPosition}px`,
+      });
     }
   }, [isOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-        if (
-            dropdownRef.current &&
-            !dropdownRef.current.contains(event.target) &&
-            buttonRef.current &&
-            !buttonRef.current.contains(event.target)
-        ) {
-            setIsOpen(false);
-        }
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
     };
 
     if (isOpen) {
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
     }
   }, [isOpen]);
 
@@ -73,10 +74,10 @@ function DropDownLogin() {
       return;
     }
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           email: email,
@@ -89,7 +90,7 @@ function DropDownLogin() {
       if (response.ok) {
         login(data.token);
         setIsOpen(false);
-        navigate('/admin');
+        navigate("/admin");
         console.log("Login successful");
       } else {
         setError(data.error || "Login failed. Please try again.");
@@ -103,7 +104,7 @@ function DropDownLogin() {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSubmit(e);
     }
   };
@@ -136,7 +137,8 @@ function DropDownLogin() {
               )}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email <input
+                  Email{" "}
+                  <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -149,7 +151,8 @@ function DropDownLogin() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Password <input
+                  Password{" "}
+                  <input
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -167,9 +170,24 @@ function DropDownLogin() {
               >
                 {isLoading ? (
                   <>
-                    <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    <svg
+                      className="animate-spin h-5 w-5 mr-2"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                        fill="none"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      />
                     </svg>
                     Signing In...
                   </>

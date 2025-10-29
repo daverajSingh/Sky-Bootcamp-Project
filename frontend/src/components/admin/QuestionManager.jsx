@@ -71,8 +71,8 @@ const QuestionManager = ({
     </div>
 
     <div className="mt-4 text-sm text-gray-700 text-center">
-      Total selected: <strong>{selectedCountForTopic}</strong> for {selectedTopic},{" "}
-      <strong>{totalSelected}</strong> overall.
+      Total selected: <strong>{selectedCountForTopic}</strong> for{" "}
+      {selectedTopic}, <strong>{totalSelected}</strong> overall.
     </div>
   </div>
 );
