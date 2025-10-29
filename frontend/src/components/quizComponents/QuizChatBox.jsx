@@ -5,7 +5,8 @@ const QuizChatBox = ({
   topics = [],
   completedMap = {},
   allCompleted,
-  topicAnswers = {}, startTime,
+  topicAnswers = {},
+  startTime,
 }) => {
   // collect messages from topics that are completed
   // Only show a topic message when it is fully answered.
@@ -55,8 +56,8 @@ const QuizChatBox = ({
           selectedIndices: Array.isArray(selected)
             ? selected
             : selected
-            ? [selected]
-            : [],
+              ? [selected]
+              : [],
           correctIndices,
           options: q.options || [],
         });
