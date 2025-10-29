@@ -21,15 +21,6 @@ def create_app():
 def create_table():
     db = DataAccess()
     try:
-        query_create_admin = """
-        CREATE TABLE IF NOT EXISTS admin (
-        `admin_id` int PRIMARY KEY NOT NULL auto_increment, 
-        `admin_email` varchar(255) NOT NULL, 
-        `admin_password` varchar(255) NOT NULL, 
-        `admin_name` varchar(50) NOT NULL
-        );
-        """
-
         query_create_topic = """        
         CREATE TABLE IF NOT EXISTS topic (
         `topic_id` int PRIMARY KEY NOT NULL auto_increment,
@@ -76,7 +67,8 @@ def create_table():
             );
         """
 
-        db.execute(query_create_admin)
+        db.execute_file('sql_scripts/admin.sql')
+        db.execute_file('sql_scripts/faq.sql')
         db.execute(query_create_quiz_session)
         db.execute(query_create_topic)
         db.execute(query_create_question)
@@ -90,3 +82,4 @@ if __name__ == "__main__":
     app = create_app()
     create_table()
     app.run(debug=True, port=5000)
+

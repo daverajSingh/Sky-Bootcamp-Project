@@ -1,75 +1,34 @@
-import datetime
-import os
-import jwt
 from dotenv import load_dotenv
 from flask import request, jsonify, Blueprint
-from bcrypt import checkpw, hashpw, gensalt
-from application.data_access import DataAccess
-
+from application.services import login_post, register_post, faq_get
 load_dotenv()
 
-routes = Blueprint('routes',__name__)
+routes = Blueprint('routes',__name__, url_prefix='/api')
 
-@routes.route('/api/login', methods=['POST'])
+@routes.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
         data = request.json
         email = data['email']
         password = data['password']
-
-        if not email or not password:
-            return jsonify({"error": "Missing Credentials"}), 400
-
-        db = DataAccess()
-
-        try:
-            user = db.query("Select admin_email, admin_password, admin_name FROM admin WHERE admin_email=%s",(email,),)
-            if not user:
-                return jsonify({"error": "Invalid Username or Password"}), 401
-
-            user = user[0]
-            stored_hash = user['admin_password'].encode('utf-8')
-
-            if not checkpw(password.encode('utf-8'), stored_hash):
-                return jsonify({"error": "Invalid Username or Password"}), 401
-
-            token = jwt.encode(
-                {
-                    'admin_email': user['admin_email'],
-                    'admin_name': user['admin_name'],
-                    'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=30),
-                    'iat': datetime.datetime.now(datetime.UTC),
-                },
-                os.getenv('SECRET_KEY'),
-                algorithm='HS256',
-            )
-            return jsonify({"message": "Successful Login", "token": token}), 200
-        finally:
-            db.close()
+        return login_post(email, password)
     else:
         return jsonify({"error": "Invalid Method"}), 405
 
-@routes.route('/api/register', methods=['POST'])
+@routes.route('/register', methods=['POST'])
 def register():
     if request.method == 'POST':
         data = request.json
         email = data['email']
         password = data['password']
         name = data['name']
+        return register_post(email, password, name)
+    else:
+        return jsonify({"error": "Invalid Method"}), 405
 
-        if not email or not password:
-            return jsonify({"error": "Missing Credentials"}), 400
-
-        db = DataAccess()
-        try:
-            # Check if username already exists
-            existing = db.query("SELECT admin_id FROM admin WHERE admin_email=%s", (email,))
-            if existing:
-                return jsonify({"error": "Email already in use"}), 409
-            hashed_password = hashpw(password.encode('utf-8'), gensalt()).decode('utf-8')
-            db.execute("INSERT into admin (admin_email, admin_password, admin_name) VALUES (%s, %s, %s) ", (email, hashed_password, name),)
-            return jsonify({"message": "Successful Register"}), 200
-        finally:
-            db.close()
+@routes.route('/faq', methods=['GET'])
+def faq():
+    if request.method == 'GET':
+        return faq_get()
     else:
         return jsonify({"error": "Invalid Method"}), 405
