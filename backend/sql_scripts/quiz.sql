@@ -1,11 +1,47 @@
-INSERT INTO topic (topic_name) VALUES 
+CREATE TABLE IF NOT EXISTS topic (
+    topic_id int PRIMARY KEY NOT NULL auto_increment,
+    topic_name varchar(255) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS question (
+    question_id int PRIMARY KEY NOT NULL auto_increment,
+    topic_id int NOT NULL,
+    question_text varchar(255) NOT NULL,
+    FOREIGN KEY (topic_id) REFERENCES topic (topic_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS options (
+    option_id int PRIMARY KEY NOT NULL auto_increment,
+    question_id int NOT NULL,
+    option_text varchar(255) NOT NULL,
+    is_correct boolean NOT NULL,
+    FOREIGN KEY (question_id) REFERENCES question (question_id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS quiz_session (
+    session_id int PRIMARY KEY NOT NULL auto_increment,
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    time_diff TIME GENERATED ALWAYS AS (SEC_TO_TIME(TIMESTAMPDIFF(SECOND, start_time, end_time))) STORED
+);
+
+CREATE TABLE IF NOT EXISTS score (
+    score_id int PRIMARY KEY NOT NULL auto_increment,
+    topic_id int NOT NULL,
+    session_id int NOT NULL,
+    score_value int NOT NULL,
+    FOREIGN KEY (topic_id) REFERENCES topic (topic_id) ON DELETE CASCADE,
+    FOREIGN KEY (session_id) REFERENCES quiz_session (session_id) ON DELETE CASCADE
+);
+
+INSERT IGNORE INTO topic (topic_name) VALUES
 ('Emotional Intelligence'),
 ('Agile'),
 ('Compliance'),
 ('Communication'),
 ('Sky products and services');
 
-INSERT INTO question (topic_id, question_text) VALUES
+INSERT IGNORE INTO question (topic_id, question_text) VALUES
 (1, "Which of the following best describes emotional intelligence (EI) in a professional telecom environment?"),
 (1, "You're a Sky graduate engineer working in a cross-functional team. During a sprint review, a colleague criticizes your work harshly in front of others. What's the most emotionally intelligent way to handle it?"),
 (2, "In an Agile development environment at Sky, what is the primary purpose of a daily stand-up?"),
@@ -18,7 +54,7 @@ INSERT INTO question (topic_id, question_text) VALUES
 (5, "You're working on improving customer experience for Sky's broadband product. Data shows customers frequently experience connection drops during peak hours. What’s the most effective product improvement approach?");
 
 
-INSERT INTO options (question_id, option_text, is_correct) VALUES
+INSERT IGNORE INTO options (question_id, option_text, is_correct) VALUES
 (1, 'Understanding and managing one’s emotions, and recognizing those of others to improve collaboration', TRUE),
 (1, 'Using emotional appeals to persuade customers during calls', FALSE),
 (1, 'Avoiding emotional discussions in team meetings', FALSE),
@@ -29,7 +65,7 @@ INSERT INTO options (question_id, option_text, is_correct) VALUES
 (2, 'Respond with sarcasm to lighten the mood', FALSE);
 
 
-INSERT INTO options (question_id, option_text, is_correct) VALUES
+INSERT IGNORE INTO options (question_id, option_text, is_correct) VALUES
 (3, 'To present completed deliverables to stakeholders', FALSE),
 (3, 'To discuss company-wide strategic goals', FALSE),
 (3, 'To ensure every team member updates others on progress, blockers, and next steps', TRUE),
@@ -40,29 +76,29 @@ INSERT INTO options (question_id, option_text, is_correct) VALUES
 (4, 'Ask the Scrum Master to decide unilaterally whether to add it', FALSE);
 
 
-INSERT INTO options (question_id, option_text, is_correct) VALUES
+INSERT IGNORE INTO options (question_id, option_text, is_correct) VALUES
 (5, 'Sharing customer data across departments without consent for "internal use"', FALSE),
 (5, 'Encrypting customer data, minimizing its collection, and processing it only for legitimate purposes', TRUE),
 (5, 'Retaining all customer call data indefinitely for analytics', FALSE),
 (5, 'Selling anonymized data to third parties without disclosure', FALSE),
-(6, 'Accept the suggestion; debugging convenience outweighs privacy', FALSE),
+(6, 'Accept the suggestion, debugging convenience outweighs privacy', FALSE),
 (6, 'Use only anonymized or pseudonymized data in the dashboard', TRUE),
 (6, 'Include full personal data but restrict access to managers only', FALSE),
 (6, 'Proceed since the dashboard is for internal use only', FALSE);
 
 
-INSERT INTO options (question_id, option_text, is_correct) VALUES
+INSERT IGNORE INTO options (question_id, option_text, is_correct) VALUES
 (7, 'Sending long, detailed emails to ensure no information is missed', FALSE),
 (7, 'Adapting tone, medium, and detail based on the audience and purpose', TRUE),
 (7, 'Avoiding video calls to save bandwidth', FALSE),
 (7, 'Using technical jargon consistently across all messages', FALSE),
-(8, 'Continue the presentation; they’ll understand when they see the results', FALSE),
+(8, 'Continue the presentation, they’ll understand when they see the results', FALSE),
 (8, 'Pause, ask what part was unclear, and re-explain using analogies or simpler terms', TRUE),
 (8, 'End the meeting and send them detailed documentation later', FALSE),
 (8, 'Apologize and ask them to read up on the topic beforehand', FALSE);
 
 
-INSERT INTO options (question_id, option_text, is_correct) VALUES
+INSERT IGNORE INTO options (question_id, option_text, is_correct) VALUES
 (9, 'Broadband internet', FALSE),
 (9, 'Satellite television', FALSE),
 (9, 'Cloud-based data analytics solutions for customers', TRUE),
