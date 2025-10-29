@@ -39,8 +39,13 @@ def insert_quiz_scores(session_id, result):
         for entry in result:
             topic_name = entry.get("topicID")
             is_correct = entry.get("isCorrect")
-            if topic_name and is_correct:
-                topic_scores[topic_name] += 1
+
+            if topic_name:
+                if topic_name not in topic_scores:
+                    topic_scores[topic_name] = 0
+
+                if is_correct:
+                    topic_scores[topic_name] += 1
 
         # Batch insert
         values = []
