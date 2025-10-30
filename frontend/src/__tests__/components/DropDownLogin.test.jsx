@@ -53,7 +53,7 @@ describe('DropDownLogin', () => {
     render(<DropDownLogin />);
     fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-    global.fetch = jest.fn(() =>
+    globalThis.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
         json: () => Promise.resolve({ token: 'mockToken' }),
@@ -79,7 +79,7 @@ describe('DropDownLogin', () => {
     render(<DropDownLogin />);
     fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-    global.fetch = jest.fn(() =>
+    globalThis.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
         json: () => Promise.resolve({ error: 'Invalid credentials' }),
@@ -104,7 +104,9 @@ describe('DropDownLogin', () => {
     render(<DropDownLogin />);
     fireEvent.click(screen.getByRole('button', { name: /login/i }));
 
-    global.fetch = jest.fn(() => Promise.reject(new Error('Network down')));
+    globalThis.fetch = jest.fn(() => Promise.reject(new Error('Network down')));
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+
 
     fireEvent.change(screen.getByPlaceholderText(/john\.doe@sky\.com/i), {
       target: { value: 'test@example.com' },
@@ -118,5 +120,12 @@ describe('DropDownLogin', () => {
     await waitFor(() => {
       expect(screen.getByText(/network error/i)).toBeInTheDocument();
     });
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.stringContaining("Login error:"),
+      expect.any(Error)
+    );
+
+    consoleErrorSpy.mockRestore();
   });
 });
