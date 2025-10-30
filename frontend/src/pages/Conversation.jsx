@@ -9,13 +9,13 @@ import {
   MessageSeparator,
 } from "@chatscope/chat-ui-kit-react";
 import { API_BASE } from '../env.js';
+import axios from "axios";
 
 const Conversation = () => {
   const { topicid } = useParams();
   // Order of the messages should be maintained in this list as they are added
   const [messageList, setMessageList] = useState([]);
   // IDs to keep track of which message to send next, may not be needed once backend is connected
-  const [userMessageId, setUserMessageId] = useState(1);
   const [aiMessageId, setAIMessageId] = useState(0);
   const [simulatorDetails, setSimulatorDetails] = useState(null)
 
@@ -31,94 +31,75 @@ const Conversation = () => {
     "Explore another topic in the simulator to learn more about corporate life or return to the main simulator page.";
 
   function sendUserResponse(message) {
-    console.log(simulatorDetails)
-    // Need to send this to the backend and get a response from the AI
-    fetch(`${API_BASE}/api/simulator/1`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        text: message,
-        context: simulatorDetails[0]["context"]
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        const userResponse = {
-              agent: "user",
-              message: message,
-              direction: "outgoing",
-            };
-            let aiResponse = {};
-            if (aiMessageId > data.length - 1) {
-              // No more AI messages left for this topic
-              aiResponse = {
-                agent: "AI",
-                message: wrapUpMessage,
-                direction: "incoming",
-              };
-            } else {
-              aiResponse = {
-                agent: "AI",
-                message: data["text"],
-                direction: "incoming",
-              };
-            }
-            setMessageList([...messageList, userResponse, aiResponse]);
-            setAIMessageId(aiMessageId + 1);
-      })
-      // .then(() => {
-      //   // For now, just fetch again the response from the AI -
-      //   // when we connect with backend, this should be part of the response from the backend
-      //   fetch(`http://localhost:3000/ai-messages?topicID=${topicid}`)
-      //     .then((response) => response.json())
-      //     .then((data) => {
-      //       const userResponse = {
-      //         agent: "user",
-      //         message: message,
-      //         direction: "outgoing",
-      //       };
-      //       let aiResponse = {};
-      //       if (aiMessageId > data.length - 1) {
-      //         // No more AI messages left for this topic
-      //         aiResponse = {
-      //           agent: "AI",
-      //           message: wrapUpMessage,
-      //           direction: "incoming",
-      //         };
-      //       } else {
-      //         aiResponse = {
-      //           agent: "AI",
-      //           message: data[aiMessageId]["text"],
-      //           direction: "incoming",
-      //         };
-      //       }
-      //       setMessageList([...messageList, userResponse, aiResponse]);
-      //       setAIMessageId(aiMessageId + 1);
-      //     })
-      //     .catch((error) => console.error(error));
-      // })
-      .catch((error) => console.error(error));
 
-    setUserMessageId(userMessageId + 1);
+    const userResponse = {
+      agent: "user",
+      message: message,
+      direction: "outgoing",
+    };
+
+    setMessageList(prev => [...prev, userResponse]);
+
+    const sendMessageToSimulator = async () => {
+      try {
+        const response = await axios.post(`${API_BASE}/api/simulator/${topicid}`, {
+          text: message,
+          context: simulatorDetails[0]["context"]
+        }, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+
+        const data = response.data;
+        let aiResponse = {};
+
+        if (aiMessageId > data.length - 1) {
+          // No more AI messages left for this topic
+          aiResponse = {
+            agent: simulatorDetails[0]["title"],
+            message: wrapUpMessage,
+            direction: "incoming",
+          };
+        } else {
+          aiResponse = {
+            agent: simulatorDetails[0]["title"],
+            message: data["text"],
+            direction: "incoming",
+          };
+        }
+
+        setMessageList(prev => [...prev, aiResponse]);
+        setAIMessageId(prev => prev + 1);
+      } catch (error) {
+        console.error('Error sending message to simulator:', error);
+      }
+    }
+    sendMessageToSimulator();
   }
 
   useEffect(() => {
     // The first message should be from the AI, asking the user if they are ready to discuss the topic.
-    fetch(`${API_BASE}/api/topic/1/simulator-details`)
-      .then((response) => response.json())
-      .then((data) => {
+    const getSimulatorDetails = async () => {
+      try {
+        const response = await axios.get(`${API_BASE}/api/topic/${topicid}/simulator-details`);
+        const data = response.data;
         setSimulatorDetails(data);
+
         const message = {
           agent: data[0]["title"],
           message: data[0]["intro_text"],
           direction: "incoming",
         };
+
         setMessageList([...messageList, message]);
-        setAIMessageId(aiMessageId + 1);
-      })
-      .catch((error) => console.error(error));
+        setAIMessageId(prev => prev + 1);
+      } catch (error) {
+        console.error('Error fetching simulator details:', error);
+      }
+    };
+
+    getSimulatorDetails();
   }, []);
 
   return (
