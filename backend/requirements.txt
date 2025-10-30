@@ -7,3 +7,4 @@ bcrypt
 pyjwt
 pytest-cov 
 flask_cors
+openai
