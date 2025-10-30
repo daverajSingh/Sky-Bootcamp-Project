@@ -1,13 +1,18 @@
 import React from "react";
+import quizService from './quizService';
 
 const QuizChatBox = ({
   topics = [],
   completedMap = {},
   allCompleted,
   topicAnswers = {},
+  startTime,
 }) => {
   // collect messages from topics that are completed
   // Only show a topic message when it is fully answered.
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
+
   const messages = topics
     .filter((t) => completedMap[t.topicID] === "answered")
     .map((t) => ({
@@ -51,8 +56,8 @@ const QuizChatBox = ({
           selectedIndices: Array.isArray(selected)
             ? selected
             : selected
-            ? [selected]
-            : [],
+              ? [selected]
+              : [],
           correctIndices,
           options: q.options || [],
         });
@@ -63,7 +68,23 @@ const QuizChatBox = ({
   }
 
   function onDoneClick() {
+
     const { totalQuestions, correctCount, results } = computeResults();
+
+    const sendQuizSessionData = async () => {
+      try {
+        await quizService.postQuizResults({
+          "start_time": startTime,
+          "end_time": today.toUTCString(),
+          "result": results
+        });
+      } catch (err) {
+        console.error('Failed to send quiz session data. Please try again later.', err);
+      }
+    };
+
+    sendQuizSessionData();
+
     // build a simple text summary for now
     let message = `You scored ${correctCount} / ${totalQuestions}\n\n`;
     results.forEach((r, idx) => {

@@ -10,7 +10,11 @@ import {
 const QuizTopicSelector = () => {
   const [topics, setTopics] = useState([]);
   const [completedMap, setCompletedMap] = useState({});
+  const [sessionStartTime, setSessionStartTime] = useState(null);
   const [error, setError] = useState(null);
+  
+  const timeElapsed = Date.now();
+  const today = new Date(timeElapsed);
 
   useEffect(() => {
     let mounted = true;
@@ -30,6 +34,7 @@ const QuizTopicSelector = () => {
       }
     };
     loadQuizData();
+    setSessionStartTime(today.toUTCString());
     return () => (mounted = false);
   }, []);
 
@@ -135,6 +140,7 @@ const QuizTopicSelector = () => {
                 .every((t) => completedMap[t.topicID] === "answered")
             }
             topicAnswers={topicAnswers}
+            startTime={sessionStartTime}
           />
         </div>
       </div>

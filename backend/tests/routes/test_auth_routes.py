@@ -1,4 +1,4 @@
-from backend import app
+import app
 
 class MockResponse:
     def __init__(self, status_code, json_data=None):

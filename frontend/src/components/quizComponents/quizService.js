@@ -1,16 +1,22 @@
 import axios from 'axios';
+import { API_BASE } from '../../env.js';
 
-// Use Vite environment variables exposed to the client. Vite exposes vars prefixed with VITE_.
-const API_BASE = 'http://localhost:4000';
-
-export async function fetchQuiz() {
+async function fetchQuiz() {
   try {
-    const res = await axios.get(`${API_BASE}/topics`);
+    const res = await axios.get(`${API_BASE}/api/quiz`);
     return res.data;
   } catch (error) {
     console.error('Failed to fetch quiz data:', error);
-    return [];
   }
 }
 
-export default { fetchQuiz };
+async function postQuizResults(details) {
+  try {
+    const res = await axios.post(`${API_BASE}/api/quiz`, details);
+    return res.data;
+  } catch (error) {
+    console.error('Failed to post the quiz session information:', error);
+  }
+}
+
+export default { fetchQuiz, postQuizResults };

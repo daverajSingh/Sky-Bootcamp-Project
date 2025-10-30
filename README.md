@@ -10,6 +10,7 @@ Sky Graduate Bootcamp Project - Team (Name TBD)
 2. Then type `npm install` in your terminal. This will install any libraries and plugins required to run the react project.
 3. Then type `npm run serve-json`. This will serve the json files using json-server. In the terminal you'll receive the end points for the different routes (NB - this is only for the MVP, as we will have these routes in a mysql backend).
 4. Finally, in new terminal instance type `npm run dev` to run the project. In the terminal, you will receive a url that will show the local running instance of the project.
+5. Add a .env file in the same directory as vite.config.js and keep this environment variable `VITE_API_BASE_URL=<BACKEND_API_BASE_URL>`. For example `VITE_API_BASE_URL=http://example.com:XXXX`
 
 ### Backend
 
@@ -48,3 +49,26 @@ NB: Don't use the `TYPE` in the description, for example `CREATE: created ...`.
 # Branches
 
 - Use the following convention to ensure consistency: '''NAME-work-being-done'''
+
+# Code Coverage Report
+
+## Backend
+
+From the project root run the below commands, make sure the virtual environment is activated and you have the dependencies installed
+`cd backend`
+`export PYTHONPATH=.`
+`pytest --cov=application`
+
+## Frontend
+
+From the project root run the below commands, make sure you have all the dependencies installed
+`cd frontend`
+`npm run test:coverage`
+
+# ENVIRONMENT VARIABLES
+
+There are sample .env files in the frontend and backend folders named `env_sample`
+
+Use the correct values, the .env file in backend will be used for connecting with your SQL database and the .env file in the frontend will be used to provide the backend url to make the requests. 
+
+

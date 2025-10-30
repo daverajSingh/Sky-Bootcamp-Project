@@ -55,7 +55,7 @@ describe('Conversation component', () => {
     }
 
     test('renders initial AI message on mount', async () => {
-        global.fetch = jest.fn()
+        globalThis.fetch = jest.fn()
         .mockResolvedValueOnce({
             ok: true,
             json: async () => aiMessagesMock,
@@ -70,7 +70,7 @@ describe('Conversation component', () => {
 
     test('renders initial AI message and sends user message', async () => {
         // Mock the fetch calls
-        global.fetch = jest.fn()
+        globalThis.fetch = jest.fn()
             .mockResolvedValueOnce({
                 json: () => Promise.resolve(aiMessagesMock),
             })
@@ -95,8 +95,8 @@ describe('Conversation component', () => {
 
         await waitFor(() => {
             const messages = screen.getAllByTestId('mock-message');
-            expect(messages[messages.length - 2]).toHaveTextContent('Hello AI!');
-            expect(messages[messages.length - 1]).toHaveTextContent('AI response 1');
+            expect(messages.at(-2)).toHaveTextContent('Hello AI!');
+            expect(messages.at(- 1)).toHaveTextContent('AI response 1');
         });
     });
 

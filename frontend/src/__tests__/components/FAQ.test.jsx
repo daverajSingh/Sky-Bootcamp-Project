@@ -34,19 +34,28 @@ describe("FAQ", () => {
       data: { question: "Wrong shape" }, // Not an array
     });
 
-    render(<FAQ />);
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+
+    render(<FAQ />)
 
     await waitFor(() => {
       expect(
         screen.getByText(/Sorry, FAQ data could not be loaded/i)
       ).toBeInTheDocument();
     });
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.stringContaining('Error displaying FAQ data'),
+      expect.any(Error)
+    );
+
+    consoleErrorSpy.mockRestore();
   });
 
   it("renders nothing but heading if faqData is empty array", async () => {
     axios.get.mockResolvedValueOnce({ data: [] });
 
-    render(<FAQ />);
+    render(<FAQ />)
 
     expect(screen.getByText("Frequently Asked Questions")).toBeInTheDocument();
 

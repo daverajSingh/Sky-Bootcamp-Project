@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from flask import request, jsonify, Blueprint
-from application.services import login_post, register_post, faq_get
+from application.services.auth import login_post, register_post, faq_get
 load_dotenv()
 
 routes = Blueprint('routes',__name__, url_prefix='/api')
@@ -32,4 +32,3 @@ def faq():
         return faq_get()
     else:
         return jsonify({"error": "Invalid Method"}), 405
-    
