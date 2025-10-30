@@ -33,8 +33,8 @@ def create_table():
     try:
         db.execute_file('sql_scripts/admin.sql')
         db.execute_file('sql_scripts/faq.sql')
-        db.execute_file('sql_scripts/simulator.sql')
         db.execute_file('sql_scripts/quiz.sql')
+        db.execute_file('sql_scripts/simulator.sql')
     except Exception as e:
         print(e)
 
