@@ -28,12 +28,18 @@ def mock_services(monkeypatch):
             {'score_id': 3, 'session_id': 2, 'score_value': 1}
         ]
 
+    def get_simulator_details_by_topic_id(topic_id):
+        return [
+            {'detail_id': 1, 'title': 'AI - 1', 'intro_text':'Topic 1 Intro', 'context': 'Topic 1 Context'}
+        ]
+
     monkeypatch.setattr("application.routes.topic.get_topics", mock_get_topics)
     monkeypatch.setattr("application.routes.topic.add_topic", mock_execute_queries)
     monkeypatch.setattr("application.routes.topic.update_topic", mock_execute_queries)
     monkeypatch.setattr("application.routes.topic.delete_topic", mock_execute_queries)
     monkeypatch.setattr("application.routes.topic.get_questions_by_topic_id", mock_get_questions_by_topic_id)
     monkeypatch.setattr("application.routes.topic.get_scores_by_topic_id", mock_get_scores_by_topic_id)
+    monkeypatch.setattr("application.routes.topic.get_simulator_details_by_topic_id", get_simulator_details_by_topic_id)
 
 def test_topics_routes(client, mock_services):
     response = client.get('/topics')
@@ -62,6 +68,10 @@ def test_topics_routes(client, mock_services):
     response = client.get('/topic/1/questions')
     assert response.status_code == 200
     assert response.json == [{'question_id': 1, 'question_text': 'Question 1'}]
+
+    response = client.get('/topic/1/simulator-details')
+    assert response.status_code == 200
+    assert response.json == [{'detail_id': 1, 'title': 'AI - 1', 'intro_text':'Topic 1 Intro', 'context': 'Topic 1 Context'}]
 
 def test_topics_routes_missing_topic_name(client):
     response = client.post('/topics', json={})

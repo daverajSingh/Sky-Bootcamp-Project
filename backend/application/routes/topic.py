@@ -2,6 +2,7 @@ from flask import Blueprint,request, jsonify
 from application.services.topic import add_topic, get_topics, delete_topic, update_topic
 from application.services.question import get_questions_by_topic_id
 from application.services.score import get_scores_by_topic_id
+from application.services.simulator_details import get_simulator_details_by_topic_id
 
 routes = Blueprint('internal_topic_routes', __name__)
 
@@ -40,4 +41,9 @@ def questions_by_topic_id(topic_id):
 @routes.route('/topic/<int:topic_id>/scores', methods=['GET'])
 def score_by_topic_id(topic_id):
     score = get_scores_by_topic_id(topic_id)
+    return jsonify(score), 200
+
+@routes.route('/topic/<int:topic_id>/simulator-details', methods=['GET'])
+def simulator_details_by_topic_id(topic_id):
+    score = get_simulator_details_by_topic_id(topic_id)
     return jsonify(score), 200
