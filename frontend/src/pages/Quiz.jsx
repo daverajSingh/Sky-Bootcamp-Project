@@ -1,7 +1,8 @@
-import { Link } from "react-router";
-import { QuizTopicSelector } from "../components/index";
+import { useNavigate } from "react-router";
+import { QuizTopicSelector, Button } from "../components/index";
 
 const Quiz = () => {
+  let navigate = useNavigate();
   return (
     <div
       style={{
@@ -28,9 +29,12 @@ const Quiz = () => {
 
       <div style={{ width: "100%", maxWidth: 1300, marginTop: 12 }}>
         <QuizTopicSelector />
-        <div style={{ marginTop: 12 }}>
-          <Link to="/">Go to Home</Link>
-        </div>
+        <Button
+          className="mt-10 justify-self-center
+"
+          buttonText={"Go To Home"}
+          onClick={() => navigate("/")}
+        />
       </div>
     </div>
   );
