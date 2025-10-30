@@ -5,18 +5,24 @@ const Home = () => {
     <>
       <WelcomeSection />
       <div className="p-6 grid grid-cols-2 gap-6">
-        <Card
-          title="Explore a day at Sky"
-          link="/simulator"
-          description={"Experience our culture, live a day at Sky "}
-        />
-        <Card
-          title="Are you Sky ready?"
-          link="/quiz"
-          description={"Take the quiz to find out"}
-        />
+        <div id="simulator">
+          <Card
+            title="Explore a day at Sky"
+            link="/simulator"
+            description={"Experience our culture, live a day at Sky "}
+          />
+        </div>
+        <div id="quiz">
+          <Card
+            title="Are you Sky ready?"
+            link="/quiz"
+            description={"Take the quiz to find out"}
+          />
+        </div>
       </div>
-      <FAQ />
+      <div id="faq">
+        <FAQ />
+      </div>
     </>
   );
 };

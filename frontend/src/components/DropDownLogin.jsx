@@ -112,6 +112,7 @@ function DropDownLogin() {
   return (
     <>
       <button
+        id="login"
         ref={buttonRef}
         className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition duration-300 flex items-center gap-2"
         onClick={() => setIsOpen(!isOpen)}
