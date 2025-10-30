@@ -43,7 +43,7 @@ def score_by_topic_id(topic_id):
     score = get_scores_by_topic_id(topic_id)
     return jsonify(score), 200
 
-@routes.route('/topic/<int:topic_id>/simulator-details', methods=['GET'])
+@routes.route('/api/topic/<int:topic_id>/simulator-details', methods=['GET'])
 def simulator_details_by_topic_id(topic_id):
     score = get_simulator_details_by_topic_id(topic_id)
     return jsonify(score), 200

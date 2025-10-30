@@ -8,6 +8,7 @@ import {
   MessageList,
   MessageSeparator,
 } from "@chatscope/chat-ui-kit-react";
+import { API_BASE } from '../env.js';
 
 const Conversation = () => {
   const { topicid } = useParams();
@@ -79,12 +80,12 @@ const Conversation = () => {
 
   useEffect(() => {
     // The first message should be from the AI, asking the user if they are ready to discuss the topic.
-    fetch(`http://localhost:3000/ai-messages?topicID=${topicid}`)
+    fetch(`${API_BASE}/api/topic/1/simulator-details`)
       .then((response) => response.json())
       .then((data) => {
         const message = {
-          agent: "AI",
-          message: data[aiMessageId]["text"],
+          agent: data[0]["title"],
+          message: data[0]["intro_text"],
           direction: "incoming",
         };
         setMessageList([...messageList, message]);
@@ -102,9 +103,9 @@ const Conversation = () => {
             <Message
               key={index}
               model={{
-                direction: message.agent === "AI" ? "incoming" : "outgoing",
+                direction: message.direction,
                 message: message.message,
-                sender: message.agent === "AI" ? "AI" : "John",
+                sender: message.agent,
               }}
             />
           ))}
