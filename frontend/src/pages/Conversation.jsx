@@ -31,15 +31,16 @@ const Conversation = () => {
     "Explore another topic in the simulator to learn more about corporate life or return to the main simulator page.";
 
   function sendUserResponse(message) {
+    console.log(simulatorDetails)
     // Need to send this to the backend and get a response from the AI
-    fetch(`${API_BASE}/simulator/1`, {
+    fetch(`${API_BASE}/api/simulator/1`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         text: message,
-        context: simulatorDetails["context"]
+        context: simulatorDetails[0]["context"]
       }),
     })
       .then((response) => response.json())
