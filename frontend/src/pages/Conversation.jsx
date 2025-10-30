@@ -44,7 +44,30 @@ const Conversation = () => {
       }),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((data) => {
+        const userResponse = {
+              agent: "user",
+              message: message,
+              direction: "outgoing",
+            };
+            let aiResponse = {};
+            if (aiMessageId > data.length - 1) {
+              // No more AI messages left for this topic
+              aiResponse = {
+                agent: "AI",
+                message: wrapUpMessage,
+                direction: "incoming",
+              };
+            } else {
+              aiResponse = {
+                agent: "AI",
+                message: data["text"],
+                direction: "incoming",
+              };
+            }
+            setMessageList([...messageList, userResponse, aiResponse]);
+            setAIMessageId(aiMessageId + 1);
+      })
       // .then(() => {
       //   // For now, just fetch again the response from the AI -
       //   // when we connect with backend, this should be part of the response from the backend
