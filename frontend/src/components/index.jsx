@@ -9,6 +9,7 @@ export { default as Layout } from "./Layout";
 export { default as LogoutButton } from "./logoutButton";
 export { default as ProtectedRoute } from "./ProtectedRoute";
 export { default as WelcomeSection } from "./WelcomeSection";
+export { default as Button } from "./Button";
 
 //ADMIN
 export { default as QuestionManager } from "./admin/QuestionManager";
