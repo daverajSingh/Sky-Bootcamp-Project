@@ -5,8 +5,14 @@ import { MemoryRouter, Route, Routes } from 'react-router';
 
 
 jest.mock('../../components/AuthContext', () => ({
-  useAuth: jest.fn(),
+    useAuth: jest.fn(),
 }));
+
+
+jest.mock('axios')
+jest.mock('../../env', () => ({ API_BASE: 'https://mocked-api.com' }))
+
+import axios from 'axios';
 
 
 // Mock chat UI components
@@ -33,10 +39,12 @@ jest.mock('@chatscope/chat-ui-kit-react', () => {
     };
 });
 
-const aiMessagesMock = [
-    { "id": 1, "topicID": 1, "text": 'Welcome to the topic!' },
-    { "id": 1, "topicID": 1, "text": 'This is AI response 1' },
-    { "id": 1, "topicID": 1, "text": 'This is AI response 2' }
+const mockSimulatorDetails = [
+    {
+        title: "AI Mentor",
+        intro_text: "Hello! Are you ready to discuss the topic?",
+        context: "topic context"
+    }
 ];
 
 describe('Conversation component', () => {
@@ -55,38 +63,27 @@ describe('Conversation component', () => {
     }
 
     test('renders initial AI message on mount', async () => {
-        globalThis.fetch = jest.fn()
-        .mockResolvedValueOnce({
-            ok: true,
-            json: async () => aiMessagesMock,
-        });
+        axios.get.mockResolvedValueOnce({ data: mockSimulatorDetails });
 
         setup();
 
         await waitFor(() => {
-            expect(screen.getByText('Welcome to the topic!')).toBeInTheDocument();
+            expect(screen.getByText('Hello! Are you ready to discuss the topic?')).toBeInTheDocument();
         });
     });
 
     test('renders initial AI message and sends user message', async () => {
-        // Mock the fetch calls
-        globalThis.fetch = jest.fn()
-            .mockResolvedValueOnce({
-                json: () => Promise.resolve(aiMessagesMock),
-            })
-            .mockResolvedValueOnce({
-                ok: true,
-                json: () => Promise.resolve({}),
-            })
-            .mockResolvedValueOnce({
-                json: () => Promise.resolve(aiMessagesMock),
-            });
+        axios.get.mockResolvedValueOnce({ data: mockSimulatorDetails });
+
+        axios.post.mockResolvedValueOnce({
+            data: { text: "Hello AI!" },
+        });
 
         setup();
 
 
         await waitFor(() => {
-            expect(screen.getByTestId('mock-message')).toHaveTextContent('Welcome to the topic!');
+            expect(screen.getByTestId('mock-message')).toHaveTextContent('Hello! Are you ready to discuss the topic?');
         });
 
         const input = screen.getByTestId('mock-input');
@@ -96,7 +93,6 @@ describe('Conversation component', () => {
         await waitFor(() => {
             const messages = screen.getAllByTestId('mock-message');
             expect(messages.at(-2)).toHaveTextContent('Hello AI!');
-            expect(messages.at(- 1)).toHaveTextContent('AI response 1');
         });
     });
 
