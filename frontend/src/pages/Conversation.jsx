@@ -55,7 +55,7 @@ const Conversation = () => {
         let aiResponse = {};
 
         if (aiMessageId > data.length - 1) {
-          // No more AI messages left for this topic
+          // No more AI messages left for this topic - <TO DO - NEED TO UPDATE THIS LOGIC>
           aiResponse = {
             agent: simulatorDetails[0]["title"],
             message: wrapUpMessage,
