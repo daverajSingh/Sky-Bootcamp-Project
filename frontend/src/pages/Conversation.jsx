@@ -7,6 +7,7 @@ import {
   Message,
   MessageList,
   MessageSeparator,
+  TypingIndicator
 } from "@chatscope/chat-ui-kit-react";
 import { API_BASE } from '../env.js';
 import axios from "axios";
@@ -18,6 +19,7 @@ const Conversation = () => {
   // IDs to keep track of which message to send next, may not be needed once backend is connected
   const [aiMessageId, setAIMessageId] = useState(0);
   const [simulatorDetails, setSimulatorDetails] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const options = {
     weekday: "long",
@@ -41,6 +43,7 @@ const Conversation = () => {
     setMessageList(prev => [...prev, userResponse]);
 
     const sendMessageToSimulator = async () => {
+      setLoading(true)
       try {
         const response = await axios.post(`${API_BASE}/api/simulator/${topicid}`, {
           text: message,
@@ -52,8 +55,11 @@ const Conversation = () => {
         });
 
         const data = response.data;
-        let aiResponse = {};
 
+        if(data) {
+          setLoading(false);
+        }
+        let aiResponse = {};
         if (aiMessageId > data.length - 1) {
           // No more AI messages left for this topic - <TO DO - NEED TO UPDATE THIS LOGIC>
           aiResponse = {
@@ -118,6 +124,7 @@ const Conversation = () => {
             />
           ))}
         </MessageList>
+        {loading &&(<TypingIndicator content=`${simulatorDetails[0]["title"]} is typing` />)}
         <MessageInput
           placeholder="Type message here"
           attachButton="false"
