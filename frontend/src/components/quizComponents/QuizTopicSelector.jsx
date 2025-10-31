@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import QuizTopicCard from "./QuizTopicCard";
-import QuizChatBox from "./QuizChatBox";
-import QuizQuestionsPanel from "./QuizQuestionsPanel";
 import quizService from "./quizService";
+import {
+  QuizTopicCard,
+  QuizChatBox,
+  QuizQuestionsPanel,
+  Button,
+} from "../index";
 
 const QuizTopicSelector = () => {
   const [topics, setTopics] = useState([]);
@@ -50,6 +53,19 @@ const QuizTopicSelector = () => {
     setSelectedTopicID((prev) => (prev === topicID ? null : topicID));
   }
 
+  function incrementTopicSelected() {
+    const allTopics = Object.keys(completedMap);
+    const currentIndex = selectedTopicID
+      ? allTopics.indexOf(selectedTopicID)
+      : -1;
+    let nextTopic =
+      allTopics
+        .slice(currentIndex + 1)
+        .find((key) => completedMap[key] === "todo") || null;
+
+    setSelectedTopicID(nextTopic);
+  }
+
   // Called when a question in the selected topic is answered/unanswered
   function handleTopicAnswer(topicID, questionID, selectedIndicesArray) {
     setTopicAnswers((prev) => {
@@ -82,10 +98,16 @@ const QuizTopicSelector = () => {
   ).length;
 
   return (
-    <div>
-      <h2 style={{ textAlign: "left" }}>Quiz topics</h2>
+    <>
+      <div className="flex flex-row justify-center mb-3">
+        <h2 className="p-2">Quiz topics</h2>
+        <Button
+          buttonText="Next Topic"
+          onClick={() => incrementTopicSelected()}
+        />
+      </div>
 
-      {/* Row containing topic cards and chatbox/transcript */}
+      {/* Row containing topic ca rds and chatbox/transcript */}
       <div style={{ display: "flex", gap: 12, alignItems: "stretch" }}>
         <div
           style={{
@@ -132,12 +154,12 @@ const QuizTopicSelector = () => {
         }
       />
 
-      <div style={{ marginTop: 20 }}>
+      <div className="mt-2">
         <p>
           Completed: {completedCount} / {Math.min(5, topics.length)}
         </p>
       </div>
-    </div>
+    </>
   );
 };
 
