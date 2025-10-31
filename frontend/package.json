@@ -8,7 +8,6 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "serve-json": "json-server --watch src/data/simulationData.json --port 3000",
     "test": "jest --config jest.config.js",
     "test:coverage": "jest --config jest.config.js --coverage"
   },
