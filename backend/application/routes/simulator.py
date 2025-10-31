@@ -13,7 +13,7 @@ def get_ai_response_for_user_input(topic_id):
     user_input = data['text']
     context = data['context']
 
-    ai_response = dialogue(user_input, context)
+    ai_response = dialogue(user_input, context, topic_id)
     return jsonify({"text":ai_response}), 200
 
 

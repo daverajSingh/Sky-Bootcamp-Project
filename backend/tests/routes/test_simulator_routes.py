@@ -17,7 +17,7 @@ def mock_services(monkeypatch):
     def mock_get_ai_response_for_user_input():
         return { "text": "AI's response to user input"}
 
-    def mock_ai_dialogue(user_input, context):
+    def mock_ai_dialogue(user_input, context, topic_id):
         return  "AI's response to user input"
 
     monkeypatch.setattr("application.routes.simulator.get_ai_response_for_user_input", mock_get_ai_response_for_user_input)
