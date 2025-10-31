@@ -124,7 +124,7 @@ const Conversation = () => {
             />
           ))}
         </MessageList>
-        {loading &&(<TypingIndicator content=`${simulatorDetails[0]["title"]} is typing` />)}
+        {/* {loading &&(<TypingIndicator content=`${simulatorDetails[0]["title"]} is typing` />)} */}
         <MessageInput
           placeholder="Type message here"
           attachButton="false"
