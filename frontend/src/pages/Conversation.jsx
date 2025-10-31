@@ -43,7 +43,7 @@ const Conversation = () => {
     setMessageList(prev => [...prev, userResponse]);
 
     const sendMessageToSimulator = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await axios.post(`${API_BASE}/api/simulator/${topicid}`, {
           text: message,
@@ -56,9 +56,6 @@ const Conversation = () => {
 
         const data = response.data;
 
-        if(data) {
-          setLoading(false);
-        }
         let aiResponse = {};
         if (aiMessageId > data.length - 1) {
           // No more AI messages left for this topic - <TO DO - NEED TO UPDATE THIS LOGIC>
@@ -79,6 +76,8 @@ const Conversation = () => {
         setAIMessageId(prev => prev + 1);
       } catch (error) {
         console.error('Error sending message to simulator:', error);
+      } finally {
+        setLoading(false);
       }
     }
     sendMessageToSimulator();
@@ -111,7 +110,13 @@ const Conversation = () => {
   return (
     <MainContainer>
       <ChatContainer>
-        <MessageList>
+        <MessageList
+          typingIndicator={
+            loading ? (
+              <TypingIndicator content={`${simulatorDetails?.[0]?.title} is typing`} />
+            ) : null
+          }
+        >
           <MessageSeparator content={today.toLocaleString("en-UK", options)} />
           {messageList.map((message, index) => (
             <Message
@@ -124,10 +129,10 @@ const Conversation = () => {
             />
           ))}
         </MessageList>
-        {/* {loading &&(<TypingIndicator content=`${simulatorDetails[0]["title"]} is typing` />)} */}
         <MessageInput
           placeholder="Type message here"
           attachButton="false"
+          disabled={loading}
           onSend={sendUserResponse}
         />
       </ChatContainer>
