@@ -4,6 +4,7 @@ import FAQ from "../../components/FAQ";
 import axios from "axios";
 
 jest.mock("axios");
+jest.mock("../../env", () => ({ API_BASE: "https://mocked-api.com" }));
 
 describe("FAQ", () => {
   afterEach(() => {
@@ -34,9 +35,11 @@ describe("FAQ", () => {
       data: { question: "Wrong shape" }, // Not an array
     });
 
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
-    render(<FAQ />)
+    render(<FAQ />);
 
     await waitFor(() => {
       expect(
@@ -45,7 +48,7 @@ describe("FAQ", () => {
     });
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Error displaying FAQ data'),
+      expect.stringContaining("Error displaying FAQ data"),
       expect.any(Error)
     );
 
@@ -55,7 +58,7 @@ describe("FAQ", () => {
   it("renders nothing but heading if faqData is empty array", async () => {
     axios.get.mockResolvedValueOnce({ data: [] });
 
-    render(<FAQ />)
+    render(<FAQ />);
 
     expect(screen.getByText("Frequently Asked Questions")).toBeInTheDocument();
 

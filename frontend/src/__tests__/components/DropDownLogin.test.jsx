@@ -1,23 +1,24 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import DropDownLogin from '../../components/DropDownLogin';
-import { useAuth } from '../../components/AuthContext';
-import { useNavigate } from 'react-router';
+import React from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import DropDownLogin from "../../components/DropDownLogin";
+import { useAuth } from "../../components/AuthContext";
+import { useNavigate } from "react-router";
+jest.mock("../../env", () => ({ API_BASE: "https://mocked-api.com" }));
 
-jest.mock('../../components/AuthContext', () => ({
+jest.mock("../../components/AuthContext", () => ({
   useAuth: jest.fn(),
 }));
 
-jest.mock('react-router', () => ({
+jest.mock("react-router", () => ({
   useNavigate: jest.fn(),
 }));
 
-jest.mock('react-dom', () => ({
-  ...jest.requireActual('react-dom'),
+jest.mock("react-dom", () => ({
+  ...jest.requireActual("react-dom"),
   createPortal: (element) => element,
 }));
 
-describe('DropDownLogin', () => {
+describe("DropDownLogin", () => {
   const mockLogin = jest.fn();
   const mockNavigate = jest.fn();
 
@@ -27,95 +28,100 @@ describe('DropDownLogin', () => {
     useNavigate.mockReturnValue(mockNavigate);
   });
 
-  it('renders login button by default', () => {
+  it("renders login button by default", () => {
     render(<DropDownLogin />);
-    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
   });
 
-  it('opens dropdown when login button is clicked', () => {
+  it("opens dropdown when login button is clicked", () => {
     render(<DropDownLogin />);
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
-    expect(screen.getByRole('heading', { name: /sign in/i })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /login/i }));
+    expect(
+      screen.getByRole("heading", { name: /sign in/i })
+    ).toBeInTheDocument();
   });
 
-  it('shows error if fields are empty on submit', async () => {
+  it("shows error if fields are empty on submit", async () => {
     render(<DropDownLogin />);
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /login/i }));
 
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
+    fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/please enter both email and password/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/please enter both email and password/i)
+      ).toBeInTheDocument();
     });
   });
 
-  it('calls login and navigates on successful login', async () => {
+  it("calls login and navigates on successful login", async () => {
     render(<DropDownLogin />);
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /login/i }));
 
     globalThis.fetch = jest.fn(() =>
       Promise.resolve({
         ok: true,
-        json: () => Promise.resolve({ token: 'mockToken' }),
+        json: () => Promise.resolve({ token: "mockToken" }),
       })
     );
 
     fireEvent.change(screen.getByPlaceholderText(/john\.doe@sky\.com/i), {
-      target: { value: 'test@example.com' },
+      target: { value: "test@example.com" },
     });
     fireEvent.change(screen.getByPlaceholderText(/••••••••/), {
-      target: { value: 'password123' },
+      target: { value: "password123" },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
+    fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
     await waitFor(() => {
-      expect(mockLogin).toHaveBeenCalledWith('mockToken');
-      expect(mockNavigate).toHaveBeenCalledWith('/admin');
+      expect(mockLogin).toHaveBeenCalledWith("mockToken");
+      expect(mockNavigate).toHaveBeenCalledWith("/admin");
     });
   });
 
-  it('shows error message on failed login', async () => {
+  it("shows error message on failed login", async () => {
     render(<DropDownLogin />);
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /login/i }));
 
     globalThis.fetch = jest.fn(() =>
       Promise.resolve({
         ok: false,
-        json: () => Promise.resolve({ error: 'Invalid credentials' }),
+        json: () => Promise.resolve({ error: "Invalid credentials" }),
       })
     );
 
     fireEvent.change(screen.getByPlaceholderText(/john\.doe@sky\.com/i), {
-      target: { value: 'bad@example.com' },
+      target: { value: "bad@example.com" },
     });
     fireEvent.change(screen.getByPlaceholderText(/••••••••/), {
-      target: { value: 'wrongpass' },
+      target: { value: "wrongpass" },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
+    fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/invalid credentials/i)).toBeInTheDocument();
     });
   });
 
-  it('shows network error on fetch failure', async () => {
+  it("shows network error on fetch failure", async () => {
     render(<DropDownLogin />);
-    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /login/i }));
 
-    globalThis.fetch = jest.fn(() => Promise.reject(new Error('Network down')));
-    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
-
+    globalThis.fetch = jest.fn(() => Promise.reject(new Error("Network down")));
+    const consoleErrorSpy = jest
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
 
     fireEvent.change(screen.getByPlaceholderText(/john\.doe@sky\.com/i), {
-      target: { value: 'test@example.com' },
+      target: { value: "test@example.com" },
     });
     fireEvent.change(screen.getByPlaceholderText(/••••••••/), {
-      target: { value: 'password123' },
+      target: { value: "password123" },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /sign in/i }));
+    fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
     await waitFor(() => {
       expect(screen.getByText(/network error/i)).toBeInTheDocument();
