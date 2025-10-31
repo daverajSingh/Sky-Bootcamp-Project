@@ -109,7 +109,7 @@ def dialogue(user_input, context):
     try:
         response = client.responses.create(
             model=MODEL_NAME,
-            input="Use this context: \n---\n" + context + "\n---\n to answer this user question:" + user_input,
+            input="Use this context: \n---\n" + context + "\n---\n to answer this user question:" + user_input + "in a concise manner.",
         )
         assistant_reply = response.output_text
     except Exception as e:
@@ -121,7 +121,13 @@ def dialogue(user_input, context):
     # print("assistant reply: " + assistant_reply)
     
     validation_prompt = [
-        {"role": "system", "content": "You are a strict validator. Your job is to check if the assistant's reply is relevant to the given topic context. Respond only with 'Y' or 'N'."},
+        {"role": "system", "content": "You are a strict validator."
+        "Your job is to check if the assistant's reply is relevant to the given topic context. Respond only with 'Y' or 'N'."
+        "Remember, if the user's question is not related to the context, the answer is automatically irrelevant, "
+        "even if the answer has been modified to match the context."
+        "For example, if the user asks about something irrelevant that could be made up to match the context, you should still respond N."
+        "For example, if they ask about a cooking recipe, or anything irrelevant to work life, you should respond N."
+        "Only if they ask something relevant to work culture as well as the context, then you should respond Y."},
         {"role": "user", "content": f"""Topic Context:
         {context}
 
@@ -131,7 +137,7 @@ def dialogue(user_input, context):
         Assistant Reply:
         {assistant_reply}
 
-        Is the assistant's reply relevant to the topic context?
+        Is the assistant's reply solely relevant to the topic context?
         
         Strictly reply either Y or N"""}
     ]
