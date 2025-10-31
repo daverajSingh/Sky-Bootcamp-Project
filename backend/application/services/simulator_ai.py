@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
+from application.services.simulator_question_asked import add_simulator_question_asked
+
 # Model and turn limit
 MODEL_NAME = "gpt-5-nano"
 TURN_LIMIT = 5
@@ -102,7 +104,7 @@ load_dotenv()
 
 #     print("Assistant: That’s 5 messages! Start a new chat if you want to continue.")
 
-def dialogue(user_input, context):
+def dialogue(user_input, context, topic_id):
 
     client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
@@ -156,6 +158,7 @@ def dialogue(user_input, context):
     # print("vr:" + validation_result)
     if validation_result.upper() == "Y":
         result = assistant_reply
+        add_simulator_question_asked(topic_id)
     else:
         result = "Sorry - I don't have a reply. Please ask another question"
 
