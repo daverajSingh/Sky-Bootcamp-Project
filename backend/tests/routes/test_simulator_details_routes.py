@@ -28,7 +28,7 @@ def mock_services(monkeypatch):
     monkeypatch.setattr("application.routes.simulator_details.update_simulator_details", mock_execute_queries)
     monkeypatch.setattr("application.routes.simulator_details.delete_simulator_detail", mock_execute_queries)
 
-def test_question_routes(client, mock_services):
+def test_simulator_details_routes(client, mock_services):
     response = client.get('/simulator-details')
     assert response.status_code == 200
     assert response.json == [
@@ -49,7 +49,7 @@ def test_question_routes(client, mock_services):
     assert response.json == {"message": "Detail deleted successfully"}
 
 
-def test_question_routes_missing_topic_id_and_question_text(client):
+def test_simulator_details_routes_missing_details(client):
     response = client.post('/simulator-details', json={})
     assert response.status_code == 400
     assert response.json == {"error": "Topic ID, introduction text, title for AI and context are required"}
