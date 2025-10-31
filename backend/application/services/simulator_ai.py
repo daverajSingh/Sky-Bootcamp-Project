@@ -5,7 +5,7 @@ from openai import OpenAI
 from application.services.simulator_question_asked import add_simulator_question_asked
 
 # Model and turn limit
-MODEL_NAME = "gpt-5-nano"
+MODEL_NAME = "gpt-4.1-nano"
 TURN_LIMIT = 5
 
 load_dotenv()
