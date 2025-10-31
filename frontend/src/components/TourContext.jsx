@@ -2,6 +2,9 @@ import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
 
 const driverObj = driver({
+  onDestroyed: () => {
+    localStorage.setItem("tourCompleted", "true");
+  },
   showProgress: true,
   steps: [
     {
@@ -59,11 +62,6 @@ const driverObj = driver({
         title: "You're all set!",
         description:
           "You can always restart this tour by pressing the Tutorial button.",
-
-        onCloseClick: () => {
-          localStorage.setItem("tourCompleted", "true");
-          driverObj.destroy();
-        },
       },
     },
   ],

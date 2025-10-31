@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { FiLogIn } from "react-icons/fi";
 import { useNavigate } from "react-router";
 import { useAuth } from "./AuthContext";
+import { API_BASE } from "../env.js";
 
 function DropDownLogin() {
   const { login } = useAuth();
@@ -74,7 +75,7 @@ function DropDownLogin() {
       return;
     }
     try {
-      const response = await fetch("http://localhost:5000/api/login", {
+      const response = await fetch(`${API_BASE}/api/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

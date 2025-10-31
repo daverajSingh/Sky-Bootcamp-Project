@@ -1,6 +1,7 @@
 import FAQItem from "./FAQItem";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { API_BASE } from "../env.js";
 
 const FAQ = () => {
   const [faqs, setFaqs] = useState([]);
@@ -8,7 +9,7 @@ const FAQ = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/faq");
+        const response = await axios.get(`${API_BASE}/api/faq`);
         setFaqs(response.data);
       } catch (error) {
         console.error("Error fetching FAQ data:", error);
