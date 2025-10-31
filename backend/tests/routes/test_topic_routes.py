@@ -69,7 +69,7 @@ def test_topics_routes(client, mock_services):
     assert response.status_code == 200
     assert response.json == [{'question_id': 1, 'question_text': 'Question 1'}]
 
-    response = client.get('/topic/1/simulator-details')
+    response = client.get('api/topic/1/simulator-details')
     assert response.status_code == 200
     assert response.json == [{'detail_id': 1, 'title': 'AI - 1', 'intro_text':'Topic 1 Intro', 'context': 'Topic 1 Context'}]
 
