@@ -25,8 +25,8 @@ INSERT IGNORE INTO simulator_details (topic_id, title, intro_text, context) VALU
  'You are a Sky product expert assisting users in understanding and promoting Sky’s offerings. Explain features, answer customer queries, and simulate service scenarios.');
 
 
--- CREATE TABLE IF NOT EXISTS simulator_question_asked (
---     question_id int PRIMARY KEY NOT NULL auto_increment,
---     topic_id int NOT NULL,
---     FOREIGN KEY (topic_id) REFERENCES topic (topic_id) ON DELETE CASCADE
--- );
+CREATE TABLE IF NOT EXISTS simulator_question_asked (
+    question_asked_id int PRIMARY KEY NOT NULL auto_increment,
+    topic_id int NOT NULL,
+    FOREIGN KEY (topic_id) REFERENCES topic (topic_id) ON DELETE CASCADE
+);
