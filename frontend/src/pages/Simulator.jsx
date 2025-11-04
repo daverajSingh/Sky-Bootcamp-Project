@@ -1,4 +1,6 @@
 // import { Card } from "../components";
+import { useNavigate, generatePath } from "react-router";
+import React from "react";
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -56,6 +58,13 @@ const EVENTS = [
 
 
 const Simulator = () => {
+  const navigate = useNavigate();
+
+  function handleEventClick(clickInfo) {
+    const link = clickInfo.event.extendedProps.link;
+    navigate(generatePath(link))
+  }
+
   return (
     // <>
     //   <h1 className="text-xl md:text-3xl text-center py-10">Explore a day at Sky</h1>
@@ -84,6 +93,7 @@ const Simulator = () => {
           height={"auto"}
           initialEvents={EVENTS}
           eventContent={renderEventContent}
+          eventClick={handleEventClick}
         />
       </div>
     </>
