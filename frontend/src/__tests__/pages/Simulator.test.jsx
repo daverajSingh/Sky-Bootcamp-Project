@@ -24,4 +24,20 @@ describe('Simulator Component', () => {
       expect(mockNavigate).toHaveBeenCalledWith('/simulator/2');
     });
   });
+
+  it('renders custom home button and triggers navigation to home page on click', async() => {
+    const mockNavigate = jest.fn();
+    useNavigate.mockReturnValue(mockNavigate);
+
+    render(<Simulator />);
+
+    const homeButton = screen.getByRole('button', { name: /Go to home/i });
+    expect(homeButton).toBeInTheDocument();
+
+    fireEvent.click(homeButton);
+
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('/');
+    });
+  });
 });

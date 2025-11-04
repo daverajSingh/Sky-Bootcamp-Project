@@ -73,7 +73,7 @@ const Simulator = () => {
           headerToolbar={{
             left: "title",
             center: "",
-            right: ""
+            right: "homeButton"
           }}
           initialView='timeGridDay'
           allDaySlot={false}
@@ -83,6 +83,12 @@ const Simulator = () => {
           initialEvents={EVENTS}
           eventContent={renderEventContent}
           eventClick={handleEventClick}
+          customButtons={{
+            homeButton: {
+              text: 'Go to Home',
+              click: () => {navigate("/")},
+            }
+          }}
         />
       </div>
     </>
@@ -99,7 +105,7 @@ function renderEventContent(eventInfo) {
       <b>{timeText} </b>
       <i>{event.title}</i>
       {description && (
-        <div className="py-1 text-xs text-gray-600">
+        <div className="py-1 text-xs text-gray-800">
           {description}
         </div>
       )}
