@@ -21,7 +21,7 @@ def get_quiz_questions():
     except pymysql.MySQLError as e:
         raise RuntimeError(f'Database query error: {e}')
 
-def get_limited_questions(limit):
+def get_limited_questions(limit=2):
     try :
         all_questions = get_quiz_questions()
 
