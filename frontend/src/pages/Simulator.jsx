@@ -85,7 +85,7 @@ const Simulator = () => {
           eventClick={handleEventClick}
           customButtons={{
             homeButton: {
-              text: 'Go to Home',
+              text: 'Home',
               click: () => {navigate("/")},
             }
           }}

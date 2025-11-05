@@ -31,7 +31,7 @@ describe('Simulator Component', () => {
 
     render(<Simulator />);
 
-    const homeButton = screen.getByRole('button', { name: /Go to home/i });
+    const homeButton = screen.getByRole('button', { name: /Home/i });
     expect(homeButton).toBeInTheDocument();
 
     fireEvent.click(homeButton);
