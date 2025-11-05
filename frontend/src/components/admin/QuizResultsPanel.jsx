@@ -1,13 +1,13 @@
 const QuizResultsPanel = ({ quizResults }) => (
-  <aside className="bg-white/80 backdrop-blur-lg border border-sky-100 rounded-2xl p-6 shadow-md hover:shadow-lg transition">
+  <aside className="p-6 rounded-2xl bg-gradient-to-br from-blue-100/30 to-pink-100/30 shadow-lg">
     <h4 className="text-xl font-semibold text-sky-700 mb-4">Quiz Results</h4>
-    <ul className="space-y-3 text-gray-700">
+    <ul className="space-y-3">
       {Object.entries(quizResults).map(([topic, score]) => (
         <li
           key={topic}
-          className="flex justify-between bg-gradient-to-r from-sky-50 to-indigo-50 rounded-md px-3 py-2"
+          className="flex justify-between bg-white rounded-md px-4 py-3 shadow-md"
         >
-          <span>{topic}</span>
+          <span className="text-gray-800">{topic}</span>
           <span className="font-semibold text-sky-600">{score}%</span>
         </li>
       ))}

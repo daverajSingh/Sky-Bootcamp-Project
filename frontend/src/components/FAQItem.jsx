@@ -10,7 +10,7 @@ const FAQItem = ({ question, answer }) => {
     <div className="border-b border-gray-200 py-4" data-testid="faqItem">
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="flex justify-between items-center cursor-pointer"
+        className="flex justify-between items-center cursor-pointer transition-transform duration-150 hover:-translate-y-1 hover:shadow-md"
       >
         <h3>{safeQuestion}</h3>
         <span>

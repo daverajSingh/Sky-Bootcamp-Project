@@ -1,9 +1,27 @@
-import React from "react";
-// Use a simple static path to the sample avatar so tests don't try to import binary assets
-const SAMPLE_PFP = '/src/assets/pfp.png';
+import React, { useState } from "react";
+
+// Map topic names to specific avatar images
+const getAvatarForTopic = (topicID) => {
+  const topicAvatarMap = {
+    'Emotional Intelligence': '/src/assets/pfp1.png',
+    'Agile': '/src/assets/pfp2.png',
+    'Compliance': '/src/assets/pfp3.png',
+    'Communication': '/src/assets/pfp4.png',
+    'Sky products and services': '/src/assets/pfp5.png',
+  };
+  
+  return topicAvatarMap[topicID] || '/src/assets/pfp.png';
+};
 
 // A simple presentational card. Selection/opening is managed by the parent.
 const QuizTopicCard = ({ topic, status = "todo", onSelect, selected, isMock = false }) => {
+  const avatarSrc = isMock ? '/src/assets/pfp.png' : getAvatarForTopic(topic.topicID);
+
+  function activate() {
+    if (isMock) return;
+    if (onSelect) onSelect(topic.topicID);
+  }
+
   return (
     <div
       {...(!isMock
@@ -11,73 +29,38 @@ const QuizTopicCard = ({ topic, status = "todo", onSelect, selected, isMock = fa
             role: "button",
             tabIndex: 0,
             'aria-pressed': selected,
-            onClick: () => onSelect && onSelect(topic.topicID),
-            onKeyDown: (e) =>
-              (e.key === "Enter" || e.key === " ") &&
-              onSelect &&
-              onSelect(topic.topicID),
+            onClick: activate,
+            onKeyDown: (e) => (e.key === "Enter" || e.key === " ") && activate(),
           }
         : {})}
       data-testid={`topic-card-${topic.topicID}`}
       aria-label={`Quiz topic: ${topic.topicID.replace(/_/g, " ")}`}
-      style={{
-        border: selected ? "2px solid #2563eb" : "1px solid #ddd",
-        padding: 0,
-        // allow topic cards to stretch/shrink like answer cards
-        flex: "1 1 0%",
-        minWidth: 140,
-        minHeight: 240,
-        boxSizing: "border-box",
-        cursor: isMock ? "default" : "pointer",
-        background: selected ? "#f0f8ff" : "white",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        position: "relative",
-        overflow: "hidden",
-      }}
+      className={
+        `flex flex-col justify-between relative overflow-hidden min-w-[140px] min-h-[240px] box-border cursor-${isMock ? 'default' : 'pointer'} transition-transform duration-200 ` +
+        (selected ? 'border-2 border-blue-600 bg-blue-50' : 'border') +
+        ' rounded-md ' +
+        (isMock ? 'border-gray-200' : 'hover:-translate-y-1.5 hover:shadow-lg shadow-sm')
+      }
     >
       {/* Full-bleed avatar for every tile; overlays show name and status. Clickable behavior preserved for non-mock cards. */}
       <img
-        src={SAMPLE_PFP}
+        src={avatarSrc}
         alt={topic.person || topic.topicID}
-        style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+        className="w-full h-full object-cover block"
       />
 
-      <div
-        style={{
-          position: "absolute",
-          left: 8,
-          bottom: 8,
-          background: "rgba(0,0,0,0.5)",
-          color: "white",
-          padding: "4px 8px",
-          borderRadius: 6,
-          fontSize: 12,
-        }}
-      >
-        {(topic.person && topic.person) || topic.topicID.replace(/_/g, " ")}
+      <div className="absolute left-2 bottom-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
+        {topic.title || (topic.person && topic.person) || topic.topicID.replace(/_/g, " ")}
       </div>
 
       {!isMock && (
-        <div
-          style={{
-            position: "absolute",
-            right: 8,
-            top: 8,
-            background: "rgba(255,255,255,0.85)",
-            color: "#333",
-            padding: "4px 8px",
-            borderRadius: 6,
-            fontSize: 12,
-          }}
-        >
+        <div className="absolute right-2 top-2 bg-white/90 text-gray-800 px-2 py-1 rounded text-xs">
           {status === "partially" ? "partially completed" : status || "todo"}
         </div>
       )}
 
       {/* Provide the uppercase title in the DOM (used by tests) */}
-      <div style={{ position: "absolute", left: 8, top: "50%", transform: "translateY(-50%)", color: "transparent" }}>
+      <div className="absolute left-2 top-1/2 -translate-y-1/2 text-transparent">
         <strong>{topic.topicID.replace(/_/g, " ").toUpperCase()}</strong>
       </div>
     </div>

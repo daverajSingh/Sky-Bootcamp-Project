@@ -115,7 +115,7 @@ function DropDownLogin() {
       <button
         id="login"
         ref={buttonRef}
-        className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition duration-300 flex items-center gap-2"
+        className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition duration-300 flex items-center gap-2 shadow-md hover:shadow-lg active:scale-95"
         onClick={() => setIsOpen(!isOpen)}
       >
         <FiLogIn size={20} />
@@ -168,7 +168,7 @@ function DropDownLogin() {
               <button
                 onClick={handleSubmit}
                 disabled={isLoading}
-                className="w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 transition duration-300 disabled:bg-indigo-300 disabled:cursor-not-allowed flex items-center justify-center"
+                className="w-full bg-indigo-500 text-white py-2 rounded-md hover:bg-indigo-600 transition duration-300 disabled:bg-indigo-300 disabled:cursor-not-allowed flex items-center justify-center shadow-md hover:shadow-lg active:scale-95"
               >
                 {isLoading ? (
                   <>

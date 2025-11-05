@@ -14,10 +14,10 @@ def mock_services(monkeypatch):
     mock_quiz_session_data = [
         {'question_id': 1, 'topic_id': 1, 'option_id': 1,
          'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
-         'option_text': 'Option 1', 'is_correct': 0},
+         'option_text': 'Option 1', 'is_correct': 0, 'title': 'Test Role 1'},
         {'question_id': 1, 'topic_id': 1, 'option_id': 2,
          'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
-         'option_text': 'Option 2', 'is_correct': 1},
+         'option_text': 'Option 2', 'is_correct': 1, 'title': 'Test Role 1'},
     ]
 
     def mock_get_quiz_questions():
@@ -40,6 +40,8 @@ def test_get_all_quiz_questions_route(client, mock_services):
     assert isinstance(response.json, list)
     assert "questions" in response.json[0]
     assert "topicID" in response.json[0]
+    assert "title" in response.json[0]
+    assert response.json[0]["title"] == "Test Role 1"
     assert "questionID" in response.json[0]["questions"][0]
     assert "question" in response.json[0]["questions"][0]
     assert "options" in response.json[0]["questions"][0]

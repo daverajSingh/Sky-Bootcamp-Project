@@ -100,16 +100,9 @@ const QuizTopicSelector = ({ navigate }) => {
   return (
     <>
       {/* Left: grid of topic cards resembling a call; Right: chatbox/transcript */}
-      <div style={{ display: "flex", gap: 12, alignItems: "stretch" }}>
-        <div style={{ flex: "1 1 0%" }}>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 12,
-              alignItems: "stretch",
-            }}
-          >
+      <div className="bg-gradient-to-br from-blue-100/30 to-pink-100/30 p-4 rounded-xl shadow-lg flex gap-3 items-stretch">
+        <div className="flex-1 bg-white/90 p-2.5 rounded-lg shadow-sm">
+          <div className="grid grid-cols-3 gap-3 items-stretch">
             {(() => {
               const visible = topics.slice(0, 5);
               const mock = { topicID: "you", person: "You", description: "", isMock: true };
@@ -128,7 +121,7 @@ const QuizTopicSelector = ({ navigate }) => {
           </div>
         </div>
 
-        <div style={{ flex: "0 0 360px" }}>
+  <div className="flex-none w-[360px] flex items-stretch">
           <QuizChatBox
             topics={topics.slice(0, 5)}
             completedMap={completedMap}

@@ -22,6 +22,7 @@ const QuizChatBox = ({
     .filter((t) => completedMap[t.topicID] === "answered")
     .map((t) => ({
       topicID: t.topicID,
+      title: t.title || t.topicID.replace(/_/g, " "),
       text: t.personMessage || `${t.topicID} completed`,
     }));
 
@@ -97,66 +98,30 @@ const QuizChatBox = ({
   }
 
   return (
-    <div
-      style={{
-        border: "1px solid #ccc",
-        padding: 14,
-        boxSizing: "border-box",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        height: "100%",
-        minHeight: minBoxHeight,
-        alignSelf: "stretch",
-        flex: "0 0 360px",
-      }}
-    >
+    <div className="border border-gray-100 p-4 box-border flex flex-col justify-between h-full min-h-[480px] flex-none w-[360px] bg-white rounded-xl shadow-lg">
       <div>
-        <h3 style={{ marginTop: 0 }}>Completed: {completedCount} / {totalTopics}</h3>
+        <h3 className="mt-0">Completed: {completedCount} / {totalTopics}</h3>
       </div>
 
-      <div style={{ flex: 1, overflowY: "auto", paddingRight: 6 }}>
+      <div className="flex-1 overflow-y-auto pr-1.5">
         <div>
           <strong>Manager:</strong> Are you ready to join our team? Answer the
           questions to gain more insight!
         </div>
         {messages.map((m) => (
-          <div key={m.topicID} style={{ marginTop: 8 }}>
-            <strong>{m.topicID.replace(/_/g, " ")}:</strong> {m.text}
+          <div key={m.topicID} className="mt-2">
+            <strong>{m.title}:</strong> {m.text}
           </div>
         ))}
       </div>
 
       {allCompleted && (
-        <div
-          style={{
-            marginTop: 12,
-            borderTop: '1px solid #e5e7eb',
-            paddingTop: 10,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: 10,
-            width: '100%'
-          }}
-        >
-          <span style={{ color: '#111', fontWeight: 600 }}>I'm good to go</span>
+        <div className="mt-3 border-t border-gray-200 pt-2 flex justify-between items-center gap-2 w-full">
+          <span className="text-gray-900 font-semibold">I'm good to go</span>
           <button
             aria-label="send-results"
             onClick={onDoneClick}
-            style={{
-              background: '#4f46e5',
-              color: 'white',
-              border: 'none',
-              padding: 12,
-              borderRadius: 9999,
-              width: 44,
-              height: 44,
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: 'pointer',
-            }}
+            className="bg-indigo-600 text-white border-0 p-3 rounded-full w-11 h-11 inline-flex items-center justify-center shadow-md hover:shadow-lg transition-transform duration-120 active:scale-95"
             data-testid="send-results-btn"
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>

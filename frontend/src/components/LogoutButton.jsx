@@ -20,7 +20,7 @@ function LogoutButton() {
       )}
       <button
         onClick={handleLogout}
-        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300 flex items-center gap-2"
+        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300 flex items-center gap-2 shadow-md hover:shadow-lg active:scale-95"
       >
         <FiLogOut />
         Logout

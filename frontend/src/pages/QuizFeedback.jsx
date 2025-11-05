@@ -45,13 +45,15 @@ const QuizFeedback = () => {
         </Button>
       </div>
 
-      <div className="rounded border p-4 mb-6 bg-white">
-        <p className="text-lg" data-testid="quiz-score">
-          You scored <span className="font-bold">{correctCount}</span> / {totalQuestions}
-        </p>
-      </div>
+      {/* Gradient wrapper for the results area */}
+      <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-100/30 to-pink-100/30 shadow-lg mb-6">
+        <div className="rounded p-4 mb-6 bg-white shadow-md">
+          <p className="text-lg" data-testid="quiz-score">
+            You scored <span className="font-bold">{correctCount}</span> / {totalQuestions}
+          </p>
+        </div>
 
-      <div className="space-y-4">
+        <div className="space-y-4">
         {results.map((r, idx) => {
           const correctOptions = (r.correctIndices || [])
             .map((i) => r.options?.[i]?.text)
@@ -61,7 +63,7 @@ const QuizFeedback = () => {
             .filter(Boolean);
 
           return (
-            <div key={`${r.topicID}-${r.questionID}-${idx}`} className="border rounded p-4 bg-white">
+            <div key={`${r.topicID}-${r.questionID}-${idx}`} className="rounded p-4 bg-white shadow-md">
               <div className="flex items-start justify-between">
                 <h2 className="text-lg font-medium">
                   {idx + 1}. {r.questionText}
@@ -93,6 +95,7 @@ const QuizFeedback = () => {
             </div>
           );
         })}
+        </div>
       </div>
     </div>
   );

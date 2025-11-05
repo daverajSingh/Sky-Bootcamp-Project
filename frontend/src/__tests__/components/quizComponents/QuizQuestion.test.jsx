@@ -45,15 +45,14 @@ describe('QuizQuestion', () => {
   });
 
   it('should show selected state via aria-pressed', () => {
-    render(<QuizQuestion question={mockQuestion} onAnswer={mockOnAnswer} selectedIndex={[0, 2]} />);
-    expect(screen.getByTestId('answer-card-0')).toHaveAttribute('aria-pressed', 'true');
+    render(<QuizQuestion question={mockQuestion} onAnswer={mockOnAnswer} selectedIndex={[2]} />);
     expect(screen.getByTestId('answer-card-2')).toHaveAttribute('aria-pressed', 'true');
   });
 
-  it('should support multi-select by toggling', () => {
+  it('should switch selection to the clicked option', () => {
     render(<QuizQuestion question={mockQuestion} onAnswer={mockOnAnswer} selectedIndex={[0]} />);
     fireEvent.click(screen.getByTestId('answer-card-1'));
-    expect(mockOnAnswer).toHaveBeenCalledWith(1, [0, 1]);
+    expect(mockOnAnswer).toHaveBeenCalledWith(1, [1]);
   });
 
   it('should use testid for question container', () => {

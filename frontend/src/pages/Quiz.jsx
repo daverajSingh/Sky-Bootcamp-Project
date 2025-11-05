@@ -4,15 +4,8 @@ import { QuizTopicSelector, Button } from "../components/index";
 const Quiz = () => {
   let navigate = useNavigate();
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: 24,
-      }}
-    >
-      <div style={{ width: "100%", maxWidth: 1300, marginTop: 12 }}>
+    <div className="flex flex-col items-center p-6">
+      <div className="w-full max-w-[1300px] mt-3">
         <QuizTopicSelector navigate={navigate} />
       </div>
     </div>
