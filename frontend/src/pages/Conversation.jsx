@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { Button } from "../components/index";
 import {
   ChatContainer,
   MainContainer,
@@ -8,7 +7,8 @@ import {
   Message,
   MessageList,
   MessageSeparator,
-  TypingIndicator
+  TypingIndicator,
+  ConversationHeader
 } from "@chatscope/chat-ui-kit-react";
 import { API_BASE } from '../env.js';
 import axios from "axios";
@@ -110,44 +110,43 @@ const Conversation = () => {
   }, []);
 
   return (
-    <>
-      <div className="flex justify-end m-3">
-        <Button
-          buttonText={"Go Back"}
-          onClick={() => navigate("/simulator")}
-        />
-      </div>
-
-      <MainContainer>
-        <ChatContainer>
-          <MessageList
-            typingIndicator={
-              loading ? (
-                <TypingIndicator content={`${simulatorDetails?.[0]?.title} is typing`} />
-              ) : null
-            }
-          >
-            <MessageSeparator content={today.toLocaleString("en-UK", options)} />
-            {messageList.map((message, index) => (
-              <Message
-                key={index}
-                model={{
-                  direction: message.direction,
-                  message: message.message,
-                  sender: message.agent,
-                }}
-              />
-            ))}
-          </MessageList>
-          <MessageInput
-            placeholder="Type message here"
-            attachButton="false"
-            disabled={loading}
-            onSend={sendUserResponse}
+    <MainContainer>
+      <ChatContainer>
+        <ConversationHeader>
+          <ConversationHeader.Back onClick={() => navigate("/simulator")} />
+          <ConversationHeader.Content
+            info="Active"
+            userName={simulatorDetails?.[0]?.title}
           />
-        </ChatContainer>
-      </MainContainer>
-    </>
+        </ConversationHeader>
+        <MessageList
+          className="py-2"
+          typingIndicator={
+            loading ? (
+              <TypingIndicator content={`${simulatorDetails?.[0]?.title} is typing`} />
+            ) : null
+          }
+        >
+          <MessageSeparator content={today.toLocaleString("en-UK", options)} />
+          {messageList.map((message, index) => (
+            <Message
+              key={index}
+              model={{
+                direction: message.direction,
+                message: message.message,
+                sender: message.agent,
+              }}
+            />
+          ))}
+        </MessageList>
+        <MessageInput
+          placeholder="Type message here"
+          attachButton="false"
+          disabled={loading}
+          onSend={sendUserResponse}
+        />
+      </ChatContainer>
+    </MainContainer>
   );
 };
 export default Conversation;
