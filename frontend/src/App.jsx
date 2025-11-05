@@ -4,6 +4,7 @@ import {
   Simulator,
   AdminDashboard,
   Conversation,
+  QuizFeedback,
 } from "./pages/pagesIndex";
 import { Layout, ProtectedRoute } from "./components";
 import { AuthProvider } from "./components/AuthContext";
@@ -28,6 +29,7 @@ function App() {
               <Route path="/simulator" element={<Simulator />} />
               <Route path="/simulator/:topicid" element={<Conversation />} />
               <Route path="/quiz" element={<Quiz />} />
+              <Route path="/quiz/feedback" element={<QuizFeedback />} />
             </Route>
           </Routes>
         </BrowserRouter>

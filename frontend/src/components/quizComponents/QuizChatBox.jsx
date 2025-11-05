@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router";
 import quizService from './quizService';
 
 const QuizChatBox = ({
@@ -8,6 +9,7 @@ const QuizChatBox = ({
   topicAnswers = {},
   startTime,
 }) => {
+  const navigate = useNavigate();
   // collect messages from topics that are completed
   // Only show a topic message when it is fully answered.
   const timeElapsed = Date.now();
@@ -85,22 +87,10 @@ const QuizChatBox = ({
 
     sendQuizSessionData();
 
-    // build a simple text summary for now
-    let message = `You scored ${correctCount} / ${totalQuestions}\n\n`;
-    results.forEach((r, idx) => {
-      message += `${idx + 1}. ${r.questionText}\n`;
-      message += `   ${r.isCorrect ? "Correct" : "Incorrect"}\n`;
-      if (!r.isCorrect) {
-        const correctOptions = r.correctIndices
-          .map((i) => r.options[i] && r.options[i].text)
-          .filter(Boolean);
-        message += `   Correct answer: ${correctOptions.join(" ; ")}\n`;
-      }
-      message += "\n";
+    // Navigate to the feedback page with results in state
+    navigate("/quiz/feedback", {
+      state: { totalQuestions, correctCount, results },
     });
-
-    // use alert for now (popup)
-    alert(message);
   }
 
   return (
@@ -134,7 +124,12 @@ const QuizChatBox = ({
 
       {allCompleted && (
         <div style={{ marginTop: 12 }}>
-          <button onClick={onDoneClick}>I'm good to go</button>
+          <button
+            onClick={onDoneClick}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1"
+          >
+            I'm good to go
+          </button>
         </div>
       )}
     </div>
