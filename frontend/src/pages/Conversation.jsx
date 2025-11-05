@@ -111,7 +111,7 @@ const Conversation = () => {
 
   return (
     <>
-      <div className="flex justify-items-end m-3">
+      <div className="flex justify-end m-3">
         <Button
           buttonText={"Go Back"}
           onClick={() => navigate("/simulator")}
