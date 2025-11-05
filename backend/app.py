@@ -13,9 +13,8 @@ from application.routes.simulator import routes as simulator_routes
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
-
 def create_app():
+    load_dotenv()
     app = Flask(__name__)
     CORS(app, resources={r"/api/*": {"origins": os.getenv("FRONT_END_URL")}})
     app.register_blueprint(login_routes)

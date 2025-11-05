@@ -12,8 +12,8 @@ def questions():
             return jsonify({"error": "Topic ID and question text are required"}), 400
         topic_id = data['topic_id']
         question = data['question_text']
-        add_question(topic_id, question)
-        return jsonify({"message": "Question added successfully"}), 200
+        question_id = add_question(topic_id, question)
+        return jsonify({"message": f"Question added successfully with ID:{question_id}"}), 200
     else:
         all_questions = get_questions()
         return jsonify(all_questions), 200
