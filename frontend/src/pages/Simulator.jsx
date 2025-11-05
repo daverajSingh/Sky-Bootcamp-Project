@@ -49,7 +49,7 @@ const EVENTS = [
     start: todayStr + 'T16:15:00',
     end: todayStr + 'T17:15:00',
     extendedProps: {
-      description: 'Presented by the Sky Product Expert. Discover Sky’s latest offerings and how they enhance customer experience',
+      description: "Presented by the Sky Product Expert. Discover Sky's latest offerings and how they enhance customer experience",
       link: "/simulator/5"
     },
   }
@@ -66,8 +66,8 @@ const Simulator = () => {
 
   return (
     <>
-      <h1 className="text-xl md:text-3xl text-center py-6">Explore a day at Sky</h1>
-      <div className='px-5'>
+      <span className="text-xl md:text-3xl text-center px-5 pt-5">Explore a day at Sky</span>
+      <div className='p-5'>
         <FullCalendar
           plugins={[timeGridPlugin, interactionPlugin]}
           headerToolbar={{
@@ -86,7 +86,7 @@ const Simulator = () => {
           customButtons={{
             homeButton: {
               text: 'Home',
-              click: () => {navigate("/")},
+              click: () => { navigate("/") },
             }
           }}
         />
@@ -98,14 +98,13 @@ const Simulator = () => {
 
 
 function renderEventContent(eventInfo) {
-  const { timeText, event } = eventInfo;
+  const { event } = eventInfo;
   const { description } = event.extendedProps;
   return (
-    <div className="cursor-pointer">
-      <b>{timeText} </b>
-      <i>{event.title}</i>
+    <div className="cursor-pointer truncate">
+      <i className="font-semi-bold">{event.title}</i>
       {description && (
-        <div className="py-1 text-xs text-gray-800">
+        <div className="py-1 text-xs text-black">
           {description}
         </div>
       )}

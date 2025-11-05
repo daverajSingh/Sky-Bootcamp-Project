@@ -1,7 +1,7 @@
 import React from 'react';
 import Conversation from '../../pages/Conversation';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router';
+import { MemoryRouter, Route, Routes, useNavigate} from 'react-router';
 
 
 jest.mock('../../components/AuthContext', () => ({
@@ -14,6 +14,10 @@ jest.mock('../../env', () => ({ API_BASE: 'https://mocked-api.com' }))
 
 import axios from 'axios';
 
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useNavigate: jest.fn(),
+}));
 
 // Mock chat UI components
 jest.mock('@chatscope/chat-ui-kit-react', () => {
@@ -96,5 +100,22 @@ describe('Conversation component', () => {
         });
     });
 
+    it('check if the back button triggers navigation to simulator page', async () => {
+        axios.get.mockResolvedValueOnce({ data: mockSimulatorDetails });
+        
+        const mockNavigate = jest.fn();
+        useNavigate.mockReturnValue(mockNavigate);
+
+        setup();
+
+        const backButton = screen.getByRole('button', { name: /Back/i });
+        expect(backButton).toBeInTheDocument();
+
+        fireEvent.click(backButton);
+
+        await waitFor(() => {
+            expect(mockNavigate).toHaveBeenCalledWith('/simulator');
+        });
+    });
 
 });

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
+import { Button } from "../components/index";
 import {
   ChatContainer,
   MainContainer,
@@ -13,6 +14,7 @@ import { API_BASE } from '../env.js';
 import axios from "axios";
 
 const Conversation = () => {
+  const navigate = useNavigate();
   const { topicid } = useParams();
   // Order of the messages should be maintained in this list as they are added
   const [messageList, setMessageList] = useState([]);
@@ -108,35 +110,44 @@ const Conversation = () => {
   }, []);
 
   return (
-    <MainContainer>
-      <ChatContainer>
-        <MessageList
-          typingIndicator={
-            loading ? (
-              <TypingIndicator content={`${simulatorDetails?.[0]?.title} is typing`} />
-            ) : null
-          }
-        >
-          <MessageSeparator content={today.toLocaleString("en-UK", options)} />
-          {messageList.map((message, index) => (
-            <Message
-              key={index}
-              model={{
-                direction: message.direction,
-                message: message.message,
-                sender: message.agent,
-              }}
-            />
-          ))}
-        </MessageList>
-        <MessageInput
-          placeholder="Type message here"
-          attachButton="false"
-          disabled={loading}
-          onSend={sendUserResponse}
+    <>
+      <div className="flex justify-items-end m-3">
+        <Button
+          buttonText={"Go Back"}
+          onClick={() => navigate("/simulator")}
         />
-      </ChatContainer>
-    </MainContainer>
+      </div>
+
+      <MainContainer>
+        <ChatContainer>
+          <MessageList
+            typingIndicator={
+              loading ? (
+                <TypingIndicator content={`${simulatorDetails?.[0]?.title} is typing`} />
+              ) : null
+            }
+          >
+            <MessageSeparator content={today.toLocaleString("en-UK", options)} />
+            {messageList.map((message, index) => (
+              <Message
+                key={index}
+                model={{
+                  direction: message.direction,
+                  message: message.message,
+                  sender: message.agent,
+                }}
+              />
+            ))}
+          </MessageList>
+          <MessageInput
+            placeholder="Type message here"
+            attachButton="false"
+            disabled={loading}
+            onSend={sendUserResponse}
+          />
+        </ChatContainer>
+      </MainContainer>
+    </>
   );
 };
 export default Conversation;
