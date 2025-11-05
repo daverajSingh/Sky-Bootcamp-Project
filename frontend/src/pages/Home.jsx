@@ -10,6 +10,7 @@ const Home = () => {
             title="Explore a day at Sky"
             link="/simulator"
             description={"Experience our culture, live a day at Sky "}
+            imageURL='assets/simulator_card.png'
           />
         </div>
         <div id="quiz">
@@ -17,6 +18,7 @@ const Home = () => {
             title="Are you Sky ready?"
             link="/quiz"
             description={"Take the quiz to find out"}
+            imageURL='assets/quiz_card.png'
           />
         </div>
       </div>
