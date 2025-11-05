@@ -65,16 +65,15 @@ describe('QuizChatBox', () => {
       <QuizChatBox topics={mockTopics} completedMap={completedMap} allCompleted={false} topicAnswers={{}} />
     );
 
-    expect(screen.queryByText("I'm good to go")).not.toBeInTheDocument();
+  expect(screen.queryByTestId('send-results-btn')).not.toBeInTheDocument();
 
     rerender(
       <QuizChatBox topics={mockTopics} completedMap={completedMap} allCompleted={true} topicAnswers={{}} />
     );
 
-    const btn = screen.getByText("I'm good to go");
-    expect(btn).toBeInTheDocument();
-    // Styled as the shared Button component (indigo background)
-    expect(btn.className).toMatch(/bg-indigo-500/);
+  const btn = screen.getByTestId('send-results-btn');
+  expect(btn).toBeInTheDocument();
+  expect(btn).toHaveAttribute('aria-label', 'send-results');
   });
 
   it('navigates to feedback with results and posts session data when done clicked', async () => {
@@ -86,7 +85,7 @@ describe('QuizChatBox', () => {
       <QuizChatBox topics={mockTopics} completedMap={completedMap} allCompleted={true} topicAnswers={topicAnswers} startTime="2025-10-25 17:00:00"/>
     );
 
-    fireEvent.click(screen.getByText("I'm good to go"));
+  fireEvent.click(screen.getByTestId('send-results-btn'));
 
     await waitFor(() => {
       expect(axios.post).toHaveBeenCalledTimes(1);
