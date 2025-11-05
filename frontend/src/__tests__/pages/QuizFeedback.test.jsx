@@ -4,6 +4,8 @@ import '@testing-library/jest-dom';
 import { MemoryRouter, Routes, Route } from 'react-router';
 import QuizFeedback from '../../pages/QuizFeedback';
 
+jest.mock('../../env', () => ({ API_BASE: 'http://localhost' }));
+
 // Mock react-router navigate to assert button behavior
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => {
@@ -81,7 +83,8 @@ describe('QuizFeedback page', () => {
     );
 
     expect(screen.getByText('Quiz Results')).toBeInTheDocument();
-    expect(screen.getByText(/You scored 1 \/ 2/i)).toBeInTheDocument();
+    // Assert score via test id to avoid ambiguity due to nested spans
+    expect(screen.getByTestId('quiz-score').textContent).toBe('You scored 1 / 2');
 
     // Your answer should appear for both questions
     const yourAnswerLines = screen.getAllByText(/Your answer:/i);

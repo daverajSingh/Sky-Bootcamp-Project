@@ -7,6 +7,15 @@ jest.mock('axios')
 jest.mock('../../../env', () => ({  API_BASE: 'https://mocked-api.com'}))
 
 import axios from 'axios';
+// Provide router context or mock navigate to satisfy components using useNavigate
+const mockNavigate = jest.fn();
+jest.mock('react-router', () => {
+  const actual = jest.requireActual('react-router');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 describe('QuizTopicSelector', () => {
   afterEach(() => {

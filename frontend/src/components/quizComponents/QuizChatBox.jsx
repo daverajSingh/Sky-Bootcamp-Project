@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
 import quizService from './quizService';
+import { Button } from "../index.jsx";
 
 const QuizChatBox = ({
   topics = [],
@@ -124,12 +125,7 @@ const QuizChatBox = ({
 
       {allCompleted && (
         <div style={{ marginTop: 12 }}>
-          <button
-            onClick={onDoneClick}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-1"
-          >
-            I'm good to go
-          </button>
+          <Button onClick={onDoneClick}>I'm good to go</Button>
         </div>
       )}
     </div>

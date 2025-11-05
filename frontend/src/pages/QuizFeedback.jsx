@@ -1,15 +1,15 @@
 import React from "react";
 import { useLocation, useNavigate, Link } from "react-router";
+import { Button } from "../components/index.jsx";
+
 
 const QuizFeedback = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const state = location.state || {};
+  const hasState = !!(location.state && Array.isArray(location.state.results));
 
-  const { totalQuestions = 0, correctCount = 0, results = [] } = state;
-
-  // If user lands here without state (e.g., refresh), guide them back
-  if (!state || typeof totalQuestions !== "number") {
+  // If user lands here without valid results state (e.g., refresh), guide them back
+  if (!hasState) {
     return (
       <div className="w-full max-w-5xl mx-auto p-6">
         <h1 className="text-3xl font-semibold mb-4">Quiz Results</h1>
@@ -32,20 +32,21 @@ const QuizFeedback = () => {
     );
   }
 
+  const { totalQuestions = 0, correctCount = 0, results = [] } = location.state || {};
+
   return (
     <div className="w-full max-w-5xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-semibold">Quiz Results</h1>
-        <button
-          className="px-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300"
+        <Button
           onClick={() => navigate("/")}
         >
           Return Home
-        </button>
+        </Button>
       </div>
 
       <div className="rounded border p-4 mb-6 bg-white">
-        <p className="text-lg">
+        <p className="text-lg" data-testid="quiz-score">
           You scored <span className="font-bold">{correctCount}</span> / {totalQuestions}
         </p>
       </div>

@@ -73,8 +73,8 @@ describe('QuizChatBox', () => {
 
     const btn = screen.getByText("I'm good to go");
     expect(btn).toBeInTheDocument();
-    // Styled as a primary button
-    expect(btn.className).toMatch(/bg-blue-600/);
+    // Styled as the shared Button component (indigo background)
+    expect(btn.className).toMatch(/bg-indigo-500/);
   });
 
   it('navigates to feedback with results and posts session data when done clicked', async () => {
