@@ -8,6 +8,16 @@ jest.mock('../../../env', () => ({  API_BASE: 'https://mocked-api.com'}))
 
 import axios from 'axios';
 
+// Mock react-router navigation
+const mockNavigate = jest.fn();
+jest.mock('react-router', () => {
+  const actual = jest.requireActual('react-router');
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
 describe('QuizChatBox', () => {
   afterEach(cleanup);
 
@@ -61,13 +71,15 @@ describe('QuizChatBox', () => {
       <QuizChatBox topics={mockTopics} completedMap={completedMap} allCompleted={true} topicAnswers={{}} />
     );
 
-    expect(screen.getByText("I'm good to go")).toBeInTheDocument();
+    const btn = screen.getByText("I'm good to go");
+    expect(btn).toBeInTheDocument();
+    // Styled as the shared Button component (indigo background)
+    expect(btn.className).toMatch(/bg-indigo-500/);
   });
 
-  it('should show results with score when done button clicked', async () => {
+  it('navigates to feedback with results and posts session data when done clicked', async () => {
     const completedMap = { emotional_intelligence: 'answered' };
     const topicAnswers = { emotional_intelligence: { 1: [0] } };
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => { });
     axios.post.mockResolvedValueOnce({ status: 200 });
 
     render(
@@ -90,9 +102,13 @@ describe('QuizChatBox', () => {
       })
     );
 
-    expect(alertMock).toHaveBeenCalled();
-    expect(alertMock.mock.calls[0][0]).toContain('You scored 1 / 1');
-
-    alertMock.mockRestore();
+    // Check navigation to feedback with result state
+    expect(mockNavigate).toHaveBeenCalledWith('/quiz/feedback', {
+      state: expect.objectContaining({
+        totalQuestions: 1,
+        correctCount: 1,
+        results: expect.any(Array),
+      }),
+    });
   });
 });
