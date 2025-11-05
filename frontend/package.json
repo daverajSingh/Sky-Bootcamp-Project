@@ -14,6 +14,10 @@
   "dependencies": {
     "@chatscope/chat-ui-kit-react": "^2.1.1",
     "@chatscope/chat-ui-kit-styles": "^1.4.0",
+    "@fullcalendar/core": "^6.1.19",
+    "@fullcalendar/interaction": "^6.1.19",
+    "@fullcalendar/react": "^6.1.19",
+    "@fullcalendar/timegrid": "^6.1.19",
     "@tailwindcss/vite": "^4.1.13",
     "axios": "^1.12.2",
     "driver.js": "^1.3.6",

@@ -8,4 +8,7 @@ export default {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
   setupFilesAfterEnv: ["<rootDir>/src/setupTests.js"],
+  testEnvironmentOptions: {
+    customExportConditions: [] // don't load "browser" field - For FullCalender dependency workaround
+  }
 };
