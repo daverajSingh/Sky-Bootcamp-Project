@@ -16,7 +16,7 @@ const Simulator = () => {
 
   return (
     <>
-      <span className="text-xl md:text-3xl text-center px-5 pt-5">Explore a day at Sky</span>
+      <span className="text-xl md:text-3xl text-center px-5 pt-5 self-center gradient-background bg-clip-text text-transparent font-semibold ">Explore a day at Sky</span>
       <div className='p-5'>
         <FullCalendar
           plugins={[timeGridPlugin, interactionPlugin]}
