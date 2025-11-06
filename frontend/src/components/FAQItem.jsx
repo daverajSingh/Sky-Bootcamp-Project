@@ -7,12 +7,12 @@ const FAQItem = ({ question, answer }) => {
   const safeAnswer = answer || "Answer not available";
 
   return (
-    <div className="border-b border-gray-200 py-4" data-testid="faqItem">
+    <div className="border border-gray-200 hover:border-blue-500 transition-colors duration-300 rounded-md p-4 mb-2" data-testid="faqItem">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex w-full justify-between items-center cursor-pointer"
       >
-        <h3 className="text-left">{safeQuestion}</h3>
+        <h3 className="text-left font-semibold">{safeQuestion}</h3>
         <span className="shrink-0 ml-1">
           {isOpen ? (
             <FiMinus data-testid="faqCollapse" size={18} />

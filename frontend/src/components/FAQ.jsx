@@ -31,7 +31,7 @@ const FAQ = () => {
   return (
     <div className="w-full p-6 ">
       <h2 className="text-xl md:text-3xl pb-2 text-white text-center gradient-background rounded-sm font-semibold">Frequently Asked Questions</h2>
-      <div className="p-4">{content}</div>
+      <div className="py-4">{content}</div>
     </div>
   );
 };
