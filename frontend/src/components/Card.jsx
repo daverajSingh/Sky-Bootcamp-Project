@@ -11,7 +11,7 @@ const Card = ({ title, link, description, imageURL }) => {
 
   return (
     <button
-      className={`relative w-full h-56 rounded-xl overflow-hidden shadow-lg ${bgImage} cursor-pointer`}
+      className={`relative w-full h-64 rounded-xl overflow-hidden shadow-lg bg-cover bg-center ${bgImage} cursor-pointer`}
       onClick={() => navigate(generatePath(link))}
       onMouseEnter={() => description && setShowDescription(true)}
       onMouseLeave={() => description && setShowDescription(false)}
