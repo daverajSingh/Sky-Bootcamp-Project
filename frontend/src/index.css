@@ -17,3 +17,7 @@
 .fc .fc-timegrid-col-frame {
   @apply bg-sky-50
 }
+
+.gradient-background {
+  @apply bg-linear-90 from-[#ff7800] via-[#f80032] via-[17.19%] via-[#ff00a0] via-[42.71%] via-[#8c28ff] via-[60%] via-[#0023ff] via-[85%] to-[#1798ff];
+}

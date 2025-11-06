@@ -8,19 +8,19 @@ const FAQItem = ({ question, answer }) => {
 
   return (
     <div className="border-b border-gray-200 py-4" data-testid="faqItem">
-      <div
+      <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex justify-between items-center cursor-pointer"
+        className="flex w-full justify-between items-center cursor-pointer"
       >
-        <h3>{safeQuestion}</h3>
-        <span>
+        <h3 className="text-left">{safeQuestion}</h3>
+        <span className="shrink-0 ml-1">
           {isOpen ? (
             <FiMinus data-testid="faqCollapse" size={18} />
           ) : (
             <FiPlus data-testid="faqExpand" size={18} />
           )}
         </span>
-      </div>
+      </button>
       {isOpen && <p className="mt-2">{safeAnswer}</p>}
     </div>
   );
