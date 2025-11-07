@@ -7,7 +7,7 @@ import {
   Button,
 } from "../index";
 
-const QuizTopicSelector = () => {
+const QuizTopicSelector = ({ navigate }) => {
   const [topics, setTopics] = useState([]);
   const [completedMap, setCompletedMap] = useState({});
   const [sessionStartTime, setSessionStartTime] = useState(null);
@@ -99,45 +99,38 @@ const QuizTopicSelector = () => {
 
   return (
     <>
-      <div className="flex flex-row justify-center mb-3">
-        <h2 className="p-2">Quiz topics</h2>
-        <Button
-          buttonText="Next Topic"
-          onClick={() => incrementTopicSelected()}
-        />
-      </div>
-
-      {/* Row containing topic ca rds and chatbox/transcript */}
-      <div style={{ display: "flex", gap: 12, alignItems: "stretch" }}>
-        <div
-          style={{
-            display: "flex",
-            gap: 12,
-            alignItems: "stretch",
-            flex: "1 1 0%",
-          }}
-        >
-          {topics.slice(0, 5).map((topic) => (
-            <QuizTopicCard
-              key={topic.topicID}
-              topic={topic}
-              status={completedMap[topic.topicID]}
-              onSelect={handleSelect}
-              selected={selectedTopicID === topic.topicID}
-            />
-          ))}
+      {/* Left: grid of topic cards resembling a call; Right: chatbox/transcript */}
+      <div className="bg-gradient-to-br from-blue-100/30 to-pink-100/30 p-4 rounded-xl shadow-lg flex gap-3 items-stretch">
+        <div className="flex-1 bg-white/90 p-2.5 rounded-lg shadow-sm">
+          <div className="grid grid-cols-3 gap-3 items-stretch">
+            {(() => {
+              const visible = topics.slice(0, 5);
+              const mock = { topicID: "you", person: "You", description: "", isMock: true };
+              const display = [...visible, mock];
+              return display.map((topic) => (
+                <QuizTopicCard
+                  key={topic.topicID}
+                  topic={topic}
+                  isMock={topic.isMock}
+                  status={completedMap[topic.topicID]}
+                  onSelect={handleSelect}
+                  selected={selectedTopicID === topic.topicID}
+                />
+              ));
+            })()}
+          </div>
         </div>
 
-        <div style={{ flex: "0 0 360px" }}>
+  <div className="flex-none w-[360px] flex items-stretch">
           <QuizChatBox
             topics={topics.slice(0, 5)}
             completedMap={completedMap}
+            completedCount={completedCount}
+            totalTopics={Math.min(5, topics.length)}
             // consider allCompleted true only when all visible topics are fully answered
             allCompleted={
               topics.length > 0 &&
-              topics
-                .slice(0, 5)
-                .every((t) => completedMap[t.topicID] === "answered")
+              topics.slice(0, 5).every((t) => completedMap[t.topicID] === "answered")
             }
             topicAnswers={topicAnswers}
             startTime={sessionStartTime}
@@ -154,10 +147,15 @@ const QuizTopicSelector = () => {
         }
       />
 
-      <div className="mt-2">
-        <p>
-          Completed: {completedCount} / {Math.min(5, topics.length)}
-        </p>
+      <div className="mt-2 flex gap-2">
+        <Button
+          buttonText="Next Topic"
+          onClick={() => incrementTopicSelected()}
+        />
+        <Button
+          buttonText="Go To Home"
+          onClick={() => navigate("/")}
+        />
       </div>
     </>
   );

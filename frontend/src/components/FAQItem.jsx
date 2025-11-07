@@ -10,7 +10,7 @@ const FAQItem = ({ question, answer }) => {
     <div className="border border-gray-200 hover:border-blue-500 transition-colors duration-300 rounded-md p-4 mb-2" data-testid="faqItem">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex w-full justify-between items-center cursor-pointer"
+        className="flex w-full justify-between items-center cursor-pointer transition-transform duration-150 hover:-translate-y-1 hover:shadow-md"
       >
         <h3 className="text-left font-semibold">{safeQuestion}</h3>
         <span className="shrink-0 ml-1">
