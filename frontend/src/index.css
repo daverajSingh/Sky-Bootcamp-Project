@@ -39,3 +39,6 @@
   @apply bg-gradient-to-br from-sky-100 via-pink-100 to-indigo-100;
 }
 
+.cs-message {
+  margin-bottom: 1rem !important;
+}
