@@ -4,6 +4,7 @@ import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { EVENTS } from "../../src/data/simulatorEvents"
+import { Container } from "../components/index.jsx";
 
 
 const Simulator = () => {
@@ -15,15 +16,15 @@ const Simulator = () => {
   }
 
   return (
-    <>
-      <span className="text-xl md:text-3xl text-center px-5 pt-5 self-center gradient-background bg-clip-text text-transparent font-semibold ">Explore a day at Sky</span>
+    <Container className="p-6 m-6 text-center">
+      <span className="text-xl md:text-3xl text-center px-5 pt-5 self-center font-semibold ">Explore a day at Sky</span>
       <div className='p-5'>
         <FullCalendar
           plugins={[timeGridPlugin, interactionPlugin]}
           headerToolbar={{
             left: "title",
             center: "",
-            right: "homeButton"
+            right: ""
           }}
           initialView='timeGridDay'
           allDaySlot={false}
@@ -33,15 +34,9 @@ const Simulator = () => {
           initialEvents={EVENTS}
           eventContent={renderEventContent}
           eventClick={handleEventClick}
-          customButtons={{
-            homeButton: {
-              text: 'Home',
-              click: () => { navigate("/") },
-            }
-          }}
         />
       </div>
-    </>
+    </Container>
 
   );
 };
