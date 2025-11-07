@@ -7,21 +7,35 @@
 }
 
 .fc .fc-homeButton-button {
-  @apply px-4 py-2 bg-indigo-500 text-white rounded hover:bg-indigo-600 transition duration-300 flex items-center gap-2 border-0;
+  @apply px-4 py-2 bg-indigo-500 text-white rounded transition duration-300 flex items-center gap-2 border-0 hover:bg-indigo-600;
+}
+
+.fc .fc-event {
+  @apply border-0 rounded-xl shadow-sm;
 }
 
 .fc .fc-event-main {
-  @apply bg-violet-500
+  @apply flex h-full bg-sky-200/70 text-slate-900 px-5 py-3 border border-sky-100 rounded-xl;
+}
+
+.fc .fc-timegrid-event {
+  @apply ml-2;
 }
 
 .fc .fc-timegrid-col-frame {
-  @apply bg-sky-50
+  @apply bg-sky-50;
 }
 
+.fc .fc-col-header-cell-cushion {
+  @apply block text-left font-semibold text-slate-800 pl-4 text-base;
+}
+
+
 .gradient-background {
-  @apply bg-linear-90 from-[#ff7800] via-[#f80032] via-[17.19%] via-[#ff00a0] via-[42.71%] via-[#8c28ff] via-[60%] via-[#0023ff] via-[85%] to-[#1798ff];
+  @apply bg-linear-90 from-[#ffd8a8] via-[#ffcad4] via-[35%] via-[#d9d4ff] via-[60%] to-[#c3e4ff];
 }
 
 .pastel-gradient {
-  @apply bg-gradient-to-br from-sky-200/60 to-pink-200/60;
+  @apply bg-gradient-to-br from-sky-100 via-pink-100 to-indigo-100;
 }
+

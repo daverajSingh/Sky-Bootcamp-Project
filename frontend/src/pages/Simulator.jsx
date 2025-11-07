@@ -6,6 +6,11 @@ import interactionPlugin from '@fullcalendar/interaction'
 import { EVENTS } from "../../src/data/simulatorEvents"
 import { Container } from "../components/index.jsx";
 
+const dayHeaderFormatter = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric",
+  month: "long",
+  year: "numeric"
+});
 
 const Simulator = () => {
   const navigate = useNavigate();
@@ -21,11 +26,7 @@ const Simulator = () => {
       <div className='p-5'>
         <FullCalendar
           plugins={[timeGridPlugin, interactionPlugin]}
-          headerToolbar={{
-            left: "title",
-            center: "",
-            right: ""
-          }}
+          headerToolbar={false}
           initialView='timeGridDay'
           allDaySlot={false}
           slotMinTime={"08:00:00"}
@@ -33,6 +34,7 @@ const Simulator = () => {
           height={"auto"}
           initialEvents={EVENTS}
           eventContent={renderEventContent}
+          dayHeaderContent={renderDayHeader}
           eventClick={handleEventClick}
         />
       </div>
@@ -46,15 +48,22 @@ function renderEventContent(eventInfo) {
   const { event } = eventInfo;
   const { description } = event.extendedProps;
   return (
-    <div className="cursor-pointer truncate">
-      <i className="font-semi-bold">{event.title}</i>
+    <div className="flex h-full flex-col justify-center gap-0 text-left cursor-pointer">
+      <div className="text-sm md:text-base font-semibold leading-tight tracking-tight whitespace-normal">
+        {event.title}
+      </div>
       {description && (
-        <div className="py-1 text-xs text-black">
+        <p className="text-xs text-slate-700 leading-tight whitespace-normal mt-0">
           {description}
-        </div>
+        </p>
       )}
     </div>
   )
+}
+
+function renderDayHeader(headerInfo) {
+  const formattedDate = dayHeaderFormatter.format(headerInfo.date);
+  return `Today, ${formattedDate}`;
 }
 
 export default Simulator;
