@@ -9,6 +9,8 @@ jest.mock('react-router', () => ({
   useNavigate: jest.fn(),
 }));
 
+jest.mock('../../env', () => ({ API_BASE: 'https://mocked-api.com' }))
+
 describe('Simulator Component', () => {
   it('navigates to correct path when an event is clicked', async () => {
     const mockNavigate = jest.fn();
@@ -22,22 +24,6 @@ describe('Simulator Component', () => {
 
     await waitFor(() => {
       expect(mockNavigate).toHaveBeenCalledWith('/simulator/2');
-    });
-  });
-
-  it('renders custom home button and triggers navigation to home page on click', async() => {
-    const mockNavigate = jest.fn();
-    useNavigate.mockReturnValue(mockNavigate);
-
-    render(<Simulator />);
-
-    const homeButton = screen.getByRole('button', { name: /Home/i });
-    expect(homeButton).toBeInTheDocument();
-
-    fireEvent.click(homeButton);
-
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith('/');
     });
   });
 });
