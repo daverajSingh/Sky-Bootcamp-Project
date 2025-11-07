@@ -1,4 +1,5 @@
 import FAQItem from "./FAQItem";
+import Container from "./Container";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_BASE } from "../env.js";
@@ -29,10 +30,12 @@ const FAQ = () => {
   }
 
   return (
-    <div className="w-full p-6 ">
-      <h2 className="text-xl md:text-3xl pb-2 text-white text-center gradient-background rounded-sm font-semibold">Frequently Asked Questions</h2>
-      <div className="py-4">{content}</div>
-    </div>
+    <Container className="p-6 mx-6 mb-6">
+      <h2 className="text-2xl md:text-3xl text-gray-800 text-center font-bold mb-4">
+        Frequently Asked Questions
+      </h2>
+      <div className="space-y-3">{content}</div>
+    </Container>
   );
 };
 

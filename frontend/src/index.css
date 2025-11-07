@@ -21,3 +21,7 @@
 .gradient-background {
   @apply bg-linear-90 from-[#ff7800] via-[#f80032] via-[17.19%] via-[#ff00a0] via-[42.71%] via-[#8c28ff] via-[60%] via-[#0023ff] via-[85%] to-[#1798ff];
 }
+
+.pastel-gradient {
+  @apply bg-gradient-to-br from-sky-200/60 to-pink-200/60;
+}

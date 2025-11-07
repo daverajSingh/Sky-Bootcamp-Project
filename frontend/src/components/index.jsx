@@ -1,5 +1,6 @@
 export { default as AuthButton } from "./AuthButton";
 export { default as Card } from "./Card";
+export { default as Container } from "./Container";
 export { default as DropDownLogin } from "./DropDownLogin";
 export { default as FAQ } from "./FAQ";
 export { default as FAQItem } from "./FAQItem";

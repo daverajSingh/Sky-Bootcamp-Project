@@ -5,6 +5,7 @@ import {
   QuizChatBox,
   QuizQuestionsPanel,
   Button,
+  Container,
 } from "../index";
 
 const QuizTopicSelector = ({ navigate }) => {
@@ -100,7 +101,7 @@ const QuizTopicSelector = ({ navigate }) => {
   return (
     <>
       {/* Left: grid of topic cards resembling a call; Right: chatbox/transcript */}
-      <div className="bg-gradient-to-br from-blue-100/30 to-pink-100/30 p-4 rounded-xl shadow-lg flex gap-3 items-stretch">
+      <Container className="p-4 flex gap-3 items-stretch">
         <div className="flex-1 bg-white/90 p-2.5 rounded-lg shadow-sm">
           <div className="grid grid-cols-3 gap-3 items-stretch">
             {(() => {
@@ -136,7 +137,7 @@ const QuizTopicSelector = ({ navigate }) => {
             startTime={sessionStartTime}
           />
         </div>
-      </div>
+      </Container>
 
       {/* Questions panel: shows the questions for the single selected topic */}
       <QuizQuestionsPanel
