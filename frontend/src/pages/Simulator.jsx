@@ -1,17 +1,66 @@
-import { Card } from "../components";
+import { useNavigate, generatePath } from "react-router";
+import React from "react";
+import FullCalendar from '@fullcalendar/react'
+import timeGridPlugin from '@fullcalendar/timegrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import { EVENTS } from "../../src/data/simulatorEvents"
+
 
 const Simulator = () => {
+  const navigate = useNavigate();
+
+  function handleEventClick(clickInfo) {
+    const link = clickInfo.event.extendedProps.link;
+    navigate(generatePath(link))
+  }
+
   return (
     <>
-      <h1 className="text-xl md:text-3xl text-center py-10">Explore a day at Sky</h1>
-      <div className="grid grid-cols-1 gap-4 p-6 md:grid-cols-5">
-            <Card title="Agile" link="/simulator/2" description="Chat with our Agile Scrum Master to explore agile principles, practices, and how they drive team success"/>
-            <Card title="Compilance" link="/simulator/3" description={"Speak with our Compliance Officer to understand how to stay aligned with policies and regulations in your work"}/>
-            <Card title="Emotional Intelligence" link="/simulator/1" description={"Connect with our Empathetic Coach to learn how emotional intelligence can improve your workplace interactions"} />
-            <Card title="Communication" link="/simulator/4" description={"Talk to our Communication Specialist to enhance your ability to speak clearly, confidently, and effectively"} />
-            <Card title="Sky Products & Services" link="/simulator/5" description={"Discover the full range of Sky products and services with our expert, and learn how they elevate customer experience"}/>
-          </div>
+      <span className="text-xl md:text-3xl text-center px-5 pt-5 self-center gradient-background bg-clip-text text-transparent font-semibold ">Explore a day at Sky</span>
+      <div className='p-5'>
+        <FullCalendar
+          plugins={[timeGridPlugin, interactionPlugin]}
+          headerToolbar={{
+            left: "title",
+            center: "",
+            right: "homeButton"
+          }}
+          initialView='timeGridDay'
+          allDaySlot={false}
+          slotMinTime={"08:00:00"}
+          slotMaxTime={"20:00:00"}
+          height={"auto"}
+          initialEvents={EVENTS}
+          eventContent={renderEventContent}
+          eventClick={handleEventClick}
+          customButtons={{
+            homeButton: {
+              text: 'Home',
+              click: () => { navigate("/") },
+            }
+          }}
+        />
+      </div>
     </>
+
   );
 };
+
+
+function renderEventContent(eventInfo) {
+  const { event } = eventInfo;
+  const { description } = event.extendedProps;
+  return (
+    <div className="cursor-pointer truncate">
+      <i className="font-semi-bold">{event.title}</i>
+      {description && (
+        <div className="py-1 text-xs text-black">
+          {description}
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default Simulator;
+

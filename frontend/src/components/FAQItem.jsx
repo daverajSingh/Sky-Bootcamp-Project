@@ -7,20 +7,20 @@ const FAQItem = ({ question, answer }) => {
   const safeAnswer = answer || "Answer not available";
 
   return (
-    <div className="border-b border-gray-200 py-4" data-testid="faqItem">
-      <div
+    <div className="border border-gray-200 hover:border-blue-500 transition-colors duration-300 rounded-md p-4 mb-2" data-testid="faqItem">
+      <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex justify-between items-center cursor-pointer transition-transform duration-150 hover:-translate-y-1 hover:shadow-md"
       >
-        <h3>{safeQuestion}</h3>
-        <span>
+        <h3 className="text-left font-semibold">{safeQuestion}</h3>
+        <span className="shrink-0 ml-1">
           {isOpen ? (
             <FiMinus data-testid="faqCollapse" size={18} />
           ) : (
             <FiPlus data-testid="faqExpand" size={18} />
           )}
         </span>
-      </div>
+      </button>
       {isOpen && <p className="mt-2">{safeAnswer}</p>}
     </div>
   );

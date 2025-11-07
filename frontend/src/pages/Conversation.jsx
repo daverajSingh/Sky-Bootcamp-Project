@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import {
   ChatContainer,
   MainContainer,
@@ -7,12 +7,14 @@ import {
   Message,
   MessageList,
   MessageSeparator,
-  TypingIndicator
+  TypingIndicator,
+  ConversationHeader
 } from "@chatscope/chat-ui-kit-react";
 import { API_BASE } from '../env.js';
 import axios from "axios";
 
 const Conversation = () => {
+  const navigate = useNavigate();
   const { topicid } = useParams();
   // Order of the messages should be maintained in this list as they are added
   const [messageList, setMessageList] = useState([]);
@@ -110,7 +112,15 @@ const Conversation = () => {
   return (
     <MainContainer>
       <ChatContainer>
+        <ConversationHeader>
+          <ConversationHeader.Back onClick={() => navigate("/simulator")} />
+          <ConversationHeader.Content
+            info="Active"
+            userName={simulatorDetails?.[0]?.title}
+          />
+        </ConversationHeader>
         <MessageList
+          className="py-2"
           typingIndicator={
             loading ? (
               <TypingIndicator content={`${simulatorDetails?.[0]?.title} is typing`} />

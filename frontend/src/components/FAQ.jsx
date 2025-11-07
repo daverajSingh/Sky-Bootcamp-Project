@@ -27,10 +27,11 @@ const FAQ = () => {
   } catch (e) {
     console.error("Error displaying FAQ data:", e);
   }
+
   return (
-    <div className="w-full px-4 py-8 lg:px-16 lg:py-12 lg:max-w-full md:max-w-2xl md:mx-auto">
-      <h2 className="text-3xl pb-2">Frequently Asked Questions</h2>
-      {content}
+    <div className="w-full p-6 ">
+      <h2 className="text-xl md:text-3xl pb-2 text-white text-center gradient-background rounded-sm font-semibold">Frequently Asked Questions</h2>
+      <div className="py-4">{content}</div>
     </div>
   );
 };
