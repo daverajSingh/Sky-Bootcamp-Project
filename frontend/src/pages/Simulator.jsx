@@ -23,6 +23,9 @@ const Simulator = () => {
   return (
     <Container className="p-6 m-6 text-center">
       <span className="text-xl md:text-3xl text-center px-5 pt-5 self-center font-semibold ">Explore a day at Sky</span>
+      <p className="text-sm md:text-base text-slate-600 px-5 pt-2 pb-3">
+        Click on the calendar events to join meetings and chat with team members throughout the day
+      </p>
       <div className='p-5'>
         <FullCalendar
           plugins={[timeGridPlugin, interactionPlugin]}
