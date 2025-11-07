@@ -15,7 +15,7 @@ const QuizQuestion = ({ question, onAnswer, selectedIndex = [] }) => {
   return (
     <div className="mb-3" data-testid={`question-${question.questionID}`}>
       <QuestionTitle human={question.human} questionText={question.question} />
-  <div className="flex gap-3 mt-2 flex-nowrap p-3 rounded-lg bg-transparent">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-2 p-3 rounded-lg bg-transparent">
         {question.options.map((opt, idx) => (
           <AnswerCard
             key={idx}

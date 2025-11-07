@@ -98,7 +98,7 @@ const QuizChatBox = ({
   }
 
   return (
-    <div className="border border-gray-100 p-4 box-border flex flex-col justify-between h-full min-h-[480px] flex-none w-[360px] bg-white rounded-xl shadow-lg">
+    <div className="border border-gray-100 p-4 box-border flex flex-col justify-between h-full min-h-[480px] w-full bg-white rounded-xl shadow-lg">
       <div>
         <h3 className="mt-0">Completed: {completedCount} / {totalTopics}</h3>
       </div>
