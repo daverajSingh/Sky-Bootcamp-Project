@@ -16,7 +16,7 @@ const AnswerCard = ({ text, onSelect, index, isSelected }) => {
       onKeyDown={(e) => (e.key === "Enter" || e.key === " " ? handleClick() : null)}
       onClick={handleClick}
       className={
-        `px-4 py-3 min-w-[120px] max-w-[420px] box-border whitespace-normal break-words flex-1 rounded-md cursor-pointer transition transform duration-150 ease-in-out ` +
+        `px-4 py-3 min-w-0 w-full box-border whitespace-normal break-words rounded-md cursor-pointer transition transform duration-150 ease-in-out ` +
         (isSelected
           ? "border-2 border-gray-800 bg-gray-50 shadow-md"
           : "border border-gray-300 bg-white shadow-sm hover:-translate-y-1 hover:shadow-lg")

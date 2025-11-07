@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import QuizQuestion from "./QuizQuestion";
+import Container from "../Container";
 
 const QuizQuestionsPanel = ({
   topic,
@@ -58,7 +59,7 @@ const QuizQuestionsPanel = ({
       <div className="mt-5 border-t border-gray-200 pt-3" />
       {/* White outer wrapper; inner card uses the pastel gradient so all white areas become pastel except the answer cards */}
         {/* Inner white card contains the title and questions; answer cards remain white inside QuizQuestion/AnswerCard */}
-  <div className="p-4 rounded-lg bg-gradient-to-br from-blue-100/30 to-pink-100/30 shadow-md mb-6"> 
+  <Container className="p-4 mb-6"> 
           <h3 className="font-bold">
             {topic.topicID.replace(/_/g, " ").toUpperCase()}
           </h3>
@@ -74,7 +75,7 @@ const QuizQuestionsPanel = ({
               />
             ))}
           </div>
-        </div>
+        </Container>
     </>
   );
 };

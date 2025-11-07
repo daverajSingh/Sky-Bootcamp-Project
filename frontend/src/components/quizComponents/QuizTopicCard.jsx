@@ -36,7 +36,7 @@ const QuizTopicCard = ({ topic, status = "todo", onSelect, selected, isMock = fa
       data-testid={`topic-card-${topic.topicID}`}
       aria-label={`Quiz topic: ${topic.topicID.replace(/_/g, " ")}`}
       className={
-        `flex flex-col justify-between relative overflow-hidden min-w-[140px] min-h-[240px] box-border cursor-${isMock ? 'default' : 'pointer'} transition-transform duration-200 ` +
+        `flex flex-col justify-between relative overflow-hidden aspect-square w-full box-border cursor-${isMock ? 'default' : 'pointer'} transition-transform duration-200 ` +
         (selected ? 'border-2 border-blue-600 bg-blue-50' : 'border') +
         ' rounded-md ' +
         (isMock ? 'border-gray-200' : 'hover:-translate-y-1.5 hover:shadow-lg shadow-sm')
@@ -46,7 +46,7 @@ const QuizTopicCard = ({ topic, status = "todo", onSelect, selected, isMock = fa
       <img
         src={avatarSrc}
         alt={topic.person || topic.topicID}
-        className="w-full h-full object-cover block"
+        className="absolute inset-0 w-full h-full object-cover"
       />
 
       <div className="absolute left-2 bottom-2 bg-black/50 text-white px-2 py-1 rounded text-xs">
