@@ -15,7 +15,7 @@
 }
 
 .fc .fc-event-main {
-  @apply flex h-full bg-sky-200/70 text-slate-900 px-5 py-3 border border-sky-100 rounded-xl;
+  @apply flex h-full bg-sky-200/100 text-slate-900 px-5 py-3 border border-sky-100 rounded-xl;
 }
 
 .fc .fc-timegrid-event {
