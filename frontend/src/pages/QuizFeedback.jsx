@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, Link } from "react-router";
-import { Button } from "../components/index.jsx";
+import { Button, Container } from "../components/index.jsx";
 import { API_BASE } from "../env.js";
 
 
@@ -85,7 +85,7 @@ const QuizFeedback = () => {
       </div>
 
       {/* Gradient wrapper for the results area */}
-      <div className="p-4 rounded-2xl bg-gradient-to-br from-blue-100/30 to-pink-100/30 shadow-lg mb-6">
+      <Container className="p-4 mb-6">
         <div className="rounded p-4 mb-6 bg-white shadow-md">
           <p className="text-lg" data-testid="quiz-score">
             You scored <span className="font-bold">{correctCount}</span> / {totalQuestions}
@@ -153,7 +153,7 @@ const QuizFeedback = () => {
           );
         })}
         </div>
-      </div>
+      </Container>
     </div>
   );
 };

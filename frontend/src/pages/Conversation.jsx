@@ -111,9 +111,9 @@ const Conversation = () => {
   }, []);
 
   return (
-    <Container className="relative h-80 p-6 m-6">
-      <MainContainer>
-        <ChatContainer>
+    <Container className="p-3 md:p-6 m-3 md:m-6 h-[calc(100vh-8rem)]">
+      <MainContainer className="h-full">
+        <ChatContainer className="h-full">
           <ConversationHeader>
             <ConversationHeader.Back onClick={() => navigate("/simulator")} />
             <ConversationHeader.Content
