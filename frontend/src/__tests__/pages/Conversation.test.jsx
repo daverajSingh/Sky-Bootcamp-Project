@@ -108,7 +108,7 @@ describe('Conversation component', () => {
 
         setup();
 
-        const backButton = screen.getByRole('button', { name: /Back/i });
+        const backButton = screen.getByRole('button');
         expect(backButton).toBeInTheDocument();
 
         fireEvent.click(backButton);

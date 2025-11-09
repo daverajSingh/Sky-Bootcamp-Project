@@ -6,6 +6,14 @@ import QuizFeedback from '../../pages/QuizFeedback';
 
 jest.mock('../../env', () => ({ API_BASE: 'http://localhost' }));
 
+// Mock fetch for AI feedback
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({ feedback: 'Great job!' }),
+  })
+);
+
 // Mock react-router navigate to assert button behavior
 const mockNavigate = jest.fn();
 jest.mock('react-router', () => {
@@ -20,6 +28,7 @@ describe('QuizFeedback page', () => {
   afterEach(() => {
     cleanup();
     mockNavigate.mockReset();
+    fetch.mockClear();
   });
 
   it('shows guidance when no results state is provided', () => {

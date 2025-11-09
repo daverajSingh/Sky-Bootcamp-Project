@@ -3,13 +3,11 @@ import React from "react";
 
 const WelcomeSection = () => {
   return (
-    <div className="relative w-80% h-56 rounded-xl overflow-hidden shadow-lg group bg-linear-to-bl from-violet-500 to-fuchsia-500 m-6">
-      <section className="px-6 py-10 text-center">
-        <h1 className="text-4xl md:text-6xl">Welcome!</h1>
-        <p className="text-s md:text-xl p-4">
-          Experience a day at work, take on challenges, and test your skills
-        </p>
-      </section>
+    <div className="bg-white rounded-lg shadow-md p-10 text-center">
+      <h1 className="text-4xl md:text-6xl text-gray-800 font-extrabold mb-4">Welcome!</h1>
+      <p className="text-base md:text-xl text-gray-700 font-medium">
+        Experience a day at work, take on challenges, and test your skills
+      </p>
     </div>
   );
 };

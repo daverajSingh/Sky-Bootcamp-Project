@@ -17,24 +17,26 @@ def test_get_quiz_questions(mocker):
     mock_instance.query.return_value = [
         {'question_id': 1, 'topic_id': 1, 'option_id': 1, 
          'topic_name': 'Topic 1', 'question_text':'Topic 1 - Question 1',
-         'option_text':'Option 1', 'is_correct': 0},
+         'option_text':'Option 1', 'is_correct': 0, 'title': 'Test Role 1'},
         {'question_id': 1,'topic_id': 1, 'option_id': 2, 
          'topic_name': 'Topic 1','question_text':'Topic 1 - Question 1',
-         'option_text':'Option 2', 'is_correct': 1},
+         'option_text':'Option 2', 'is_correct': 1, 'title': 'Test Role 1'},
         {'question_id': 2, 'topic_id': 2, 'option_id': 1, 
          'topic_name': 'Topic 2', 'question_text':'Topic 2 Question 1',
-         'option_text':'Option 1', 'is_correct': 1},
+         'option_text':'Option 1', 'is_correct': 1, 'title': 'Test Role 2'},
         {'question_id': 2, 'topic_id': 2, 'option_id': 2, 
          'topic_name': 'Topic 2', 'question_text':'Topic 2 Question 1',
-         'option_text':'Option 2', 'is_correct': 0}
+         'option_text':'Option 2', 'is_correct': 0, 'title': 'Test Role 2'}
     ]
 
     all_questions = get_quiz_questions()
 
     assert len(all_questions) == 4
     assert all_questions[0]['question_text'] == 'Topic 1 - Question 1'
+    assert all_questions[0]['title'] == 'Test Role 1'
     assert all_questions[1]['is_correct'] == 1
     assert all_questions[2]['topic_name'] == 'Topic 2'
+    assert all_questions[2]['title'] == 'Test Role 2'
     assert all_questions[3]['option_text'] == 'Option 2' == 'Option 2'
 
 def test_get_limited_quiz_questions(mocker):
@@ -145,6 +147,43 @@ def test_restructure_data():
     sample_input = [
         {'question_id': 1, 'topic_id': 1, 'option_id': 1,
          'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
+         'option_text': 'Option 1', 'is_correct': 0, 'title': 'Test Role 1'},
+        {'question_id': 1, 'topic_id': 1, 'option_id': 2,
+         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
+         'option_text': 'Option 2', 'is_correct': 1, 'title': 'Test Role 1'},
+    ]
+
+    expected_output = [
+        {
+            "topicID": "Topic 1",
+            "title": "Test Role 1",
+            "questions": [
+                    {
+                        "options": [
+                            {
+                                "is_correct": False,
+                                "text": "Option 1"
+                            },
+                            {
+                                "is_correct": True,
+                                "text": "Option 2"
+                            }
+                        ],
+                        "question": "Topic 1 - Question 1",
+                        "questionID": 1
+                    }
+            ]
+        }
+    ]
+
+    actual_output = restructure_data(sample_input)
+    assert actual_output == expected_output
+
+def test_restructure_data_with_missing_title():
+    """Test that restructure_data handles missing title field gracefully"""
+    sample_input = [
+        {'question_id': 1, 'topic_id': 1, 'option_id': 1,
+         'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
          'option_text': 'Option 1', 'is_correct': 0},
         {'question_id': 1, 'topic_id': 1, 'option_id': 2,
          'topic_name': 'Topic 1', 'question_text': 'Topic 1 - Question 1',
@@ -154,6 +193,7 @@ def test_restructure_data():
     expected_output = [
         {
             "topicID": "Topic 1",
+            "title": None,
             "questions": [
                     {
                         "options": [
