@@ -13,22 +13,14 @@ const AnswerCard = ({ text, onSelect, index, isSelected }) => {
       data-testid={`answer-card-${index}`}
       aria-label={`Answer option: ${text}`}
       aria-pressed={isSelected}
-      onKeyDown={(e) =>
-        e.key === "Enter" || e.key === " " ? handleClick() : null
-      }
+      onKeyDown={(e) => (e.key === "Enter" || e.key === " " ? handleClick() : null)}
       onClick={handleClick}
-      style={{
-        border: isSelected ? "2px solid #333" : "1px solid #ccc",
-        padding: 14,
-        minWidth: 120,
-        maxWidth: 420,
-        boxSizing: "border-box",
-        cursor: "pointer",
-        background: isSelected ? "#fafafa" : "white",
-        whiteSpace: "normal",
-        wordBreak: "break-word",
-        flex: "1 1 0%",
-      }}
+      className={
+        `px-4 py-3 min-w-0 w-full box-border whitespace-normal break-words rounded-md cursor-pointer transition transform duration-150 ease-in-out ` +
+        (isSelected
+          ? "border-2 border-gray-800 bg-gray-50 shadow-md"
+          : "border border-gray-300 bg-white shadow-sm hover:-translate-y-1 hover:shadow-lg")
+      }
     >
       {text}
     </div>

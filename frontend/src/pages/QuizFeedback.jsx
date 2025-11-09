@@ -1,12 +1,16 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, Link } from "react-router";
-import { Button } from "../components/index.jsx";
+import { Button, Container } from "../components/index.jsx";
+import { API_BASE } from "../env.js";
 
 
 const QuizFeedback = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const hasState = !!(location.state && Array.isArray(location.state.results));
+  const [aiFeedback, setAiFeedback] = useState("");
+  const [loadingFeedback, setLoadingFeedback] = useState(true);
+  const hasFetchedRef = useRef(false);
 
   // If user lands here without valid results state (e.g., refresh), guide them back
   if (!hasState) {
@@ -34,6 +38,41 @@ const QuizFeedback = () => {
 
   const { totalQuestions = 0, correctCount = 0, results = [] } = location.state || {};
 
+  // Fetch AI-powered feedback when component mounts (only once)
+  useEffect(() => {
+    if (hasState && results.length > 0 && !hasFetchedRef.current) {
+      hasFetchedRef.current = true;
+      fetchAIFeedback();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchAIFeedback = async () => {
+    setLoadingFeedback(true);
+    try {
+      const response = await fetch(`${API_BASE}/api/quiz/feedback`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ results }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setAiFeedback(data.feedback || "");
+      } else {
+        console.error('Failed to fetch AI feedback. Status:', response.status);
+        setAiFeedback("");
+      }
+    } catch (error) {
+      console.error('Error fetching AI feedback:', error);
+      setAiFeedback("");
+    } finally {
+      setLoadingFeedback(false);
+    }
+  };
+
   return (
     <div className="w-full max-w-5xl mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
@@ -45,13 +84,33 @@ const QuizFeedback = () => {
         </Button>
       </div>
 
-      <div className="rounded border p-4 mb-6 bg-white">
-        <p className="text-lg" data-testid="quiz-score">
-          You scored <span className="font-bold">{correctCount}</span> / {totalQuestions}
-        </p>
-      </div>
+      {/* Gradient wrapper for the results area */}
+      <Container className="p-4 mb-6">
+        <div className="rounded p-4 mb-6 bg-white shadow-md">
+          <p className="text-lg" data-testid="quiz-score">
+            You scored <span className="font-bold">{correctCount}</span> / {totalQuestions}
+          </p>
+        </div>
 
-      <div className="space-y-4">
+        {/* AI-Powered Smart Suggestion */}
+        <div className="rounded p-4 mb-6 bg-white shadow-md">
+          <h3 className="text-base font-semibold text-sky-700 mb-2">Smart Suggestion</h3>
+          {loadingFeedback ? (
+            <div className="flex items-center gap-2 text-gray-600">
+              <svg className="animate-spin h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span className="text-sm">Generating personalized feedback...</span>
+            </div>
+          ) : aiFeedback ? (
+            <p className="text-gray-800 leading-relaxed">{aiFeedback}</p>
+          ) : (
+            <p className="text-gray-500 italic text-sm">Feedback unavailable at this time.</p>
+          )}
+        </div>
+
+        <div className="space-y-4">
         {results.map((r, idx) => {
           const correctOptions = (r.correctIndices || [])
             .map((i) => r.options?.[i]?.text)
@@ -61,7 +120,7 @@ const QuizFeedback = () => {
             .filter(Boolean);
 
           return (
-            <div key={`${r.topicID}-${r.questionID}-${idx}`} className="border rounded p-4 bg-white">
+            <div key={`${r.topicID}-${r.questionID}-${idx}`} className="rounded p-4 bg-white shadow-md">
               <div className="flex items-start justify-between">
                 <h2 className="text-lg font-medium">
                   {idx + 1}. {r.questionText}
@@ -93,7 +152,8 @@ const QuizFeedback = () => {
             </div>
           );
         })}
-      </div>
+        </div>
+      </Container>
     </div>
   );
 };

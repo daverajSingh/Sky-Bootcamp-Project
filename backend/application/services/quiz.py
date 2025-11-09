@@ -8,12 +8,14 @@ def get_quiz_questions():
     db = DataAccess()
     try:
         query = """
-                SELECT t.topic_id, q.question_id, o.option_id, t.topic_name, q.question_text, o.option_text, o.is_correct
+                SELECT t.topic_id, q.question_id, o.option_id, t.topic_name, q.question_text, o.option_text, o.is_correct, sd.title
                 FROM topic as t 
                 INNER JOIN question as q
                 ON t.topic_id = q.topic_id
                 INNER JOIN options as o
                 ON o.question_id = q.question_id
+                LEFT JOIN simulator_details as sd
+                ON t.topic_id = sd.topic_id
                 ORDER BY t.topic_id, q.question_id, o.option_id;
                 """
         all_questions = db.query(query)
@@ -89,14 +91,18 @@ def add_question_if_new(topic_questions, item):
 
 
 def restructure_data(flat_data):
-    topics = defaultdict(lambda: {"questions": []})
+    topics = defaultdict(lambda: {"questions": [], "title": None})
     for item in flat_data:
         topic_name = item["topic_name"]
         add_question_if_new(topics[topic_name]["questions"], item)
+        # Store the title (it will be the same for all rows of the same topic)
+        if topics[topic_name]["title"] is None:
+            topics[topic_name]["title"] = item.get("title")
 
     return [
         {
             "topicID": topic,
+            "title": data["title"],
             "questions": data["questions"]
         }
         for topic, data in topics.items()

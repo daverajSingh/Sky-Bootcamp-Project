@@ -7,21 +7,28 @@ const FAQItem = ({ question, answer }) => {
   const safeAnswer = answer || "Answer not available";
 
   return (
-    <div className="border-b border-gray-200 py-4" data-testid="faqItem">
-      <div
+    <div 
+      className="bg-white rounded-md shadow-md p-4 transition-all duration-200 hover:shadow-lg" 
+      data-testid="faqItem"
+    >
+      <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex justify-between items-center cursor-pointer"
+        className="w-full flex justify-between items-center text-left transition-all duration-150 active:scale-95"
       >
-        <h3>{safeQuestion}</h3>
-        <span>
+        <h3 className="font-semibold text-gray-800">{safeQuestion}</h3>
+        <span className="shrink-0 ml-2 text-sky-600">
           {isOpen ? (
-            <FiMinus data-testid="faqCollapse" size={18} />
+            <FiMinus data-testid="faqCollapse" size={20} />
           ) : (
-            <FiPlus data-testid="faqExpand" size={18} />
+            <FiPlus data-testid="faqExpand" size={20} />
           )}
         </span>
-      </div>
-      {isOpen && <p className="mt-2">{safeAnswer}</p>}
+      </button>
+      {isOpen && (
+        <p className="mt-3 text-gray-700 leading-relaxed border-t border-gray-200 pt-3">
+          {safeAnswer}
+        </p>
+      )}
     </div>
   );
 };

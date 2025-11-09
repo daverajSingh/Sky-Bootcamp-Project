@@ -1,4 +1,5 @@
 import FAQItem from "./FAQItem";
+import Container from "./Container";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_BASE } from "../env.js";
@@ -27,11 +28,14 @@ const FAQ = () => {
   } catch (e) {
     console.error("Error displaying FAQ data:", e);
   }
+
   return (
-    <div className="w-full px-4 py-8 lg:px-16 lg:py-12 lg:max-w-full md:max-w-2xl md:mx-auto">
-      <h2 className="text-3xl pb-2">Frequently Asked Questions</h2>
-      {content}
-    </div>
+    <Container className="p-6 mx-6 mb-6">
+      <h2 className="text-2xl md:text-3xl text-gray-800 text-center font-bold mb-4">
+        Frequently Asked Questions
+      </h2>
+      <div className="space-y-3">{content}</div>
+    </Container>
   );
 };
 

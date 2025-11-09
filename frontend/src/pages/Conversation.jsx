@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
-import { Button } from "../components/index";
 import {
   ChatContainer,
   MainContainer,
@@ -8,10 +7,12 @@ import {
   Message,
   MessageList,
   MessageSeparator,
-  TypingIndicator
+  TypingIndicator,
+  ConversationHeader
 } from "@chatscope/chat-ui-kit-react";
 import { API_BASE } from '../env.js';
 import axios from "axios";
+import { Container } from "../components/index.jsx";
 
 const Conversation = () => {
   const navigate = useNavigate();
@@ -110,17 +111,18 @@ const Conversation = () => {
   }, []);
 
   return (
-    <>
-      <div className="flex justify-end m-3">
-        <Button
-          buttonText={"Go Back"}
-          onClick={() => navigate("/simulator")}
-        />
-      </div>
-
-      <MainContainer>
-        <ChatContainer>
+    <Container className="p-3 md:p-6 m-3 md:m-6 h-[calc(100vh-8rem)]">
+      <MainContainer className="h-full">
+        <ChatContainer className="h-full">
+          <ConversationHeader>
+            <ConversationHeader.Back onClick={() => navigate("/simulator")} />
+            <ConversationHeader.Content
+              info="Active"
+              userName={simulatorDetails?.[0]?.title}
+            />
+          </ConversationHeader>
           <MessageList
+            className="py-2"
             typingIndicator={
               loading ? (
                 <TypingIndicator content={`${simulatorDetails?.[0]?.title} is typing`} />
@@ -147,7 +149,7 @@ const Conversation = () => {
           />
         </ChatContainer>
       </MainContainer>
-    </>
+    </Container>
   );
 };
 export default Conversation;

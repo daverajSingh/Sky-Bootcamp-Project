@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from openai import OpenAI
 
 from application.services.simulator_question_asked import add_simulator_question_asked
+from application.services.simulator_details import get_simulator_details_by_topic_id
+from application.services.topic import get_topic
 
 # Model and turn limit
 MODEL_NAME = "gpt-4.1-nano"
@@ -66,7 +68,19 @@ def dialogue(user_input, context, topic_id):
         result = assistant_reply
         add_simulator_question_asked(topic_id)
     else:
-        result = "Sorry - I don't have a reply. Please ask another question"
+        # Fetch the actual topic name from the topic table
+        topic_name = None
+        try:
+            topic_data = get_topic(topic_id)
+            if topic_data and isinstance(topic_data, list) and 'topic_name' in topic_data[0]:
+                topic_name = topic_data[0]['topic_name'].lower()
+        except Exception:
+            topic_name = None
+
+        if topic_name:
+            result = f"Unfortunately I can't answer that. I'm here to talk about {topic_name}."
+        else:
+            result = "I'm here to talk about this topic."
 
     return result
 
