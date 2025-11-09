@@ -119,7 +119,7 @@ function DropDownLogin() {
         onClick={() => setIsOpen(!isOpen)}
       >
         <FiLogIn size={20} />
-        Login
+        Admin
       </button>
       {isOpen &&
         createPortal(

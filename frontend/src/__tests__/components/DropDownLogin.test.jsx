@@ -30,12 +30,12 @@ describe("DropDownLogin", () => {
 
   it("renders login button by default", () => {
     render(<DropDownLogin />);
-    expect(screen.getByRole("button", { name: /login/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /admin/i })).toBeInTheDocument();
   });
 
   it("opens dropdown when login button is clicked", () => {
     render(<DropDownLogin />);
-    fireEvent.click(screen.getByRole("button", { name: /login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /admin/i }));
     expect(
       screen.getByRole("heading", { name: /sign in/i })
     ).toBeInTheDocument();
@@ -43,7 +43,7 @@ describe("DropDownLogin", () => {
 
   it("shows error if fields are empty on submit", async () => {
     render(<DropDownLogin />);
-    fireEvent.click(screen.getByRole("button", { name: /login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /admin/i }));
 
     fireEvent.click(screen.getByRole("button", { name: /sign in/i }));
 
@@ -56,7 +56,7 @@ describe("DropDownLogin", () => {
 
   it("calls login and navigates on successful login", async () => {
     render(<DropDownLogin />);
-    fireEvent.click(screen.getByRole("button", { name: /login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /admin/i }));
 
     globalThis.fetch = jest.fn(() =>
       Promise.resolve({
@@ -82,7 +82,7 @@ describe("DropDownLogin", () => {
 
   it("shows error message on failed login", async () => {
     render(<DropDownLogin />);
-    fireEvent.click(screen.getByRole("button", { name: /login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /admin/i }));
 
     globalThis.fetch = jest.fn(() =>
       Promise.resolve({
@@ -107,7 +107,7 @@ describe("DropDownLogin", () => {
 
   it("shows network error on fetch failure", async () => {
     render(<DropDownLogin />);
-    fireEvent.click(screen.getByRole("button", { name: /login/i }));
+    fireEvent.click(screen.getByRole("button", { name: /admin/i }));
 
     globalThis.fetch = jest.fn(() => Promise.reject(new Error("Network down")));
     const consoleErrorSpy = jest

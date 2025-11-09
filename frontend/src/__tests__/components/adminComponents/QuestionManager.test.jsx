@@ -1,50 +1,114 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import QuestionManager from "../../../components/admin/QuestionManager.jsx";
+import userEvent from "@testing-library/user-event";
+import QuestionManager from "../../../components/admin/QuestionManager";
 
-const mockProps = {
-  topics: ["Agile", "Values"],
-  selectedTopic: "Agile",
-  onSelectTopic: jest.fn(),
-  filteredQuestions: [
-    { id: 1, category: "Agile", question: "Agile question 1" },
-    { id: 2, category: "Agile", question: "Agile question 2" },
-  ],
-  selectedQuestions: { Agile: [1] },
-  onToggleQuestion: jest.fn(),
-  newQuestion: "",
-  onNewQuestionChange: jest.fn(),
-  onAddQuestion: jest.fn(),
-  selectedCountForTopic: 1,
-  totalSelected: 1,
-};
-
-describe("QuestionManager Component", () => {
-  it("renders topic buttons and questions", () => {
-    render(<QuestionManager {...mockProps} />);
-    expect(screen.getByText("Agile")).toBeInTheDocument();
-    expect(screen.getByText("Agile question 1")).toBeInTheDocument();
+describe("QuestionManager", () => {
+  const quizQuestions = [
+    {
+      question: "What is Agile?",
+      topic: "Agile",
+      options: ["A", "B", "C", "D"],
+      correctAnswerIndex: 1,
+    },
+    {
+      question: "What is Git?",
+      topic: "Git",
+      options: ["E", "F", "G", "H"],
+      correctAnswerIndex: 0,
+    },
+  ];
+  test("renders quizQuestions list by default and shows total", () => {
+    render(<QuestionManager adminData={{ quizQuestions }} />);
+    expect(screen.getByText(/2 total/)).toBeInTheDocument();
+    expect(screen.getAllByText(/Topic:/).length).toBe(2);
+    expect(screen.getByText("What is Agile?")).toBeInTheDocument();
+    expect(screen.getByText("What is Git?")).toBeInTheDocument();
   });
 
-  it("calls onSelectTopic when topic button clicked", () => {
-    render(<QuestionManager {...mockProps} />);
-    fireEvent.click(screen.getByText("Values"));
-    expect(mockProps.onSelectTopic).toHaveBeenCalledWith("Values");
+  test("shows empty state when no questions available", () => {
+    render(<QuestionManager adminData={{}} />);
+    expect(screen.getByText(/0 total/)).toBeInTheDocument();
+    expect(screen.getByText(/No questions available./)).toBeInTheDocument();
   });
 
-  it("calls onToggleQuestion when checkbox clicked", () => {
-    render(<QuestionManager {...mockProps} />);
-    const checkboxes = screen.getAllByRole("checkbox");
-    fireEvent.click(checkboxes[0]);
-    expect(mockProps.onToggleQuestion).toHaveBeenCalled();
+  test("can toggle to add form and submit new question payload then reset", async () => {
+    const user = userEvent.setup();
+    const logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+    render(<QuestionManager adminData={{ quizQuestions }} />);
+
+    await user.click(screen.getByRole("button", { name: /Add New/i }));
+    expect(screen.getByRole("button", { name: /Submit/i })).toBeInTheDocument();
+    const questionArea = screen.getByPlaceholderText(/Enter the question/i);
+    expect(questionArea).toBeInTheDocument();
+
+    await user.type(questionArea, "New question text");
+    await user.selectOptions(screen.getByRole("combobox"), "Git");
+
+    const optionInputs = [
+      ...screen.getAllByPlaceholderText(/Answer choice \d/),
+    ];
+    expect(optionInputs).toHaveLength(4);
+
+    for (let i = 0; i < optionInputs.length; i++) {
+      await user.type(optionInputs[i], `Option ${i + 1}`);
+    }
+
+    const correctCheckboxes = screen.getAllByRole("checkbox", {
+      name: /Mark option \d+ as correct/,
+    });
+    expect(correctCheckboxes).toHaveLength(4);
+    expect(correctCheckboxes[0]).toBeChecked();
+    await user.click(correctCheckboxes[2]);
+    expect(correctCheckboxes[2]).toBeChecked();
+    expect(correctCheckboxes[0]).not.toBeChecked();
+
+    await user.click(screen.getByRole("button", { name: /Submit/i }));
+    expect(logSpy).toHaveBeenCalledTimes(1);
+    const payloadArg = logSpy.mock.calls[0][1];
+    expect(payloadArg).toEqual({
+      question: "New question text",
+      topic: "Git",
+      options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+      correctAnswerIndex: 2,
+    });
+
+    expect(questionArea).toHaveValue("");
+    expect(screen.getByRole("combobox")).toHaveValue("");
+    optionInputs.forEach((input) => expect(input).toHaveValue(""));
+    expect(correctCheckboxes[0]).toBeChecked();
+    expect(correctCheckboxes[2]).not.toBeChecked();
+
+    logSpy.mockRestore();
   });
 
-  it("handles adding a new question", () => {
-    render(<QuestionManager {...mockProps} />);
-    const input = screen.getByPlaceholderText(/Type your question/i);
-    const addBtn = screen.getByText("Add");
-    fireEvent.change(input, { target: { value: "New question" } });
-    fireEvent.click(addBtn);
-    expect(mockProps.onAddQuestion).toHaveBeenCalled();
+  test("selecting different correct option unchecks previous one", async () => {
+    const user = userEvent.setup();
+    render(<QuestionManager adminData={{ quizQuestions }} />);
+    await user.click(screen.getByRole("button", { name: /Add New/i }));
+    const checkboxes = screen.getAllByRole("checkbox", {
+      name: /Mark option \d+ as correct/,
+    });
+    expect(checkboxes[0]).toBeChecked();
+    await user.click(checkboxes[1]);
+    expect(checkboxes[1]).toBeChecked();
+    expect(checkboxes[0]).not.toBeChecked();
+    await user.click(checkboxes[3]);
+    expect(checkboxes[3]).toBeChecked();
+    expect(checkboxes[1]).not.toBeChecked();
+  });
+
+  test("Submit button only visible in add tab", async () => {
+    const user = userEvent.setup();
+    render(<QuestionManager adminData={{ quizQuestions }} />);
+    expect(
+      screen.queryByRole("button", { name: /Submit/i })
+    ).not.toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /Add New/i }));
+    expect(screen.getByRole("button", { name: /Submit/i })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: /All Questions/i }));
+    expect(
+      screen.queryByRole("button", { name: /Submit/i })
+    ).not.toBeInTheDocument();
   });
 });

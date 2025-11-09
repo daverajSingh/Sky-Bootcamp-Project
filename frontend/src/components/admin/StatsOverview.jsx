@@ -16,14 +16,10 @@ const StatsOverview = ({ data }) => {
   const [period, setPeriod] = useState("daily");
 
   if (!data?.userActivity || !data?.quizPerformance)
-    return (
-      <p className="text-center text-gray-600 mt-10">
-        Loading charts...
-      </p>
-    );
+    return <p className="text-center text-gray-600 mt-10">Loading charts...</p>;
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-6 w-11/12 mx-auto">
+    <section className="grid grid-cols-1 md:grid-cols-2 gap-6 w-12/12 mx-auto mb-8">
       {/* USER ENGAGEMENT CHART */}
       <div className="bg-white/80 backdrop-blur-lg border border-sky-100 rounded-2xl p-6 shadow-md">
         <h3 className="text-xl font-semibold text-sky-700 mb-4 text-center">
@@ -77,7 +73,6 @@ const StatsOverview = ({ data }) => {
             <Tooltip />
             <Legend />
             <Bar dataKey="correct" fill="#22c55e" name="Correct" />
-            <Bar dataKey="incorrect" fill="#ef4444" name="Incorrect" />
           </BarChart>
         </ResponsiveContainer>
       </div>
