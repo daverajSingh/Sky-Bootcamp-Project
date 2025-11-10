@@ -27,7 +27,7 @@ def login_post(email, password):
             {
                 'admin_email': user['admin_email'],
                 'admin_name': user['admin_name'],
-                'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=30),
+                'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(minutes=60),
                 'iat': datetime.datetime.now(datetime.UTC),
             },
             os.getenv('SECRET_KEY'),
