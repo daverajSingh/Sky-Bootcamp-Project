@@ -1,6 +1,7 @@
 export function KPIs({ data }) {
-  const formatTimeSpent = (mins) => {
-    if (mins == null) return "—";
+  const formatTimeSpent = (seconds) => {
+    if (seconds == null) return "—";
+    const mins = Math.round(seconds / 60);
     const value = Number(mins);
     if (!Number.isFinite(value)) return "—";
     if (value > 60) {

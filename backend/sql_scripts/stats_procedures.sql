@@ -143,7 +143,7 @@ BEGIN
     SELECT
         ROUND(AVG(s.score_value * 100), 1) as averageScore,
         COUNT(DISTINCT q.session_id) as totalSessions,
-        ROUND(SUM(q.time_diff / 60), 0) as timeSpent,
+        ROUND(SUM(q.time_diff), 0) as timeSpent,
         COUNT(DISTINCT sim.question_asked_id) as totalSimulatorQuestions
     FROM
         score s,

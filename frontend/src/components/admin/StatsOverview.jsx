@@ -100,7 +100,7 @@ const StatsOverview = ({ data }) => {
             if (period === "weekly") {
               return {
                 label: item.week_label,
-                fullLabel: item.week_start_date,
+                fullLabel: "Week Beginning " + item.week_start_date,
                 count: item.quiz_count ?? item.users ?? 0,
               };
             }
