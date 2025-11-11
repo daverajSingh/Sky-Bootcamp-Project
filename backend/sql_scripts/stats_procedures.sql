@@ -84,26 +84,26 @@ CREATE PROCEDURE GetQuizTrendWeekly(
 BEGIN
     WITH RECURSIVE week_range AS (
         SELECT 
-            DATE_SUB(CURDATE(), INTERVAL p_weeks WEEK) AS week_start
+            DATE_SUB(DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL p_weeks WEEK) AS week_start
         UNION ALL
         SELECT 
             DATE_ADD(week_start, INTERVAL 1 WEEK)
         FROM 
             week_range
         WHERE 
-            week_start < CURDATE()
+            DATE_ADD(week_start, INTERVAL 1 WEEK) <= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
     )
     SELECT 
-        wr.week_start AS week_start_date,
+        DATE_FORMAT(wr.week_start, '%d-%m-%Y') AS week_start_date,
         DATE_FORMAT(wr.week_start, '%Y-%U') AS week_label,
         COALESCE(COUNT(qs.session_id), 0) AS quiz_count
     FROM 
         week_range wr
     LEFT JOIN 
-        quiz_session qs ON DATE(DATE_SUB(qs.start_time, INTERVAL WEEKDAY(qs.start_time) DAY)) = wr.week_start
+        quiz_session qs ON DATE(qs.start_time) >= wr.week_start 
+                        AND DATE(qs.start_time) < DATE_ADD(wr.week_start, INTERVAL 1 WEEK)
     GROUP BY 
-        wr.week_start,
-        week_label
+        wr.week_start
     ORDER BY 
         wr.week_start ASC;
 END//
