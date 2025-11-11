@@ -56,7 +56,7 @@ function renderEventContent(eventInfo) {
         {event.title}
       </div>
       {description && (
-        <p className="text-xs text-slate-700 leading-tight whitespace-normal mt-0">
+        <p className="hidden md:text-xs md:block text-slate-700 leading-tight whitespace-normal mt-0 ">
           {description}
         </p>
       )}
