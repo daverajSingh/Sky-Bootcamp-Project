@@ -28,6 +28,7 @@ export function AuthProvider({ children }) {
         setTimeout(() => {
           logout();
           alert("Session expired. Please login again.");
+          globalThis.location.href = "/";
         }, timeUntilExpiry);
       }
     } catch (error) {

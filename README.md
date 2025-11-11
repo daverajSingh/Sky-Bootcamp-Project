@@ -19,7 +19,7 @@ Sky Graduate Bootcamp Project - Team (Name TBD)
    - `source venv/bin/activate`
 3. Then type `pip3 install -r requirements.txt` in your terminal. This will install any libraries and plugins required to run the backend.
 4. Finally, type `python3 app.py` to run the project. In the terminal, you will receive a url that will show the local running instance of the project.
-5. NB - Make sure to have the .env file in backend/application directory to ensure correct login details for the mysql database - WILL NOT WORK OTHERWISE. Please request a .env from Daveraj if you require one.
+5. NB - Make sure to have the .env file in backend directory to ensure correct login details for the mysql database - WILL NOT WORK OTHERWISE. Please request a .env from Daveraj if you require one.
 
 # Git Conventions
 
@@ -68,6 +68,4 @@ From the project root run the below commands, make sure you have all the depende
 
 There are sample .env files in the frontend and backend folders named `env_sample`
 
-Use the correct values, the .env file in backend will be used for connecting with your SQL database and the .env file in the frontend will be used to provide the backend url to make the requests. 
-
-
+Use the correct values, the .env file in backend will be used for connecting with your SQL database and the .env file in the frontend will be used to provide the backend url to make the requests.

@@ -11,7 +11,7 @@ jest.mock("../../components/AuthContext", () => ({
 }));
 
 jest.mock("../../components/AuthButton", () =>
-  jest.fn(() => <button>Login</button>)
+  jest.fn(() => <button>Admin</button>)
 );
 
 jest.mock("react-router", () => ({
@@ -48,10 +48,9 @@ describe("Header", () => {
 
     fireEvent.click(screen.getByText("Immersion"));
 
-    expect(screen.getByRole("link", { name: "Immersion" })).toHaveAttribute(
-      "href",
-      "/"
-    );
+    expect(
+      screen.getByRole("link", { name: "Immersion Logo Immersion" })
+    ).toHaveAttribute("href", "/");
   });
 
   it("Check if the login button is visible", () => {
@@ -60,8 +59,8 @@ describe("Header", () => {
       isAuthenticated: false,
     });
 
-    expect(screen.getByText("Login")).toBeInTheDocument();
-    expect(screen.getByText("Login")).toBeVisible();
+    expect(screen.getByText("Admin")).toBeInTheDocument();
+    expect(screen.getByText("Admin")).toBeVisible();
   });
 
   it("checks if the Sky logo image is visible", () => {

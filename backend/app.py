@@ -10,15 +10,14 @@ from application.routes.quiz_session import routes as quiz_session_routes
 from application.routes.score import routes as score_routes
 from application.routes.simulator_details import routes as simulator_details_routes
 from application.routes.simulator import routes as simulator_routes
+from application.routes.admin import routes as admin_routes
 from application.routes.quiz_feedback import routes as quiz_feedback_routes
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
-
 def create_app():
+    load_dotenv()
     app = Flask(__name__)
-    CORS(app, resources={r"/api/*": {"origins": os.getenv("FRONT_END_URL")}})
     app.register_blueprint(login_routes)
     app.register_blueprint(quiz_routes)
     app.register_blueprint(topic_routes)
@@ -28,9 +27,9 @@ def create_app():
     app.register_blueprint(score_routes)
     app.register_blueprint(simulator_details_routes)
     app.register_blueprint(simulator_routes)
+    app.register_blueprint(admin_routes)    
     app.register_blueprint(quiz_feedback_routes)
-
-    
+    CORS(app, resources={r"*": {"origins": os.getenv("FRONT_END_URL")}})
     return app
 
 def create_table():
@@ -40,6 +39,7 @@ def create_table():
         db.execute_file('sql_scripts/faq.sql')
         db.execute_file('sql_scripts/quiz.sql')
         db.execute_file('sql_scripts/simulator.sql')
+        db.execute_stored_procedures('sql_scripts/stats_procedures.sql')
     except Exception as e:
         print(e)
 

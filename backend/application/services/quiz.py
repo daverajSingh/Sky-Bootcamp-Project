@@ -23,7 +23,7 @@ def get_quiz_questions():
     except pymysql.MySQLError as e:
         raise RuntimeError(f'Database query error: {e}')
 
-def get_limited_questions(limit):
+def get_limited_questions(limit=2):
     try :
         all_questions = get_quiz_questions()
 
@@ -119,7 +119,7 @@ def make_date_time_sql_compatible(start_time, end_time):
 
     return [start_time_str, end_time_str]
 
-def limit_questions_per_topic(all_questions, limit):
+def limit_questions_per_topic(all_questions, limit=2):
     # Group by topic -> question -> options
     topic_question_map = defaultdict(lambda: defaultdict(list))
     for row in all_questions:

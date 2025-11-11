@@ -21,7 +21,8 @@ def get_questions_by_topic_id(topic_id):
 def add_question(topic_id, question):
     db = DataAccess()
     try :
-        db.execute("INSERT INTO question (topic_id, question_text) VALUES (%s, %s)", (topic_id, question))
+        last_row_id = db.execute("INSERT INTO question (topic_id, question_text) VALUES (%s, %s)", (topic_id, question))
+        return last_row_id
     except pymysql.MySQLError as e:
         raise RuntimeError(f'Database query error: {e}')
 

@@ -26,6 +26,6 @@ def quiz_questions ():
         return jsonify({"message": "Scores submitted successfully"}), 200
 
     # Get request
-    all_quiz_data = get_quiz_questions()
+    all_quiz_data = get_limited_questions(2)
     structured_data = restructure_data(all_quiz_data)
     return jsonify(structured_data), 200

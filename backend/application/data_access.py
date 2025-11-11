@@ -92,3 +92,25 @@ class DataAccess:
         except (pymysql.MySQLError, IOError) as e:
             self.__connection.rollback()
             raise RuntimeError(f"Failed to execute SQL file: {e}")
+
+    def execute_stored_procedures(self, file_path):
+        """Executes SQL file containing stored procedures."""
+        try:
+            with open(file_path, 'r') as file:
+                sql_content = file.read()
+            self._connect()
+            lines = sql_content.split('\n')
+            cleaned_lines = [
+                line for line in lines 
+                if not line.strip().upper().startswith('DELIMITER')
+            ]
+            sql_content = '\n'.join(cleaned_lines)
+            procedures = sql_content.split('//')
+            for proc in procedures:
+                proc = proc.strip().rstrip(';').strip()
+                if proc and not proc.isspace():
+                    self.__cursor.execute(proc)
+            self.__connection.commit()
+        except (pymysql.MySQLError, IOError) as e:
+            self.__connection.rollback()
+            raise RuntimeError(f"Failed to execute stored procedures file: {e}")
