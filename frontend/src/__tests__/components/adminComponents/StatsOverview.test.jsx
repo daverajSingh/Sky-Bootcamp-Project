@@ -27,10 +27,6 @@ const mockData = {
       { name: "Jan", users: 200 },
       { name: "Feb", users: 250 },
     ],
-    yearly: [
-      { name: "2023", users: 3000 },
-      { name: "2024", users: 3500 },
-    ],
   },
   quizPerformance: [
     { topic: "Agile", correct: 8, incorrect: 2 },
@@ -44,7 +40,7 @@ describe("StatsOverview Component", () => {
 
     expect(screen.getByText(/User Engagement/i)).toBeInTheDocument();
     expect(screen.getByText(/Quiz Performance by Topic/i)).toBeInTheDocument();
-    ["Daily", "Weekly", "Monthly", "Yearly"].forEach((label) => {
+    ["Daily", "Weekly", "Monthly"].forEach((label) => {
       expect(screen.getByText(label)).toBeInTheDocument();
     });
   });
@@ -52,7 +48,7 @@ describe("StatsOverview Component", () => {
   it("switches between data periods when buttons clicked", () => {
     render(<StatsOverview data={mockData} />);
 
-    const buttons = ["Daily", "Weekly", "Monthly", "Yearly"];
+    const buttons = ["Daily", "Weekly", "Monthly"];
     buttons.forEach((label) => {
       const button = screen.getByText(label);
       fireEvent.click(button);
