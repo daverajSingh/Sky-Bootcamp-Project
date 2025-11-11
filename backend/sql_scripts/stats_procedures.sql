@@ -140,8 +140,8 @@ END//
 DROP PROCEDURE IF EXISTS GetOverallKPIs//
 CREATE PROCEDURE GetOverallKPIs()
 BEGIN
-    SELECT
-        (SELECT ROUND(AVG(score_value * 100), 1) FROM score) as averageScore,
+        SELECT 
+        (SELECT (AVG(session_total/8)*100) FROM (SELECT SUM(score_value) AS session_total FROM score GROUP BY session_id) AS session_scores) AS averageScore,
         (SELECT COUNT(DISTINCT session_id) FROM quiz_session) as totalSessions,
         (SELECT SUM(time_diff) FROM quiz_session) as timeSpent,
         (SELECT COUNT(DISTINCT question_asked_id) FROM simulator_question_asked) as totalSimulatorQuestions;
