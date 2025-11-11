@@ -65,7 +65,10 @@ const Header = () => {
       <div className="flex items-center gap-3">
         {isHomePage && !isAuthenticated && (
           <div id="tutorialButton">
-            <Button onClick={() => driverObj.drive()} buttonText={"Tutorial"}>
+            <Button
+              onClick={() => driverObj.drive()}
+              buttonText={<span className="hidden md:inline">Tutorial</span>}
+            >
               <FiHelpCircle size={20} />
             </Button>
           </div>
