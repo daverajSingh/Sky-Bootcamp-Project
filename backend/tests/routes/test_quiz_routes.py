@@ -20,7 +20,7 @@ def mock_services(monkeypatch):
          'option_text': 'Option 2', 'is_correct': 1, 'title': 'Test Role 1'},
     ]
 
-    def mock_get_quiz_questions():
+    def mock_get_limited_quiz_questions(limit):
         return mock_quiz_session_data
 
     def mock_add_quiz_session(start_time_str, end_time_str):
@@ -29,7 +29,7 @@ def mock_services(monkeypatch):
     def mock_insert_quiz_scores(session_id, result):
         pass
 
-    monkeypatch.setattr("application.routes.quiz.get_quiz_questions", mock_get_quiz_questions)
+    monkeypatch.setattr("application.routes.quiz.get_limited_questions", mock_get_limited_quiz_questions)
     monkeypatch.setattr("application.routes.quiz.add_quiz_session", mock_add_quiz_session)
     monkeypatch.setattr("application.routes.quiz.insert_quiz_scores", mock_insert_quiz_scores)
 
