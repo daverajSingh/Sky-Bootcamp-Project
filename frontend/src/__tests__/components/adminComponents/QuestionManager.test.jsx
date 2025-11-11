@@ -55,7 +55,11 @@ beforeEach(() => {
   } else {
     mockFetchQuestions.mockResolvedValue([]);
   }
+  jest.spyOn(console, 'error').mockImplementation(() => {});
 });
+
+afterAll(() => {  console.error.mockRestore();});
+
 describe("QuestionManager", () => {
   test("renders quizQuestions list by default and shows total", async () => {
     render(<QuestionManager />);
