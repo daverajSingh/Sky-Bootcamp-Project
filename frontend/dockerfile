@@ -1,13 +1,27 @@
-# ---------- Stage 1: Build ----------
 FROM node:24-bullseye
+
 WORKDIR /app
-# Copy dependency files first
+
+# Install Rust for oxide compilation
+RUN apt-get update && \
+    apt-get install -y curl build-essential && \
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+ENV PATH="/root/.cargo/bin:$PATH"
+
+# Copy package files first
 COPY package*.json ./
-# Install dependencies
-RUN npm install node 
-# Copy source code
+
+# Clean install
+RUN npm ci
+
+# Copy the rest of the project
 COPY . .
-# Build the production-ready static files
+
+# Rebuild Tailwind oxide from source
+RUN npm rebuild @tailwindcss/oxide --build-from-source
+
+# Build the frontend
 RUN npm run build
+
 EXPOSE 80
 CMD ["npm","start"]
