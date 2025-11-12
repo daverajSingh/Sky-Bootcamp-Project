@@ -15,6 +15,9 @@ services:
       - app-network
 
   backend:
+    build:
+      context: ./backend
+      dockerfile: dockerfile
     image: app-backend:latest
     container_name: app-backend
     restart: always
@@ -28,6 +31,9 @@ services:
       - app-network
 
   frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
     image: app-frontend:latest
     container_name: app-frontend
     restart: always
