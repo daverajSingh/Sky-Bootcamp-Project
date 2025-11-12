@@ -81,21 +81,11 @@ pipeline {
     stage('Build and Run with Compose') {
       steps {
         sh '''
-          set -eux
-          # Fallback detection in case COMPOSE_CMD wasn't set earlier
-          if [ -z "${COMPOSE_CMD:-}" ]; then
-            if docker compose version >/dev/null 2>&1; then
-              COMPOSE_CMD="docker compose"
-            elif docker-compose version >/dev/null 2>&1; then
-              COMPOSE_CMD="docker-compose"
-            else
-              echo "Neither 'docker compose' nor 'docker-compose' is available on this agent." >&2
-              exit 1
-            fi
-          fi
-          $COMPOSE_CMD down || true
-          $COMPOSE_CMD up -d --build
-          $COMPOSE_CMD ps
+          set -ex
+          # Try docker compose v2, then fall back to legacy docker-compose
+          (docker compose -f docker-compose.yml down || docker-compose -f docker-compose.yml down || true)
+          (docker compose -f docker-compose.yml up -d --build || docker-compose -f docker-compose.yml up -d --build)
+          (docker compose -f docker-compose.yml ps || docker-compose -f docker-compose.yml ps)
         '''
       }
     }
@@ -104,13 +94,14 @@ pipeline {
   post {
     always {
       script {
-        // Ensure we have a workspace (FilePath) and compose command even after early failures
-        def composeCmd = (env.COMPOSE_CMD?.trim()) ? env.COMPOSE_CMD : 'docker compose'
         node {
           dir(env.WORKSPACE) {
-            sh "${composeCmd} ps || true"
-            sh "${composeCmd} logs --no-color --tail=200 || true"
             if (fileExists('docker-compose.yml')) {
+              sh '''
+                set -e
+                (docker compose -f docker-compose.yml ps || docker-compose -f docker-compose.yml ps || true)
+                (docker compose -f docker-compose.yml logs --no-color --tail=200 || docker-compose -f docker-compose.yml logs --no-color --tail=200 || true)
+              '''
               archiveArtifacts artifacts: 'docker-compose.yml', fingerprint: true, onlyIfSuccessful: false
             }
           }
