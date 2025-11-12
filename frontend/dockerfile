@@ -1,5 +1,5 @@
 # ---------- Stage 1: Build ----------
-FROM node:20-bullseye
+FROM node:24-bullseye
 WORKDIR /app
 # Copy dependency files first
 COPY package*.json ./
