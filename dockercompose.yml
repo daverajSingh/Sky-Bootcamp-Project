@@ -6,7 +6,7 @@ services:
     container_name: app-mysql
     restart: always
     env_file:
-      - ./sql/.env
+      - ./.env
     ports:
       - "3304:3306"
     volumes:
