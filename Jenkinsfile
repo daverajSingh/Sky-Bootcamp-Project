@@ -11,10 +11,26 @@ pipeline {
 
   stages {
     stage('Checkout') {
-      steps{
-          checkout scm
+      options { timeout(time: 5, unit: 'MINUTES') }
+      steps {
+        script {
+          // Clean workspace, then perform a robust explicit Git checkout
+          retry(2) {
+            deleteDir()
+            checkout([
+              $class: 'GitSCM',
+              branches: [[name: '*/dev-ops-again']],
+              doGenerateSubmoduleConfigurations: false,
+              extensions: [
+                [$class: 'CleanBeforeCheckout'],
+                [$class: 'CloneOption', noTags: false, reference: '', shallow: false, depth: 0, timeout: 60]
+              ],
+              userRemoteConfigs: [[url: 'https://github.com/daverajSingh/Sky-Bootcamp-Project']]
+            ])
+          }
         }
       }
+    }
 
     stage('Prepare Compose Command') {
       steps {
