@@ -45,7 +45,9 @@ pipeline {
           file(credentialsId: 'db-env', variable: 'DB_ENV_FILE')
         ]) {
           sh '''
-            set -euxo pipefail
+            chmod 600 "$BACKEND_ENV_FILE" "$FRONTEND_ENV_FILE" "$DB_ENV_FILE"
+            chmod 600 backend frontend
+            chmod 600 backend/.env backend/.env.db frontend/.env
             cp "$BACKEND_ENV_FILE" backend/.env
             cp "$FRONTEND_ENV_FILE" frontend/.env
             cp "$DB_ENV_FILE" backend/.env.db
