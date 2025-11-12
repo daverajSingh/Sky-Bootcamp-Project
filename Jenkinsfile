@@ -45,9 +45,7 @@ pipeline {
           file(credentialsId: 'db-env', variable: 'DB_ENV_FILE')
         ]) {
           sh '''
-            chmod 600 "$BACKEND_ENV_FILE" "$FRONTEND_ENV_FILE" "$DB_ENV_FILE"
-            chmod 600 backend frontend
-            chmod 600 backend/.env backend/.env.db frontend/.env
+            set -eux
             cp "$BACKEND_ENV_FILE" backend/.env
             cp "$FRONTEND_ENV_FILE" frontend/.env
             cp "$DB_ENV_FILE" backend/.env.db
@@ -59,7 +57,7 @@ pipeline {
     stage('Build and Run with Compose') {
       steps {
         sh '''
-          set -euxo pipefail
+          set -eux
           ${COMPOSE_CMD} down || true
           ${COMPOSE_CMD} up -d --build
           ${COMPOSE_CMD} ps
