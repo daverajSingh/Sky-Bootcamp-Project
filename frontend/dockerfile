@@ -1,27 +1,14 @@
-FROM node:24-bullseye
+# Use an official Nginx image to serve the static files
+FROM nginx:alpine
 
-WORKDIR /app
+# Remove default Nginx website
+RUN rm -rf /usr/share/nginx/html/*
 
-# Install Rust for oxide compilation
-RUN apt-get update && \
-    apt-get install -y curl build-essential && \
-    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-ENV PATH="/root/.cargo/bin:$PATH"
+# Copy build output to Nginx directory
+COPY dist/ /usr/share/nginx/html/
 
-# Copy package files first
-COPY package*.json ./
+# Expose port 80
+EXPOSE 5173
 
-# Clean install
-RUN npm ci
-
-# Copy the rest of the project
-COPY . .
-
-# Rebuild Tailwind oxide from source
-RUN npm rebuild @tailwindcss/oxide --build-from-source
-
-# Build the frontend
-RUN npm run build
-
-EXPOSE 80
-CMD ["npm","start"]
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
