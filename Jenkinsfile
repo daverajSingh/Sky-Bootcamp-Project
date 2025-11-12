@@ -107,23 +107,43 @@ pipeline {
         }
       }
     }
+
+    stage('Connectivity check (non-blocking)') {
+      steps {
+        script {
+          // Try local and public URL without failing the build; print diagnostics to help debugging
+          def url = params.FRONTEND_URL?.trim()
+          if (!url) { url = 'http://localhost:84' }
+          sh label: 'Probe localhost:84 and FRONTEND_URL', script: """
+            set +e
+            echo '--- Connectivity check start ---'
+            echo '[1/3] Curl localhost:84'
+            curl -sS -D - -o /dev/null http://localhost:84 || echo 'Curl to localhost:84 failed'
+            echo '\n[2/3] Curl FRONTEND_URL: ${url}'
+            curl -sS -D - -o /dev/null "${url}" || echo 'Curl to FRONTEND_URL failed (likely firewall or DNS)'
+            echo '\n[3/3] Frontend container recent logs'
+            (docker compose -f "${WORKSPACE}/docker-compose.yml" logs --no-color --tail=100 frontend || docker-compose -f "${WORKSPACE}/docker-compose.yml" logs --no-color --tail=100 frontend || true)
+            echo '--- Connectivity check end ---'
+            exit 0
+          """
+        }
+      }
+    }
   }
 
   post {
     always {
       script {
-        node {
-          dir(env.WORKSPACE) {
-            if (fileExists('docker-compose.yml')) {
-              sh '''
-                set -e
-                (docker compose -f docker-compose.yml ps || docker-compose -f docker-compose.yml ps || true)
-                (docker compose -f docker-compose.yml logs --no-color --tail=200 || docker-compose -f docker-compose.yml logs --no-color --tail=200 || true)
-              '''
-              archiveArtifacts artifacts: 'docker-compose.yml', fingerprint: true, onlyIfSuccessful: false
-            }
-          }
-        }
+        // Use absolute path to avoid workspace suffix issues (e.g., @2)
+        def composeFile = "${env.WORKSPACE}/docker-compose.yml"
+        sh """
+          set -e
+          if [ -f "${composeFile}" ]; then
+            (docker compose -f "${composeFile}" ps || docker-compose -f "${composeFile}" ps || true)
+            (docker compose -f "${composeFile}" logs --no-color --tail=200 frontend || docker-compose -f "${composeFile}" logs --no-color --tail=200 frontend || true)
+          fi
+        """
+        archiveArtifacts artifacts: 'docker-compose.yml', fingerprint: true, onlyIfSuccessful: false
       }
     }
   }
