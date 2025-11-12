@@ -93,6 +93,7 @@ pipeline {
           (docker compose -f docker-compose.yml down || docker-compose -f docker-compose.yml down || true)
           (docker compose -f docker-compose.yml up -d --build || docker-compose -f docker-compose.yml up -d --build)
           (docker compose -f docker-compose.yml ps || docker-compose -f docker-compose.yml ps)
+          (docker compose -f docker-compose.yml up || docker-compose -f docker-compose.yml ps)
         '''
       }
     }
