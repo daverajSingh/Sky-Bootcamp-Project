@@ -18,18 +18,34 @@ const Header = () => {
     driverObj.drive();
   }, []);
 
+  const topic_map = {
+    "1": 'Emotional Intelligence',
+    "2": 'Agile',
+    "3": 'Compliance',
+    "4": 'Communication',
+    "5": 'Sky products and services'
+  }
+
   const GRADIENT_CLASS =
     "text-2xl font-bold bg-gradient-to-r from-[#E60000] via-[#D90166] via-[#A100FF] to-[#0072FF] text-transparent bg-clip-text";
   const path = location.pathname;
-  const pageTitle =
-    path === "/"
+
+  const split_path = path === "/"
       ? "Home"
       : path
-          .split("/")
-          .filter(Boolean)
-          .at(-1)
-          .replaceAll(/[-_]/g, " ")
-          .replaceAll(/\b\w/g, (c) => c.toUpperCase());
+      .split("/")
+      .filter(Boolean)
+      .at(-1)
+      .replaceAll(/[-_]/g, " ")
+      .replaceAll(/\b\w/g, (c) => c.toUpperCase())
+
+  const simulator_page_title = split_path === "Simulator"
+    ? split_path
+    : topic_map[split_path];
+
+  const pageTitle = path.includes("/simulator")
+        ? simulator_page_title
+        : split_path;
 
   return (
     <header className="relative flex items-center justify-between p-4 bg-white shadow-md h-20 border-b border-gray-300">
