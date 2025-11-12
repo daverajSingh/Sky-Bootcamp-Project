@@ -6,6 +6,10 @@ pipeline {
     skipDefaultCheckout(true)
   }
 
+  parameters {
+    string(name: 'FRONTEND_URL', defaultValue: 'http://localhost:84', description: 'Public URL where the frontend will be available')
+  }
+
   environment {
     COMPOSE_CMD = ''
   }
@@ -87,6 +91,17 @@ pipeline {
           (docker compose -f docker-compose.yml up -d --build || docker-compose -f docker-compose.yml up -d --build)
           (docker compose -f docker-compose.yml ps || docker-compose -f docker-compose.yml ps)
         '''
+      }
+    }
+
+    stage('Report deployment URL') {
+      steps {
+        script {
+          def url = params.FRONTEND_URL?.trim()
+          if (!url) { url = 'http://localhost:84' }
+          echo "Frontend is available at: ${url}"
+          currentBuild.description = "Frontend: ${url}"
+        }
       }
     }
   }
