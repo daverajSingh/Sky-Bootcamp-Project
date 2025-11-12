@@ -19,14 +19,15 @@ pipeline {
           file(credentialsId: 'frontend-env-team4', variable: 'FRONTEND_ENV'),
           file(credentialsId: 'sql-env-team4', variable: 'DB_ENV')
         ]) {
-          sh '''
-            echo "[INFO] Injecting environment files..."
-            cp $BACKEND_ENV ./backend/.env
-            cp $FRONTEND_ENV ./frontend/.env
-            cp $DB_ENV ./sql/.env
-            ls -l ./backend/.env ./frontend/.env ./sql/.env
-          '''
-        }
+            script {
+                def dbEnvContent = readFile(file: env.DB_ENV)
+                def backendEnvContent = readFile(file: env.BACKEND_ENV)
+                def frontendEnvContent = readFile(file: env.FRONTEND_ENV)
+
+                writeFile file: '/.env', text: dbEnvContent
+                writeFile file: '/backend/.env', text: backendEnvContent
+                writeFile file: '/frontend/.env', text: frontendEnvContent
+            }
       }
     }
 
