@@ -35,7 +35,7 @@ pipeline {
               userRemoteConfigs: [[url: 'https://github.com/daverajSingh/Sky-Bootcamp-Project']]
             ])
           }
-        }
+        } 
       }
     }
 
@@ -82,9 +82,20 @@ pipeline {
       steps {
         sh '''
           set -eux
-          ${COMPOSE_CMD} down || true
-          ${COMPOSE_CMD} up -d --build
-          ${COMPOSE_CMD} ps
+          # Fallback detection in case COMPOSE_CMD wasn't set earlier
+          if [ -z "${COMPOSE_CMD:-}" ]; then
+            if docker compose version >/dev/null 2>&1; then
+              COMPOSE_CMD="docker compose"
+            elif docker-compose version >/dev/null 2>&1; then
+              COMPOSE_CMD="docker-compose"
+            else
+              echo "Neither 'docker compose' nor 'docker-compose' is available on this agent." >&2
+              exit 1
+            fi
+          fi
+          $COMPOSE_CMD down || true
+          $COMPOSE_CMD up -d --build
+          $COMPOSE_CMD ps
         '''
       }
     }
