@@ -24,6 +24,8 @@ services:
       - "5004:5000"
     env_file:
       - ./backend/.env
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
     command: sh -c "pip install --no-cache-dir -r requirements.txt && python app.py"
     depends_on:
       - db

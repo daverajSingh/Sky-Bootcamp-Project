@@ -21,13 +21,16 @@ pipeline {
         script {
           // Clean workspace, then perform a robust explicit Git checkout
           retry(2) {
-            // Relax perms and clear any leftover files that might be owned by another user
+            // Clean using a root container to remove any root-owned files from previous runs
             sh '''
               set +e
-              chmod -R u+rwX . 2>/dev/null || true
-              find . -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
+              if command -v docker >/dev/null 2>&1; then
+                docker run --rm -v "$WORKSPACE":/w alpine sh -c 'rm -rf /w/* /w/.[!.]* /w/..?* || true'
+              else
+                chmod -R u+rwX . 2>/dev/null || true
+                find . -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
+              fi
             '''
-            deleteDir()
             checkout([
               $class: 'GitSCM',
               branches: [[name: '*/dev-ops-again']],
