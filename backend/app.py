@@ -12,7 +12,7 @@ from application.routes.simulator_details import routes as simulator_details_rou
 from application.routes.simulator import routes as simulator_routes
 from application.routes.admin import routes as admin_routes
 from application.routes.quiz_feedback import routes as quiz_feedback_routes
-from application.services.auth import register_post
+from bcrypt import hashpw, gensalt
 from dotenv import load_dotenv
 import os
 
@@ -53,8 +53,24 @@ def seed_admin():
     """
     email = os.getenv("ADMIN_EMAIL")
     password = os.getenv("ADMIN_PASSWORD")
-    name = os.getenv("ADMIN_NAME")
-    register_post(email, password, name)
+    name = os.getenv("ADMIN_NAME", "Administrator")
+
+    if not email or not password:
+        return
+
+    db = DataAccess()
+    try:
+        existing = db.query("SELECT admin_id FROM admin WHERE admin_email=%s", (email,))
+        if not existing:
+            hashed = hashpw(password.encode('utf-8'), gensalt()).decode('utf-8')
+            db.execute(
+                "INSERT INTO admin (admin_email, admin_password, admin_name) VALUES (%s, %s, %s)",
+                (email, hashed, name),
+            )
+    except Exception as e:
+        print(e)
+    finally:
+        db.close()
     
 
 if __name__ == "__main__":
