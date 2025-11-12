@@ -6,7 +6,7 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Copy build output to Nginx directory
 COPY dist/ /usr/share/nginx/html/
-
+COPY src/assets /usr/share/nginx/html/assets/
 # Expose port 80
 EXPOSE 5173
 
