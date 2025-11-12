@@ -118,15 +118,43 @@ pipeline {
             set +e
             echo '--- Connectivity check start ---'
             echo '[1/3] Curl localhost:84'
-            curl -sS -D - -o /dev/null http://localhost:84 || echo 'Curl to localhost:84 failed'
+            for i in 1 2 3 4 5; do
+              curl -sS -D - -o /dev/null http://localhost:84 && break || sleep 2
+            done || echo 'Curl to localhost:84 failed'
             echo '\n[2/3] Curl FRONTEND_URL: ${url}'
-            curl -sS -D - -o /dev/null "${url}" || echo 'Curl to FRONTEND_URL failed (likely firewall or DNS)'
+            for i in 1 2 3 4 5; do
+              curl -sS -D - -o /dev/null "${url}" && break || sleep 2
+            done || echo 'Curl to FRONTEND_URL failed (likely firewall or DNS)'
             echo '\n[3/3] Frontend container recent logs'
             (docker compose -f "${WORKSPACE}/docker-compose.yml" logs --no-color --tail=100 frontend || docker-compose -f "${WORKSPACE}/docker-compose.yml" logs --no-color --tail=100 frontend || true)
             echo '--- Connectivity check end ---'
             exit 0
           """
         }
+      }
+    }
+
+    stage('Inspect frontend container (non-blocking)') {
+      steps {
+        sh '''
+          set +e
+          echo '--- Inspect frontend container ---'
+          FRONTEND_CID=$(docker compose -f "${WORKSPACE}/docker-compose.yml" ps -q frontend 2>/dev/null || docker-compose -f "${WORKSPACE}/docker-compose.yml" ps -q frontend 2>/dev/null)
+          if [ -n "$FRONTEND_CID" ]; then
+            echo '[1/4] Process list:'
+            docker exec "$FRONTEND_CID" sh -lc 'ps aux | sed -n "1,80p"' || true
+            echo '\n[2/4] Listening TCP ports:'
+            docker exec "$FRONTEND_CID" sh -lc 'command -v ss >/dev/null 2>&1 && ss -ltpn || (command -v netstat >/dev/null 2>&1 && netstat -ltpn) || echo "ss/netstat not available"' || true
+            echo '\n[3/4] Node/NPm versions:'
+            docker exec "$FRONTEND_CID" sh -lc 'node -v && npm -v' || true
+            echo '\n[4/4] App dir check:'
+            docker exec "$FRONTEND_CID" sh -lc 'ls -la /app | sed -n "1,120p"; [ -d /app/node_modules ] && echo "node_modules present" || echo "node_modules missing"' || true
+          else
+            echo 'Frontend container ID not found.'
+          fi
+          echo '--- End inspect ---'
+          exit 0
+        '''
       }
     }
   }
