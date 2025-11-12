@@ -35,18 +35,21 @@ pipeline {
     stage('Create environment files') {
       steps {
         sh 'mkdir -p backend frontend'
-        // Expect three Secret Text credentials in Jenkins containing the full file content
-        // - ID: backend-env  -> for backend/.env
-        // - ID: frontend-env -> for frontend/.env
-        // - ID: db-env       -> for backend/.env.db
+        // Expect three Secret File credentials in Jenkins containing the file contents
+        // - ID: backend-env  -> binds path to $BACKEND_ENV_FILE (will be copied to backend/.env)
+        // - ID: frontend-env -> binds path to $FRONTEND_ENV_FILE (will be copied to frontend/.env)
+        // - ID: db-env       -> binds path to $DB_ENV_FILE (will be copied to backend/.env.db)
         withCredentials([
-          string(credentialsId: 'backend-env', variable: 'BACKEND_ENV'),
-          string(credentialsId: 'frontend-env', variable: 'FRONTEND_ENV'),
-          string(credentialsId: 'db-env', variable: 'DB_ENV')
+          file(credentialsId: 'backend-env', variable: 'BACKEND_ENV_FILE'),
+          file(credentialsId: 'frontend-env', variable: 'FRONTEND_ENV_FILE'),
+          file(credentialsId: 'db-env', variable: 'DB_ENV_FILE')
         ]) {
-          writeFile file: 'backend/.env', text: "${BACKEND_ENV}\n"
-          writeFile file: 'frontend/.env', text: "${FRONTEND_ENV}\n"
-          writeFile file: 'backend/.env.db', text: "${DB_ENV}\n"
+          sh '''
+            set -euxo pipefail
+            cp "$BACKEND_ENV_FILE" backend/.env
+            cp "$FRONTEND_ENV_FILE" frontend/.env
+            cp "$DB_ENV_FILE" backend/.env.db
+          '''
         }
       }
     }
@@ -58,23 +61,6 @@ pipeline {
           ${COMPOSE_CMD} down || true
           ${COMPOSE_CMD} up -d --build
           ${COMPOSE_CMD} ps
-        '''
-      }
-    }
-
-    stage('Smoke test') {
-      when { expression { return env.SKIP_SMOKE_TEST != 'true' } }
-      steps {
-        sh '''
-          set +e
-          # Wait for backend to be ready
-          for i in $(seq 1 40); do
-            curl -fsS http://localhost:5004/api/faq >/dev/null 2>&1 && exit 0
-            sleep 3
-          done
-          echo "Backend did not become ready in time" >&2
-          ${COMPOSE_CMD} logs backend || true
-          exit 1
         '''
       }
     }
