@@ -2,13 +2,15 @@ version: "3.8"
 
 services:
   frontend:
-    image: node:18-alpine
+    image: node:22-bookworm-slim
     working_dir: /app
     volumes:
       - ./frontend:/app:delegated
       - /app/node_modules
     ports:
       - "84:5173"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     command: sh -c "npm install --silent && npm run dev -- --host"
     depends_on:
       - backend
