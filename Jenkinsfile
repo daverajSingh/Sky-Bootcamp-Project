@@ -1,9 +1,3 @@
-‎Jenkinsfile‎
-+3
--3
-Lines changed: 3 additions & 3 deletions
-Original file line number	Diff line number	Diff line change
-@@ -1,101 +1,101 @@
 pipeline {
   agent any
 
