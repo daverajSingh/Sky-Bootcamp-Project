@@ -1,87 +1,123 @@
 pipeline {
-  agent any
+    agent any
 
-  environment {
-    DOCKER_COMPOSE_FILE = 'docker-compose.yml'
-  }
-
-  stages {
-    stage('Checkout') {
-      steps {
-        checkout scm
-      }
+    environment {
+        // Backend environment
+        BACKEND_DIR = 'backend'
+        FRONTEND_DIR = 'frontend'
+        DB_NAME = 'simpossible'
+        DB_USER = 'root'
+        DB_PORT = '3306'
     }
 
-    stage('Inject environment files') {
-      steps {
-        withCredentials([
-          file(credentialsId: 'backend-env-team4', variable: 'BACKEND_ENV'),
-          file(credentialsId: 'frontend-env-team4', variable: 'FRONTEND_ENV'),
-          file(credentialsId: 'sql-env-team4', variable: 'DB_ENV')
-        ]) {
-            script {
-                def dbEnvContent = readFile(file: env.DB_ENV)
-                def backendEnvContent = readFile(file: env.BACKEND_ENV)
-                def frontendEnvContent = readFile(file: env.FRONTEND_ENV)
-
-                writeFile file: '/.env', text: dbEnvContent
-                writeFile file: '/backend/.env', text: backendEnvContent
-                writeFile file: '/frontend/.env', text: frontendEnvContent
+    stages {
+        stage('Preparation') {
+            steps {
+                echo 'Cleaning workspace...'
+                cleanWs()
+                checkout scm
             }
         }
-      }
-    }
 
-    stage('Build and Deploy with Docker Compose') {
-      steps {
-        script {
-          echo 'Deploying services with docker compose'
-          dir("${WORKSPACE}") {
-            // Stop old containers but keep images for caching
-            sh 'docker compose -f ${DOCKER_COMPOSE_FILE} down --remove-orphans || true'
-            sh 'docker container prune -f || true'
-
-            // Build and start containers
-            sh 'docker compose -f ${DOCKER_COMPOSE_FILE} up -d --build --force-recreate'
-
-            // Give containers time to start and show status
-            sleep time: 5, unit: 'SECONDS'
-            sh 'docker compose -f ${DOCKER_COMPOSE_FILE} ps'
-          }
+        stage('Start MySQL Server') {
+            steps {
+                echo 'Starting MySQL service...'
+                sh '''
+                    sudo service mysql start
+                    mysql -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
+                '''
+            }
         }
-      }
-    }
-  }
 
-  post {
-    always {
-      script {
-        echo '=== docker compose ps ==='
-        dir("${WORKSPACE}") {
-          sh 'docker compose -f ${DOCKER_COMPOSE_FILE} ps || true'
-          sh 'docker compose -f ${DOCKER_COMPOSE_FILE} logs --tail=200 || true'
+        stage('Setup Backend') {
+            steps {
+                dir("${BACKEND_DIR}") {
+                    echo 'Setting up Python backend environment...'
+                    sh '''
+                        python3 -m venv venv
+                        source venv/bin/activate
+                        pip install -r requirements.txt
+                    '''
+                }
+            }
         }
-      }
-    }
 
-    success {
-      script {
-        echo '✓ Pipeline completed successfully!'
-        echo 'Services running:'
-        echo '  - Frontend: http://localhost:84'
-        echo '  - Backend: http://localhost:5004'
-        echo '  - MySQL: localhost:3304'
-      }
-    }
+        // stage('Run Backend Tests') {
+        //     steps {
+        //         dir("${BACKEND_DIR}") {
+        //             echo 'Running backend tests...'
+        //             sh '''
+        //                 source venv/bin/activate
+        //                 pytest --maxfail=1 --disable-warnings -q
+        //             '''
+        //         }
+        //     }
+        // }
 
-    failure {
-      script {
-        echo '✗ Pipeline failed — collecting debug info...'
-        dir("${WORKSPACE}") {
-          sh 'docker compose -f ${DOCKER_COMPOSE_FILE} ps || true'
-          sh 'docker compose -f ${DOCKER_COMPOSE_FILE} logs --tail=500 || true'
+        // stage('Setup Frontend') {
+        //     steps {
+        //         dir("${FRONTEND_DIR}") {
+        //             echo 'Installing frontend dependencies...'
+        //             sh '''
+        //                 npm install
+        //             '''
+        //         }
+        //     }
+        // }
+
+        // stage('Run Frontend Tests') {
+        //     steps {
+        //         dir("${FRONTEND_DIR}") {
+        //             echo 'Running frontend tests...'
+        //             sh '''
+        //                 npm test
+        //             '''
+        //         }
+        //     }
+        // }
+
+        stage('Start Applications') {
+            parallel {
+                stage('Run Backend Server') {
+                    steps {
+                        dir("${BACKEND_DIR}") {
+                            echo 'Launching backend server...'
+                            sh '''
+                                source venv/bin/activate
+                                nohup python3 app.py > backend.log 2>&1 &
+                            '''
+                        }
+                    }
+                }
+
+                stage('Run Frontend Server') {
+                    steps {
+                        dir("${FRONTEND_DIR}") {
+                            echo 'Launching frontend server...'
+                            sh '''
+                                nohup npm run dev > frontend.log 2>&1 &
+                            '''
+                        }
+                    }
+                }
+            }
         }
-      }
     }
-  }
+
+    post {
+        always {
+            echo 'Stopping background processes and cleaning up...'
+            sh '''
+                pkill -f "python3 app.py" || true
+                pkill -f "vite" || true
+                sudo service mysql stop || true
+            '''
+        }
+        success {
+            echo '✅ Build and deployment successful!'
+        }
+        failure {
+            echo '❌ Build failed.'
+        }
+    }
 }
