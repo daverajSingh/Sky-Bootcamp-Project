@@ -28,6 +28,7 @@ pipeline {
                 writeFile file: '/backend/.env', text: backendEnvContent
                 writeFile file: '/frontend/.env', text: frontendEnvContent
             }
+        }
       }
     }
 
