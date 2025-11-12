@@ -1,5 +1,5 @@
 # ---------- Stage 1: Build ----------
-FROM node:24-alpine AS build
+FROM node:20
 WORKDIR /app
 # Copy dependency files first
 COPY package*.json ./
@@ -10,4 +10,4 @@ COPY . .
 # Build the production-ready static files
 RUN npm run build
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["npm","start"]
