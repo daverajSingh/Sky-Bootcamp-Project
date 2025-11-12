@@ -21,6 +21,7 @@ pipeline {
         ]) {
           sh '''
             echo "[INFO] Injecting environment files..."
+            chmod 600 ./
             cp $BACKEND_ENV ./backend/.env
             chmod 600 ./backend/.env
             cp $FRONTEND_ENV ./frontend/.env
