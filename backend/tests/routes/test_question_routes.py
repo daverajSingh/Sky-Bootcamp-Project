@@ -21,6 +21,9 @@ def mock_services(monkeypatch):
         # Mock function to simulate database updates/inserts/deletes
         pass
 
+    def mock_add_question(*args, **kwargs):
+        return 1
+
     def mock_get_questions():
         return [{'question_id': 1, 'question_text': 'Question 1', 'topic_id': 1},
                 {'question_id': 2, 'question_text': 'Question 2', 'topic_id': 2}]
@@ -33,7 +36,7 @@ def mock_services(monkeypatch):
         ]
 
     monkeypatch.setattr("application.routes.question.get_questions", mock_get_questions)
-    monkeypatch.setattr("application.routes.question.add_question", mock_execute_queries)
+    monkeypatch.setattr("application.routes.question.add_question", mock_add_question)
     monkeypatch.setattr("application.routes.question.update_question", mock_execute_queries)
     monkeypatch.setattr("application.routes.question.delete_question", mock_execute_queries)
     monkeypatch.setattr("application.routes.question.get_options_by_question_id", mock_get_options_by_question_id)
@@ -45,7 +48,7 @@ def test_question_routes(client, mock_services):
 
     response = client.post('/questions', json={'topic_id': 1, 'question_text': 'New Question'})
     assert response.status_code == 200
-    assert response.json == {"message": "Question added successfully"}
+    assert response.json == {"message": "Question added successfully with ID:1"}
 
     response = client.patch('/question/1', json={'question_text': 'Updated Question'})
     assert response.status_code == 200
