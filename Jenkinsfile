@@ -21,9 +21,9 @@ pipeline {
         ]) {
           sh '''
             echo "[INFO] Injecting environment files..."
-            sudo cp $BACKEND_ENV ./backend/.env
-            sudo cp $FRONTEND_ENV ./frontend/.env
-            sudo cp $DB_ENV ./.env
+            cp $BACKEND_ENV ./backend/.env
+            cp $FRONTEND_ENV ./frontend/.env
+            cp $DB_ENV ./.env
           '''
         }
       }
