@@ -7,7 +7,7 @@ export { default as FAQItem } from "./FAQItem";
 export { default as Footer } from "./Footer";
 export { default as Header } from "./Header";
 export { default as Layout } from "./Layout";
-export { default as LogoutButton } from "./logoutButton";
+export { default as LogoutButton } from "./LogoutButton";
 export { default as ProtectedRoute } from "./ProtectedRoute";
 export { default as WelcomeSection } from "./WelcomeSection";
 export { default as Button } from "./Button";
