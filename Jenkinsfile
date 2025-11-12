@@ -1,123 +1,109 @@
+‎Jenkinsfile‎
++3
+-3
+Lines changed: 3 additions & 3 deletions
+Original file line number	Diff line number	Diff line change
+@@ -1,101 +1,101 @@
 pipeline {
-    agent any
+  agent any
 
-    environment {
-        // Backend environment
-        BACKEND_DIR = 'backend'
-        FRONTEND_DIR = 'frontend'
-        DB_NAME = 'simpossible'
-        DB_USER = 'root'
-        DB_PORT = '3306'
+  environment {
+    COMPOSE_FILE = 'docker-compose.yml'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
     }
 
-    stages {
-        stage('Preparation') {
-            steps {
-                echo 'Cleaning workspace...'
-                cleanWs()
-                checkout scm
-            }
+    stage('Inject .env files') {
+      steps {
+        withCredentials([
+          file(credentialsId: 'backend-env-team4', variable: 'BACKEND_ENV'),
+          file(credentialsId: 'frontend-env-team4', variable: 'FRONTEND_ENV'),
+          file(credentialsId: 'sql-env-team4', variable: 'DB_ENV')
+        ]) {
+          sh '''
+            echo "[INFO] Injecting environment files..."
+            cp $BACKEND_ENV ./backend/.env
+            chmod 600 ./backend/.env
+            cp $FRONTEND_ENV ./frontend/.env
+            chmod 600 ./backend/.env
+            cp $DB_ENV ./.env
+            chmod 600 ./.env
+          '''
         }
-
-        stage('Start MySQL Server') {
-            steps {
-                echo 'Starting MySQL service...'
-                sh '''
-                    sudo service mysql start
-                    mysql -u root -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
-                '''
-            }
-        }
-
-        stage('Setup Backend') {
-            steps {
-                dir("${BACKEND_DIR}") {
-                    echo 'Setting up Python backend environment...'
-                    sh '''
-                        python3 -m venv venv
-                        source venv/bin/activate
-                        pip install -r requirements.txt
-                    '''
-                }
-            }
-        }
-
-        // stage('Run Backend Tests') {
-        //     steps {
-        //         dir("${BACKEND_DIR}") {
-        //             echo 'Running backend tests...'
-        //             sh '''
-        //                 source venv/bin/activate
-        //                 pytest --maxfail=1 --disable-warnings -q
-        //             '''
-        //         }
-        //     }
-        // }
-
-        // stage('Setup Frontend') {
-        //     steps {
-        //         dir("${FRONTEND_DIR}") {
-        //             echo 'Installing frontend dependencies...'
-        //             sh '''
-        //                 npm install
-        //             '''
-        //         }
-        //     }
-        // }
-
-        // stage('Run Frontend Tests') {
-        //     steps {
-        //         dir("${FRONTEND_DIR}") {
-        //             echo 'Running frontend tests...'
-        //             sh '''
-        //                 npm test
-        //             '''
-        //         }
-        //     }
-        // }
-
-        stage('Start Applications') {
-            parallel {
-                stage('Run Backend Server') {
-                    steps {
-                        dir("${BACKEND_DIR}") {
-                            echo 'Launching backend server...'
-                            sh '''
-                                source venv/bin/activate
-                                nohup python3 app.py > backend.log 2>&1 &
-                            '''
-                        }
-                    }
-                }
-
-                stage('Run Frontend Server') {
-                    steps {
-                        dir("${FRONTEND_DIR}") {
-                            echo 'Launching frontend server...'
-                            sh '''
-                                nohup npm run dev > frontend.log 2>&1 &
-                            '''
-                        }
-                    }
-                }
-            }
-        }
+      }
     }
 
-    post {
-        always {
-            echo 'Stopping background processes and cleaning up...'
-            sh '''
-                pkill -f "python3 app.py" || true
-                pkill -f "vite" || true
-                sudo service mysql stop || true
-            '''
+    // stage('Frontend Tests') {
+    //   steps {
+    //     dir('frontend') {
+    //       sh '''
+    //         echo "[INFO] Running frontend tests..."
+    //         npm ci
+    //         npm run test
+    //       '''
+    //     }
+    //   }
+    // }
+
+    // stage('Backend Tests') {
+    //   steps {
+    //     dir('backend') {
+    //       sh '''
+    //         echo "[INFO] Running backend tests..."
+    //         pip install -r requirements.txt
+    //         pytest --maxfail=1 --disable-warnings -q
+    //       '''
+    //     }
+    //   }
+    // }
+
+    stage('Build Docker Images') {
+      steps {
+        script {
+          echo "[INFO] Building backend and frontend Docker images..."
+          sh 'docker build -t app-backend:latest ./backend'
+          sh 'docker build -t app-frontend:latest ./frontend'
         }
-        success {
-            echo '✅ Build and deployment successful!'
-        }
-        failure {
-            echo '❌ Build failed.'
-        }
+      }
     }
+
+    stage('Deploy with Docker Compose') {
+      steps {
+        script {
+          echo "[INFO] Starting application with Docker Compose..."
+          sh '''
+            docker compose up -d --build
+          '''
+        }
+      }
+    }
+
+    // stage('Verify Deployment') {
+    //   steps {
+    //     script {
+    //       echo "[INFO] Verifying deployment..."
+    //       // Replace with your actual frontend health endpoint
+    //       sh 'curl -f http://localhost:84 || (echo "Frontend not reachable" && exit 1)'
+    //     }
+    //   }
+    // }
+  }
+
+  // post {
+  //   always {
+  //     echo "[INFO] Cleaning up unused Docker resources..."
+  //     sh 'docker system prune -f'
+  //   }
+  //   failure {
+  //     echo "[ERROR] Pipeline failed."
+  //   }
+  //   success {
+  //     echo "[SUCCESS] Pipeline completed successfully!"
+  //   }
+  // }
 }
