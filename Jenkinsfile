@@ -24,7 +24,7 @@ pipeline {
             cp $BACKEND_ENV ./backend/.env
             chmod 600 ./backend/.env
             cp $FRONTEND_ENV ./frontend/.env
-            chmod 600 ./backend/.env
+            chmod 600 ./frontend/.env
             cp $DB_ENV ./.env
             chmod 600 ./.env
           '''
