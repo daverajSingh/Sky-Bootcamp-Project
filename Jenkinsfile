@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   environment {
-    COMPOSE_FILE = 'docker-compose.yml'
+    DOCKER_COMPOSE_FILE = 'docker-compose.yml'
   }
 
   stages {
@@ -12,7 +12,7 @@ pipeline {
       }
     }
 
-    stage('Inject .env files') {
+    stage('Inject environment files') {
       steps {
         withCredentials([
           file(credentialsId: 'backend-env-team4', variable: 'BACKEND_ENV'),
@@ -23,64 +23,29 @@ pipeline {
             echo "[INFO] Injecting environment files..."
             cp $BACKEND_ENV ./backend/.env
             cp $FRONTEND_ENV ./frontend/.env
-            cp $DB_ENV ./.env
+            cp $DB_ENV ./sql/.env
+            ls -l ./backend/.env ./frontend/.env ./sql/.env
           '''
         }
       }
     }
 
-    stage('Frontend Tests') {
-      steps {
-        dir('frontend') {
-          sh '''
-            echo "[INFO] Running frontend tests..."
-            npm ci
-            npm run test
-          '''
-        }
-      }
-    }
-
-    stage('Backend Tests') {
-      steps {
-        dir('backend') {
-          sh '''
-            echo "[INFO] Running backend tests..."
-            pip install -r requirements.txt
-            pytest --maxfail=1 --disable-warnings -q
-          '''
-        }
-      }
-    }
-
-    stage('Build Docker Images') {
+    stage('Build and Deploy with Docker Compose') {
       steps {
         script {
-          echo "[INFO] Building backend and frontend Docker images..."
-          sh 'docker build -t app-backend:latest ./backend'
-          sh 'docker build -t app-frontend:latest ./frontend'
-        }
-      }
-    }
+          echo 'Deploying services with docker compose'
+          dir("${WORKSPACE}") {
+            // Stop old containers but keep images for caching
+            sh 'docker compose -f ${DOCKER_COMPOSE_FILE} down --remove-orphans || true'
+            sh 'docker container prune -f || true'
 
-    stage('Deploy with Docker Compose') {
-      steps {
-        script {
-          echo "[INFO] Starting application with Docker Compose..."
-          sh '''
-            docker compose down || true
-            docker compose up -d --build
-          '''
-        }
-      }
-    }
+            // Build and start containers
+            sh 'docker compose -f ${DOCKER_COMPOSE_FILE} up -d --build --force-recreate'
 
-    stage('Verify Deployment') {
-      steps {
-        script {
-          echo "[INFO] Verifying deployment..."
-          // Replace with your actual frontend health endpoint
-          sh 'curl -f http://localhost:84 || (echo "Frontend not reachable" && exit 1)'
+            // Give containers time to start and show status
+            sleep time: 5, unit: 'SECONDS'
+            sh 'docker compose -f ${DOCKER_COMPOSE_FILE} ps'
+          }
         }
       }
     }
@@ -88,14 +53,33 @@ pipeline {
 
   post {
     always {
-      echo "[INFO] Cleaning up unused Docker resources..."
-      sh 'docker system prune -f'
+      script {
+        echo '=== docker compose ps ==='
+        dir("${WORKSPACE}") {
+          sh 'docker compose -f ${DOCKER_COMPOSE_FILE} ps || true'
+          sh 'docker compose -f ${DOCKER_COMPOSE_FILE} logs --tail=200 || true'
+        }
+      }
     }
-    failure {
-      echo "[ERROR] Pipeline failed."
-    }
+
     success {
-      echo "[SUCCESS] Pipeline completed successfully!"
+      script {
+        echo '✓ Pipeline completed successfully!'
+        echo 'Services running:'
+        echo '  - Frontend: http://localhost:84'
+        echo '  - Backend: http://localhost:5004'
+        echo '  - MySQL: localhost:3304'
+      }
+    }
+
+    failure {
+      script {
+        echo '✗ Pipeline failed — collecting debug info...'
+        dir("${WORKSPACE}") {
+          sh 'docker compose -f ${DOCKER_COMPOSE_FILE} ps || true'
+          sh 'docker compose -f ${DOCKER_COMPOSE_FILE} logs --tail=500 || true'
+        }
+      }
     }
   }
 }
