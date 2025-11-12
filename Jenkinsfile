@@ -61,8 +61,7 @@ pipeline {
         script {
           echo "[INFO] Building backend and frontend Docker images..."
           sh 'docker build -t app-backend:latest ./backend'
-
-          sh 'docker build --no-cache -t your-image-name d:latest ./frontend'
+          sh 'docker build --no-cache -t app-frontend:latest ./frontend'
         }
       }
     }
