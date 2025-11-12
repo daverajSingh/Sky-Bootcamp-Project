@@ -3,6 +3,7 @@ pipeline {
 
   options {
     timestamps()
+    skipDefaultCheckout(true)
   }
 
   environment {
@@ -16,6 +17,12 @@ pipeline {
         script {
           // Clean workspace, then perform a robust explicit Git checkout
           retry(2) {
+            // Relax perms and clear any leftover files that might be owned by another user
+            sh '''
+              set +e
+              chmod -R u+rwX . 2>/dev/null || true
+              find . -mindepth 1 -maxdepth 1 -exec rm -rf {} + 2>/dev/null || true
+            '''
             deleteDir()
             checkout([
               $class: 'GitSCM',
@@ -85,9 +92,19 @@ pipeline {
 
   post {
     always {
-      sh "${env.COMPOSE_CMD ?: 'docker compose'} ps || true"
-      sh "${env.COMPOSE_CMD ?: 'docker compose'} logs --no-color --tail=200 || true"
-      archiveArtifacts artifacts: 'docker-compose.yml', fingerprint: true, onlyIfSuccessful: false
+      script {
+        // Ensure we have a workspace (FilePath) and compose command even after early failures
+        def composeCmd = (env.COMPOSE_CMD?.trim()) ? env.COMPOSE_CMD : 'docker compose'
+        node {
+          dir(env.WORKSPACE) {
+            sh "${composeCmd} ps || true"
+            sh "${composeCmd} logs --no-color --tail=200 || true"
+            if (fileExists('docker-compose.yml')) {
+              archiveArtifacts artifacts: 'docker-compose.yml', fingerprint: true, onlyIfSuccessful: false
+            }
+          }
+        }
+      }
     }
   }
 }
