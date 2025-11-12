@@ -8,3 +8,4 @@ pyjwt
 pytest-cov 
 flask_cors
 openai
+cryptography
