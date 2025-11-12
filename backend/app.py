@@ -14,6 +14,7 @@ from application.routes.admin import routes as admin_routes
 from application.routes.quiz_feedback import routes as quiz_feedback_routes
 from dotenv import load_dotenv
 import os
+from bcrypt import hashpw, gensalt
 
 def create_app():
     load_dotenv()
@@ -30,6 +31,7 @@ def create_app():
     app.register_blueprint(admin_routes)    
     app.register_blueprint(quiz_feedback_routes)
     CORS(app, resources={r"*": {"origins": os.getenv("FRONT_END_URL")}})
+
     return app
 
 def create_table():
@@ -43,8 +45,33 @@ def create_table():
     except Exception as e:
         print(e)
 
+def seed_admin():
+    """Insert an initial admin user if not present. Controlled via env vars.
+
+    Uses ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NAME. If not set, no-op.
+    """
+    email = os.getenv("ADMIN_EMAIL")
+    password = os.getenv("ADMIN_PASSWORD")
+    name = os.getenv("ADMIN_NAME", "Administrator")
+    if not email or not password:
+        return
+    db = DataAccess()
+    try:
+        existing = db.query("SELECT admin_id FROM admin WHERE admin_email=%s", (email,))
+        if not existing:
+            hashed = hashpw(password.encode('utf-8'), gensalt()).decode('utf-8')
+            db.execute(
+                "INSERT INTO admin (admin_email, admin_password, admin_name) VALUES (%s, %s, %s)",
+                (email, hashed, name),
+            )
+    except Exception as e:
+        print(e)
+    finally:
+        db.close()
+
 if __name__ == "__main__":
     app = create_app()
     create_table()
+    seed_admin()
     app.run(host="0.0.0.0", debug=True, port=5000)
 

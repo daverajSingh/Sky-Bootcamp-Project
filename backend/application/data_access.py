@@ -18,6 +18,8 @@ class DataAccess:
                 self.__connection = pymysql.connect(
                     host=os.getenv("DB_HOST"),
                     user=os.getenv("DB_USER"),
+                    password=os.getenv("DB_PASSWORD"),
+                    port=int(os.getenv("DB_PORT", 3306)),
                     db=os.getenv("DB_NAME"),
                     cursorclass=pymysql.cursors.DictCursor,
                 )
@@ -31,6 +33,8 @@ class DataAccess:
             connection = pymysql.connect(
                 host=os.getenv("DB_HOST"),
                 user=os.getenv("DB_USER"),
+                password=os.getenv("DB_PASSWORD"),
+                port=int(os.getenv("DB_PORT", 3306)),
                 cursorclass=pymysql.cursors.DictCursor
             )
             with connection.cursor() as cursor:

@@ -22,6 +22,8 @@ services:
       - ./backend:/app:delegated
     ports:
       - "5004:5000"
+    env_file:
+      - ./backend/.env
     command: sh -c "pip install --no-cache-dir -r requirements.txt && python app.py"
     depends_on:
       - db
@@ -29,9 +31,8 @@ services:
   db:
     image: mysql:8.0
     restart: unless-stopped
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_DATABASE: app_db
+    env_file:
+      - ./backend/.env.db
     ports:
       - "3304:3306"
     volumes:

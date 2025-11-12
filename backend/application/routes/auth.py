@@ -15,16 +15,16 @@ def login():
     else:
         return jsonify({"error": "Invalid Method"}), 405
 
-@routes.route('/register', methods=['POST'])
-def register():
-    if request.method == 'POST':
-        data = request.json
-        email = data['email']
-        password = data['password']
-        name = data['name']
-        return register_post(email, password, name)
-    else:
-        return jsonify({"error": "Invalid Method"}), 405
+# @routes.route('/register', methods=['POST'])
+# def register():
+#     if request.method == 'POST':
+#         data = request.json
+#         email = data['email']
+#         password = data['password']
+#         name = data['name']
+#         return register_post(email, password, name)
+#     else:
+#         return jsonify({"error": "Invalid Method"}), 405
 
 @routes.route('/faq', methods=['GET'])
 def faq():
