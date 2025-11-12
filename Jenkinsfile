@@ -11,8 +11,27 @@ pipeline {
 
   stages {
     stage('Checkout') {
+      options { timeout(time: 5, unit: 'MINUTES') }
       steps {
-        checkout scm
+        retry(2) {
+          deleteDir()
+          checkout([
+            $class: 'GitSCM',
+            branches: [[name: '*/dev-ops-again']],
+            doGenerateSubmoduleConfigurations: false,
+            extensions: [[
+              $class: 'CloneOption',
+              noTags: false,
+              reference: '',
+              shallow: false,
+              depth: 0,
+              timeout: 30
+            ]],
+            userRemoteConfigs: [[
+              url: 'https://github.com/daverajSingh/Sky-Bootcamp-Project'
+            ]]
+          ])
+        }
       }
     }
 
