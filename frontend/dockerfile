@@ -4,7 +4,7 @@ WORKDIR /app
 # Copy dependency files first
 COPY package*.json ./
 # Install dependencies
-RUN npm ci
+RUN npm install node 
 # Copy source code
 COPY . .
 # Build the production-ready static files
