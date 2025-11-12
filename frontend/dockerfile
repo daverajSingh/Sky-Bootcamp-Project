@@ -9,10 +9,12 @@ COPY package*.json ./
 # If there is no package-lock.json, npm ci will fail; fall back to npm install
 RUN set -eux; \
     if [ -f package-lock.json ]; then \
-      npm ci --silent; \
+      npm ci --silent || (rm -rf node_modules package-lock.json && npm install --silent); \
     else \
       npm install --silent; \
-    fi
+    fi; \
+    # Ensure any native modules are correctly built for this platform
+    npm rebuild --silent || true
 
 # Copy source
 COPY . .
