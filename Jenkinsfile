@@ -11,29 +11,8 @@ pipeline {
 
   stages {
     stage('Checkout') {
-      options { timeout(time: 5, unit: 'MINUTES') }
-      steps {
-        retry(2) {
-          deleteDir()
-          checkout([
-            $class: 'GitSCM',
-            branches: [[name: '*/dev-ops-again']],
-            doGenerateSubmoduleConfigurations: false,
-            extensions: [[
-              $class: 'CloneOption',
-              noTags: false,
-              reference: '',
-              shallow: false,
-              depth: 0,
-              timeout: 30
-            ]],
-            userRemoteConfigs: [[
-              url: 'https://github.com/daverajSingh/Sky-Bootcamp-Project'
-            ]]
-          ])
-        }
+        checkout scm
       }
-    }
 
     stage('Prepare Compose Command') {
       steps {
@@ -64,10 +43,11 @@ pipeline {
           file(credentialsId: 'db-env', variable: 'DB_ENV_FILE')
         ]) {
           sh '''
-            set -eux
             cp "$BACKEND_ENV_FILE" backend/.env
             cp "$FRONTEND_ENV_FILE" frontend/.env
             cp "$DB_ENV_FILE" backend/.env.db
+            # Secure the copied files (leave directory perms intact)
+            chmod 600 backend/.env backend/.env.db frontend/.env || true
           '''
         }
       }
